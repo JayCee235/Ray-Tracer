@@ -295,7 +295,7 @@ typedef struct obj_sphere
 	int pos_index;
 	int up_normal_index;
 	int equator_normal_index;
-	int texture_index[MAX_VERTEX_COUNT];
+	int texture_index[MAX_VERTEX_COUNT]; 
 	int material_index;
 } obj_sphere;
 

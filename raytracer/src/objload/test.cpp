@@ -13,7 +13,7 @@ void printVector(obj_vector *v)
 int main(int argc, char **argv)
 {
 	objLoader *objData = new objLoader();
-	objData->load("test.obj");
+	objData->load("res/test.obj");
 
 	printf("Number of vertices: %i\n", objData->vertexCount);
 	printf("Number of vertex normals: %i\n", objData->normalCount);

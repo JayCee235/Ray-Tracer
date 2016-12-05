@@ -16,7 +16,7 @@ int main (int argc, const char * argv[]) {
 			im[i*4*3+j*3+2] = 150;
 		}
 	}
-	simplePNG_write("test.png", w, h, im);
+	simplePNG_write("res/test.png", w, h, im);
 	printf("Writing: test.png\n");
 	
     return 0;
