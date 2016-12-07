@@ -25,7 +25,7 @@ void printHitPoint(struct HitPoint* hp) {
 class Scene {
 private:
 	Loader* loader;
-	std::vector<Sphere*>* primList;
+	std::vector<Primitive*>* primList;
 	Camera* camera;
 	int primCount;
 public:
@@ -35,7 +35,7 @@ public:
 		printf("Making Loader\n");
 		this->loader = loader;
 		printf("Loading prims\n");
-		this->primList = this->loader->getSpheres();
+		this->primList = this->loader->getPrimitives();
 		printf("loading camera.\n");
 		this->camera = this->loader->getCamera();
 		printf("loading count.\n");
@@ -45,7 +45,7 @@ public:
 	float intersect(Ray* r, HitPoint* hp) {
 		float out = -1;
 		int i;
-		std::vector<Sphere*> ls = *this->primList;
+		std::vector<Primitive*> ls = *this->primList;
 		for(i = 0; i < primCount; i++) {
 			Primitive* work = ls[i];
  			if(out < 0) {

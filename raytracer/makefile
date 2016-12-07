@@ -53,6 +53,10 @@ runSphereTest: SphereTest
 	./SphereTest res/SphereTest1.obj res/SphereTest1.png
 	./SphereTest res/SphereTest2.obj res/SphereTest2.png
 
+runTriangleTest: SphereTest
+	./SphereTest res/triangleTest1.obj res/triangleTest1.png
+	./SphereTest res/triangleTest2.obj res/triangleTest2.png
+
 all: SphereTest
 
 clean: 

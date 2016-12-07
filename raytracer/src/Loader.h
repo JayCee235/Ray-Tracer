@@ -15,6 +15,7 @@ Vector3 objToGenVec(obj_vector const * objVec)
 
 #include "Primitive.h"
 #include "Sphere.h"
+#include "Triangle.h"
 #include "camera.h"
 #include <vector>
 
@@ -53,28 +54,58 @@ public:
 
 		std::vector<Sphere*>* toReturn = new std::vector<Sphere*>();
 
-		printf("Prepared to run.\n");
+		// printf("Prepared to run.\n");
 
 		int i;
 		for(i = 0; i < count; i++) {
 			obj_sphere* sphereToCalc = sphereList[i];
-			printf("Sphere center: %d\n", sphereToCalc->pos_index);
+			// printf("Sphere center: %d\n", sphereToCalc->pos_index);
 			Vector3 center = objToGenVec(vecLs[sphereToCalc->pos_index]);
-			printf("Sphere center calculated.\n");
+			// printf("Sphere center calculated.\n");
 			int upNormIndex = sphereToCalc->up_normal_index;
-			printf("Normal index gathered.\n");
+			// printf("Normal index gathered.\n");
 			obj_vector* upNorm = normLs[upNormIndex];
-			printf("Normal vector gathered. Result: (%f, %f, %f)\n", upNorm->e[0], upNorm->e[1], upNorm->e[2]);
+			// printf("Normal vector gathered. Result: (%f, %f, %f)\n", upNorm->e[0], upNorm->e[1], upNorm->e[2]);
 			Vector3 norm = objToGenVec(upNorm);
-			printf("Sphere normal calculated.\n");
+			// printf("Sphere normal calculated.\n");
 			float radius = norm.length();
 
 			Sphere* toAdd = new Sphere(center, radius);
 
-			printf("Ready to push\n");
+			// printf("Ready to push\n");
 			toReturn->push_back(toAdd);
 		}
-		printf("Ready to return.\n");
+		// printf("Ready to return.\n");
+		return toReturn;
+	}
+
+	std::vector<Triangle*>* getTriangles() {
+		obj_face** faceList = data->faceList;
+		int count = data->faceCount;
+
+		obj_vector** vecLs = data->vertexList;
+		obj_vector** normLs = data->normalList;
+
+		std::vector<Triangle*>* toReturn = new std::vector<Triangle*>();
+
+		int i;
+		for(i = 0; i < count; i++) {
+			obj_face* faceToCheck = faceList[i];
+			if(faceToCheck->vertex_count == 3) {
+				int ai = faceToCheck->vertex_index[0];
+				int bi = faceToCheck->vertex_index[1];
+				int ci = faceToCheck->vertex_index[2];
+
+				Vector3 aVec = objToGenVec(vecLs[ai]);
+				Vector3 bVec = objToGenVec(vecLs[bi]);
+				Vector3 cVec = objToGenVec(vecLs[ci]);
+
+				Triangle* toAdd = new Triangle(aVec, bVec, cVec);
+
+				toReturn->push_back(toAdd);
+			}
+		}
+
 		return toReturn;
 	}
 
@@ -88,12 +119,36 @@ public:
 		return camera;
 	}
 
-	// Primitive* getPrimitives() {
-	// 	return (Primitive*) (getSpheres());
-	// }
+	std::vector<Primitive*>* getPrimitives() {
+		std::vector<Primitive*>* toReturn = new std::vector<Primitive*>();
+
+		std::vector<Sphere*>* spheres = getSpheres();
+		std::vector<Triangle*>* triangles = getTriangles();
+
+		for(int i = 0; i < spheres->size(); i++) {
+			toReturn->push_back((Primitive*) (spheres[0][i]));
+		}
+
+		for(int i = 0; i < triangles->size(); i++) {
+			toReturn->push_back((Primitive*) (triangles[0][i]));
+		}
+
+		return toReturn;
+	}
+
+	int getTriangleCount() {
+		obj_face** ls = data->faceList;
+		int out = 0;
+		for(int i = 0; i < data->faceCount; i++) {
+			if(ls[i]->vertex_count == 3) {
+				out++;
+			}
+		}
+		return out;
+	}
 
 	int getPrimCount() {
-		return data->sphereCount;
+		return data->sphereCount + getTriangleCount();
 	}
 
 
