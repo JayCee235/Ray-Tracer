@@ -37,6 +37,14 @@ public:
 			return -1;
 		}
 	}
+
+	Vector3 getNormal(Ray* r, HitPoint* hp) {
+		Vector3 x = r->getPointAt(hp->t);
+		Vector3 toReturn = x - this->center;
+		toReturn.normalize();
+		return toReturn;
+	}
+
 };
 
 #endif

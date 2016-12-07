@@ -1,52 +1,89 @@
-/* *
- * RayTracer main class
+/* RayTracer
  *
- * Written by Jeremiah Caudel
+ * Written by Jeremiah Caudell
  *
  */
 
- #include "RayTracer.h"
+#include "RayTracer.h"
+
+
+#define RES 200
+#define FOV 90
 
 int main(int argc, char* argv[]) {
-	Color red = Color(255, 0, 0);
+	Buffer<Color>* buffer = new Buffer<Color>(RES, RES);
 
-	Buffer<Color> b = Buffer<Color>(40, 40);
-	b.at(4,4) = red;
 
-	simplePNG_write("res/RayTracerTest.png", b.getWidth(), b.getHeight(), (unsigned char*) &b.at(0, 0));
-
-	if(argc < 2)
+	//Need at least two arguments (obj input and png output)
+	if(argc < 3)
 	{
-		printf("Usage %s filename.obj\n", argv[0]);
+		printf("Usage %s input.obj output.png\n [-d]", argv[0]);
 		exit(0);
 	}
 
-	//load camera data
-	objLoader objData = objLoader();
-	objData.load(argv[1]);
+	// bool debug = false;
 
-	if(objData.camera != NULL)
+	// int i;
+	// for(i = 0; i < argc; i++) {
+	// 	char* arg = &argv[i];
+	// 	if(arg.compare("-d") == 0) {
+	// 		debug = true;
+	// 	}
+	// }
+
+	// objLoader objDat = objLoader();
+	// objDat.load(argv[1]);
+
+	Loader* loader = new Loader();
+	loader->load(argv[1]);
+
+	printf("Loader loaded.\n");
+
+	Scene* scene = new Scene();
+	printf("New Scene created.\n");
+	scene->load(loader);
+
+	printf("Scene loaded.\n");
+
+	Camera* camera = loader->getCamera();
+
+	printf("Camera loaded.\n");
+
+	RayGenerator* generator = new RayGenerator(camera, RES, RES, FOV);
+
+	printf("Generator ready.\n");
+
+	//Convert vectors to RGB colors for testing results
+	Color white = Color(255.0f, 255.0f, 255.0f);
+	Color black = Color(0.0f, 0.0f, 0.0f);
+	for(int y=0; y<RES; y++)
 	{
-		printf("Found a camera\n");
-		printf(" position: ");
-		printf("%f %f %f\n",
-				objData.vertexList[ objData.camera->camera_pos_index ]->e[0],
-				objData.vertexList[ objData.camera->camera_pos_index ]->e[1],
-				objData.vertexList[ objData.camera->camera_pos_index ]->e[2]
-				);
-		printf(" looking at: ");
-		printf("%f %f %f\n",
-				objData.vertexList[ objData.camera->camera_look_point_index ]->e[0],
-				objData.vertexList[ objData.camera->camera_look_point_index ]->e[1],
-				objData.vertexList[ objData.camera->camera_look_point_index ]->e[2]
-				);
-		printf(" up normal: ");
-		printf("%f %f %f\n",
-				objData.normalList[ objData.camera->camera_up_norm_index ]->e[0],
-				objData.normalList[ objData.camera->camera_up_norm_index ]->e[1],
-				objData.normalList[ objData.camera->camera_up_norm_index ]->e[2]
-				);
+		for(int x=0; x<RES; x++)
+		{
+			Ray* ray = generator->getRay(x, y);
+			// Vector3 dir = ray->getDirection()*255.0f;
+			// Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
+			// buffer->at(x,y) = col;
+			buffer->at(x,y) = black;
+
+			struct HitPoint hp;
+			float t = scene->intersect(ray, &hp);
+
+			if(t > 0) {
+				hp.normal = hp.p->getNormal(ray, &hp);
+				Vector3 direction = hp.normal;
+				Vector3 dir = direction*255.0f;
+				Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
+
+
+				buffer->at(x,y) = col;
+			}
+
+		}
 	}
+
+	//Write output buffer to file argv2
+	simplePNG_write(argv[2], buffer->getWidth(), buffer->getHeight(), (unsigned char*)&buffer->at(0,0));
 
 	return 0;
 }

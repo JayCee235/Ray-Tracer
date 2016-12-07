@@ -3,6 +3,7 @@
 
 #include "vector/GenVector.h"
 #include "Primitive.h"
+#include "HitPoint.h"
 
 class Triangle : public Primitive {
 private:
@@ -47,6 +48,10 @@ public:
 		} else {
 			return -1;
 		}
+	}
+
+	Vector3 getNormal(Ray* r, HitPoint* hp) {
+		return this->normal;
 	}
 };
 

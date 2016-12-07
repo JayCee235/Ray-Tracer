@@ -40,7 +40,7 @@ SphereTest.o: src/SphereTest.cpp
 SphereTest: SphereTest.o
 	g++ SphereTest.o -o SphereTest
 
-allTest: vecTest pngTest objLoadTest bufferTest ioTest
+allTest: vecTest pngTest objLoadTest bufferTest ioTest SphereTest
 
 runIOTest: ioTest
 	./ioTest res/test1.obj res/test1.png
@@ -57,7 +57,11 @@ runTriangleTest: SphereTest
 	./SphereTest res/triangleTest1.obj res/triangleTest1.png
 	./SphereTest res/triangleTest2.obj res/triangleTest2.png
 
-all: SphereTest
+runNormalShadingTest: RayTracer
+	./RayTracer res/NormalShadingTest1.obj res/NormalShadingTest1.png
+	./RayTracer res/NormalShadingTest2.obj res/NormalShadingTest2.png
+
+all: RayTracer
 
 clean: 
 	rm -f core *.o  *Test RayTracer

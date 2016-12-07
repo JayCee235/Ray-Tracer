@@ -16,6 +16,8 @@
 #include "png/simplePNG.h"
 #include "vector/GenVector.h"
 #include "RayGenerator.h"
+#include "Primitive.h"
+#include "HitPoint.h"
 #include "Sphere.h"
 #include "Loader.h"
 #include "Scene.h"

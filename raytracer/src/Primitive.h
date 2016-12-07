@@ -1,9 +1,12 @@
 #ifndef __PRIMSHAPE
 #define __PRIMSHAPE
 
+class Primitive;
+
 #include <math.h>
 #include "vector/GenVector.h"
 #include "RayGenerator.h"
+#include "HitPoint.h"
 
 #ifndef CALCQUAD
 #define CALCQUAD
@@ -41,6 +44,9 @@ private:
 public:
 	virtual float intersect(Ray* r) {
 		return -1;
+	}
+	virtual Vector3 getNormal(Ray* r, HitPoint* hp) {
+		return Vector3(0, 1, 0);
 	}
 };
 #endif
