@@ -5,82 +5,95 @@
 #define __OBJTOVEC
 Vector3 objToGenVec(obj_vector const * objVec)
 {
-	Vector3 v;
-	v[0] = objVec->e[0];
-	v[1] = objVec->e[1];
-	v[2] = objVec->e[2];
-	return v;
+	Vector3 toReturn;
+	toReturn[0] = objVec->e[0];
+	toReturn[1] = objVec->e[1];
+	toReturn[2] = objVec->e[2];
+	return toReturn;
 }
 #endif
 
-#include "Primitive.h";
-#include "Sphere.h";
+#include "Primitive.h"
+#include "Sphere.h"
 #include "camera.h"
+#include <vector>
 
 class Loader {
 private:
-	objLoader data;
+	objLoader* data;
 public:
-	Loader(const char* filename) {
-		data = objLoader();
-		data.load();
+	Loader() {}
+
+	void load(const char* filename) {
+		printf("Loading loader... ");
+		this->data = new objLoader();
+		this->data->load(filename);
+		printf("%d\n", data->sphereCount);
 	}
-	objLoader getObjData() {
+
+	objLoader* getObjData() {
 		return data;
 	}
 	obj_vector** getObjVertexList() {
-		return data.vertexList;
+		return data->vertexList;
 	}
 	obj_sphere** getObjSphereList() {
-		return data.sphereList;
+		return data->sphereList;
 	}
 	obj_camera* getObjCamera() {
-		return data.camera;
+		return data->camera;
 	}
 
-	Sphere* getSpheres() {
-		obj_sphere** ls = data.sphereList;
-		int count = data.sphereCount;
+	std::vector<Sphere*>* getSpheres() {
+		obj_sphere** sphereList = data->sphereList;
+		int count = data->sphereCount;
 
-		if(count == 0) {
-			return null;
-		}
+		obj_vector** vecLs = data->vertexList;
+		obj_vector** normLs = data->normalList;
 
-		obj_vector** vecLs = data.vertexList;
+		std::vector<Sphere*>* toReturn = new std::vector<Sphere*>();
 
-		Sphere* out = Sphere[count];
+		printf("Prepared to run.\n");
 
 		int i;
 		for(i = 0; i < count; i++) {
-			obj_sphere sp = ls[i];
-			Vector3 c = objToGenVec(vecLs[sp.pos_index]);
-			Vector3 norm = objToGenVec(vecLs[sp.up_normal_index]);
-			float r = norm.length();
+			obj_sphere* sphereToCalc = sphereList[i];
+			printf("Sphere center: %d\n", sphereToCalc->pos_index);
+			Vector3 center = objToGenVec(vecLs[sphereToCalc->pos_index]);
+			printf("Sphere center calculated.\n");
+			int upNormIndex = sphereToCalc->up_normal_index;
+			printf("Normal index gathered.\n");
+			obj_vector* upNorm = normLs[upNormIndex];
+			printf("Normal vector gathered. Result: (%f, %f, %f)\n", upNorm->e[0], upNorm->e[1], upNorm->e[2]);
+			Vector3 norm = objToGenVec(upNorm);
+			printf("Sphere normal calculated.\n");
+			float radius = norm.length();
 
-			Sphere toAdd = Sphere(c, r);
-			out[i] = toAdd;
+			Sphere* toAdd = new Sphere(center, radius);
+
+			printf("Ready to push\n");
+			toReturn->push_back(toAdd);
 		}
-		return out;
+		printf("Ready to return.\n");
+		return toReturn;
 	}
 
-	Camera getCamera() {
-		obj_camera* cam = data.camera;
-		obj_vector** vecLs = data.vertexList;
+	Camera* getCamera() {
+		obj_camera* cam = data->camera;
+		obj_vector** vecLs = data->vertexList;
+		obj_vector** normLs = data->normalList;
 
-		Vector3 c = Camera(cam, vecLs);
+		Camera* camera = new Camera(cam, vecLs, normLs);
 
-		return c;
+		return camera;
 	}
 
-	Primitive* getPrimitives() {
-		int count = data.sphereCount;
-		Primitive* out = Primitive[count];
-		out = getSpheres();
-		return out;
-	}
+	// Primitive* getPrimitives() {
+	// 	return (Primitive*) (getSpheres());
+	// }
 
 	int getPrimCount() {
-		return data.sphereCount;
+		return data->sphereCount;
 	}
 
 

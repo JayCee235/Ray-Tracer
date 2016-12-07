@@ -21,6 +21,10 @@ public:
 	Vector3 getDirection() {
 		return this->d;
 	}
+	Vector3 getPointAt(float t) {
+		Vector3 dis = this->d * t;
+		return dis + this->p;
+	}
 };
 
 #endif

@@ -39,7 +39,7 @@ class Primitive {
 private:
 
 public:
-	float intersect(Ray r) {
+	virtual float intersect(Ray* r) {
 		return -1;
 	}
 };

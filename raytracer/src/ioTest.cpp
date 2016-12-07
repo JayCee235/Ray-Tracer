@@ -51,9 +51,7 @@ int main(int argc, char ** argv)
 
 	Loader l = Loader(argv[1]);
 
-	Scene s = new Scene(l);
-
-	Camera camera = Camera(objDat.camera, objDat.vertexList);
+	Camera camera = l.getCamera();
 
 	RayGenerator generator = RayGenerator(&camera, RES, RES, FOV);
 

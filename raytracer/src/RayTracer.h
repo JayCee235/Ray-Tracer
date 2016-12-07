@@ -19,6 +19,7 @@
 #include "Sphere.h"
 #include "Loader.h"
 #include "Scene.h"
+#include "Triangle.h"
 
 
 #endif

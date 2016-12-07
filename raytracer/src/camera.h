@@ -20,10 +20,11 @@ class Camera {
 private:
 	Vector3 p, u, v, w;
 public:
-	Camera(obj_camera* cam, obj_vector** ls) {
-		obj_vector* atObj = ls[cam->camera_pos_index];
-		obj_vector* lookingAtObj = ls[cam->camera_look_point_index];
-		obj_vector* upObj = ls[cam->camera_up_norm_index];
+	Camera() {}
+	Camera(obj_camera* cam, obj_vector** vecLs, obj_vector** normLs) {
+		obj_vector* atObj = vecLs[cam->camera_pos_index];
+		obj_vector* lookingAtObj = vecLs[cam->camera_look_point_index];
+		obj_vector* upObj = normLs[cam->camera_up_norm_index];
 
 		Vector3 at = objToGenVec(atObj);
 		Vector3 lookingAt = objToGenVec(lookingAtObj);

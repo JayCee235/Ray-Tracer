@@ -42,7 +42,7 @@ public:
 
 	}
 
-	Ray getRay(int x, int y) {
+	Ray* getRay(int x, int y) {
 		Vector3 out;
 		float xC = (x+0.5) - this->w2;
 		Vector3 xDir = -this->camera->getU();
@@ -51,16 +51,10 @@ public:
 		float zC = this->dis;
 		Vector3 zDir = this->camera->getW();
 
-		out = xC*xDir + yC*yDir + zC*zDir;
+		out = -xC*xDir - yC*yDir - zC*zDir;
 		out.normalize();
 
-		if(x == 43 && y == 22) {
-			printf("Coefficients are: %f, %f, %f.\n Camera u is: (%f, %f, %f).\n Out direction is: (%f, %f, %f)\n\n", 
-				xC, yC, zC, 
-				xDir[0], xDir[1], xDir[2], 
-				out[0], out[1], out[2]);
-		}
-		return Ray(this->camera->getP(), out);
+		return new Ray(this->camera->getP(), out);
 	}
 };
 

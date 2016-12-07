@@ -9,15 +9,19 @@ private:
 	Vector3 center;
 	float radius;
 public:
+	Sphere() {
+		radius = 0;
+		center = Vector3(0, 0, 0);
+	}
 	Sphere(Vector3 center, float radius) {
 		this->center = center;
 		this->radius = radius;
 	}
-	float intersect(Ray r) {
-		Vector3 ec = (r.getP() - this->center);
+	float intersect(Ray* r) {
+		Vector3 ec = (r->getP() - this->center);
 
-		float a = r.getD().dot(r.getD());
-		float b = (2.0f*r.getD()).dot(ec);
+		float a = r->getD().dot(r->getD());
+		float b = (2.0f*r->getD()).dot(ec);
 		float c = ec.dot(ec) - this->radius * this->radius;
 
 		struct quadAnswer ans;
