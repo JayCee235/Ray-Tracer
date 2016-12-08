@@ -128,6 +128,19 @@ public:
 		int count = data->lightPointCount;
 
 		obj_vector** vecLs = data->vertexList;
+
+		std::vector<Light*>* toReturn = new std::vector<Light*>();
+
+		for(int i = 0; i < count; i++) {
+			obj_light_point* objLight = lightList[i];
+			Vector3 p = objToGenVec(vecLs[objLight->pos_index]);
+			int matIndex = objLight->material_index;
+			Material* m = this->matList[0][matIndex];
+			Light* newLight = new Light(p, m);
+			toReturn->push_back(newLight);
+		}
+		return toReturn;
+
 	}
 
 	std::vector<Triangle*>* getTriangles() {

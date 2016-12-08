@@ -7,14 +7,16 @@ class Light
 {
 private:
 	Vector3 p;
-	Color ambient, diffuse, specular;
+	Material* m;
 public:
 	Light() {}
-	Light(Vector3 p, Color a, Color d, Color s) {
+	Light(Vector3 p, Material* m) {
 		this->p = p;
-		this->ambient = a;
-		this->diffuse = d;
-		this->specular = s;
+		this->m = m;
+	}
+
+	Material* getMaterial() {
+		return this->m;
 	}
 
 	~Light() {};
