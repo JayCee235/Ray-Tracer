@@ -26,6 +26,7 @@ public:
 		this->camera = this->loader->getCamera();
 		printf("loading count.\n");
 		this->primCount = this->loader->getPrimCount();
+
 	}
 
 	float intersect(Ray* r, HitPoint* hp) {

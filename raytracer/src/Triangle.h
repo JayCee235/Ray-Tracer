@@ -9,6 +9,7 @@ class Triangle : public Primitive {
 private:
 	Vector3 a, b, c, normal;
 	float d;
+	Material* m;
 public:
 	Triangle() {}
 	Triangle(Vector3 a, Vector3 b, Vector3 c) {
@@ -22,7 +23,23 @@ public:
 		this->normal = n1.cross(n2);
 		this->normal.normalize();
 
+		this->m = new Material();
 	}
+
+	Triangle(Vector3 a, Vector3 b, Vector3 c, Material* m) {
+		this-> a = Vector3(a);
+		this->b = Vector3(b);
+		this->c = Vector3(c);
+
+		Vector3 n1 = b - a;
+		Vector3 n2 = c - a;
+
+		this->normal = n1.cross(n2);
+		this->normal.normalize();
+
+		this->m = m;
+	}
+
 	float intersect(Ray* r) {
 		Vector3 ae = this->a - r->getP();
 		float out = ae.dot(this->normal);
@@ -52,6 +69,10 @@ public:
 
 	Vector3 getNormal(Ray* r, HitPoint* hp) {
 		return this->normal;
+	}
+
+	Material* getMaterial() {
+		return this->m;
 	}
 };
 

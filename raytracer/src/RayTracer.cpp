@@ -7,7 +7,7 @@
 #include "RayTracer.h"
 
 
-#define RES 200
+#define RES 100
 #define FOV 90
 
 int main(int argc, char* argv[]) {
@@ -61,19 +61,26 @@ int main(int argc, char* argv[]) {
 		for(int x=0; x<RES; x++)
 		{
 			Ray* ray = generator->getRay(x, y);
-			// Vector3 dir = ray->getDirection()*255.0f;
-			// Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
-			// buffer->at(x,y) = col;
-			buffer->at(x,y) = black;
+			Vector3 dir = ray->getDirection()*255.0f;
+			Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
+			buffer->at(x,y) = col;
+			// buffer->at(x,y) = black;
 
 			struct HitPoint hp;
 			float t = scene->intersect(ray, &hp);
 
 			if(t > 0) {
 				hp.normal = hp.p->getNormal(ray, &hp);
-				Vector3 direction = hp.normal;
-				Vector3 dir = direction*255.0f;
-				Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
+				// Vector3 direction = hp.normal;
+				// Vector3 dir = direction*255.0f;
+				// Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
+				// printf("Gathering Material from HitPoint...\n");
+				Material* m = hp.p->getMaterial();
+				// m->printInfo();
+
+				Vector3 c = m->ambient + Vector3(0, 0, 0);
+				// printf("%f %f %f    ", c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
+				Color col = Color(c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
 
 
 				buffer->at(x,y) = col;

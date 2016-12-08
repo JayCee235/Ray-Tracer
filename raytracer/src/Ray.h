@@ -25,6 +25,14 @@ public:
 		Vector3 dis = this->d * t;
 		return dis + this->p;
 	}
+
+	Ray* reflect(Vector3 normal) {
+		Vector3 old = this->d + Vector3(0, 0, 0);
+		Vector3 dif = old - normal;
+		Vector3 toReturn = normal - dif;
+		Ray *out = new Ray(this->p, toReturn);
+		return out;
+	}
 };
 
 #endif

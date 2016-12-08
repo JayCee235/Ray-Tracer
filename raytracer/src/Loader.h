@@ -22,6 +22,8 @@ Vector3 objToGenVec(obj_vector const * objVec)
 class Loader {
 private:
 	objLoader* data;
+	std::vector<Material*>* matList; 
+	int numMat;
 public:
 	Loader() {}
 
@@ -29,7 +31,37 @@ public:
 		printf("Loading loader... ");
 		this->data = new objLoader();
 		this->data->load(filename);
-		printf("%d\n", data->sphereCount);
+		printf("%d\n", data->faceCount);
+
+		obj_material **ls = this->data->materialList;
+
+		numMat = this->data->materialCount;
+
+		printf("Found %d materials.\n", numMat);
+
+		this->matList = new std::vector<Material*>();
+
+		printf("Loading materials...\n");
+
+		for(int i = 0; i < numMat; i++) {
+			obj_material* work = ls[i];
+			printf("Incoming material name: %s\n", work->name);
+			Material* newMat = new Material(*work);
+			matList->push_back(newMat);
+			printf("Material added.\n");
+			printf("Material info:\n");
+			newMat->printInfo();
+		}
+
+		printMaterialTest();
+		
+	}
+
+	void printMaterialTest() {
+		printf("Testing Materials loaded...\n");
+		for(int i = 0; i < this->data->materialCount; i++) {
+			matList[0][i]->printInfo();
+		}
 	}
 
 	objLoader* getObjData() {
@@ -44,6 +76,11 @@ public:
 	obj_camera* getObjCamera() {
 		return data->camera;
 	}
+
+	std::vector<Material*>* getMatList() {
+		return this->matList;
+	}
+
 
 	std::vector<Sphere*>* getSpheres() {
 		obj_sphere** sphereList = data->sphereList;
@@ -70,13 +107,27 @@ public:
 			// printf("Sphere normal calculated.\n");
 			float radius = norm.length();
 
-			Sphere* toAdd = new Sphere(center, radius);
+			int matIndex = sphereToCalc->material_index;
+			if(matIndex >= numMat) {
+				matIndex = numMat - 1;
+			}
+
+			Material* m = this->matList[0][matIndex];
+
+			Sphere* toAdd = new Sphere(center, radius, m);
 
 			// printf("Ready to push\n");
 			toReturn->push_back(toAdd);
 		}
 		// printf("Ready to return.\n");
 		return toReturn;
+	}
+
+	std::vector<Light*>* getLights() {
+		obj_light_point **lightList = data->lightPointList;
+		int count = data->lightPointCount;
+
+		obj_vector** vecLs = data->vertexList;
 	}
 
 	std::vector<Triangle*>* getTriangles() {
@@ -100,7 +151,20 @@ public:
 				Vector3 bVec = objToGenVec(vecLs[bi]);
 				Vector3 cVec = objToGenVec(vecLs[ci]);
 
-				Triangle* toAdd = new Triangle(aVec, bVec, cVec);
+				// printf("Getting material for triangle...\n");
+				// printf("Triangle uses index %d.\n", faceToCheck->material_index);
+
+				int matIndex = faceToCheck->material_index;
+				if(matIndex >= numMat) {
+					matIndex = numMat - 1;
+				}
+
+				Material* m = this->matList[0][matIndex];
+
+				// printf("Gathered material.\n");
+				// m->printAbbrInfo();
+
+				Triangle* toAdd = new Triangle(aVec, bVec, cVec, m);
 
 				toReturn->push_back(toAdd);
 			}
@@ -121,9 +185,11 @@ public:
 
 	std::vector<Primitive*>* getPrimitives() {
 		std::vector<Primitive*>* toReturn = new std::vector<Primitive*>();
+		printf("Starting getPrimitives()...\n");
 
 		std::vector<Sphere*>* spheres = getSpheres();
 		std::vector<Triangle*>* triangles = getTriangles();
+
 
 		for(int i = 0; i < spheres->size(); i++) {
 			toReturn->push_back((Primitive*) (spheres[0][i]));

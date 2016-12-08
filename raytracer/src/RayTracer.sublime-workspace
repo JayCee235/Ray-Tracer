@@ -3,6 +3,10 @@
 	{
 		"selected_items":
 		[
+			[
+				"loader",
+				"loader"
+			]
 		]
 	},
 	"buffers":
@@ -11,7 +15,90 @@
 			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 			"settings":
 			{
-				"buffer_size": 1481,
+				"buffer_size": 1803,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "/* RayTracer\n *\n * Written by Jeremiah Caudell\n *\n */\n\n#include \"RayTracer.h\"\n\n\n#define RES 200\n#define FOV 90\n\nint main(int argc, char* argv[]) {\n	Buffer<Color>* buffer = new Buffer<Color>(RES, RES);\n\n\n	//Need at least two arguments (obj input and png output)\n	if(argc < 3)\n	{\n		printf(\"Usage %s input.obj output.png\\n [-d]\", argv[0]);\n		exit(0);\n	}\n\n	// bool debug = false;\n\n	// int i;\n	// for(i = 0; i < argc; i++) {\n	// 	char* arg = &argv[i];\n	// 	if(arg.compare(\"-d\") == 0) {\n	// 		debug = true;\n	// 	}\n	// }\n\n	// objLoader objDat = objLoader();\n	// objDat.load(argv[1]);\n\n	Loader* loader = new Loader();\n	loader->load(argv[1]);\n\n	printf(\"Loader loaded.\\n\");\n\n	Scene* scene = new Scene();\n	printf(\"New Scene created.\\n\");\n	scene->load(loader);\n\n	printf(\"Scene loaded.\\n\");\n\n	Camera* camera = loader->getCamera();\n\n	printf(\"Camera loaded.\\n\");\n\n	RayGenerator* generator = new RayGenerator(camera, RES, RES, FOV);\n\n	printf(\"Generator ready.\\n\");\n\n	//Convert vectors to RGB colors for testing results\n	Color white = Color(255.0f, 255.0f, 255.0f);\n	Color black = Color(0.0f, 0.0f, 0.0f);\n	for(int y=0; y<RES; y++)\n	{\n		for(int x=0; x<RES; x++)\n		{\n			Ray* ray = generator->getRay(x, y);\n			// Vector3 dir = ray->getDirection()*255.0f;\n			// Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );\n			// buffer->at(x,y) = col;\n			buffer->at(x,y) = black;\n\n			struct HitPoint hp;\n			float t = scene->intersect(ray, &hp);\n\n			if(t > 0) {\n				hp.normal = hp.p->getNormal(ray, &hp);\n				// Vector3 direction = hp.normal;\n				// Vector3 dir = direction*255.0f;\n				// Color col = Color( abs(dir[0]), abs(dir[1]), abs(dir[2]) );\n				Vector3 c = hp.p->getMaterial()->ambient;\n				Color col = Color(c[0],)\n\n\n				buffer->at(x,y) = col;\n			}\n\n		}\n	}\n\n	//Write output buffer to file argv2\n	simplePNG_write(argv[2], buffer->getWidth(), buffer->getHeight(), (unsigned char*)&buffer->at(0,0));\n\n	return 0;\n}",
+			"file": "RayTracer.cpp",
+			"file_size": 1890,
+			"file_write_time": 1481229499000000,
+			"settings":
+			{
+				"buffer_size": 1897,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Light.h",
+			"settings":
+			{
+				"buffer_size": 198,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "objload/obj_parser.h",
+			"settings":
+			{
+				"buffer_size": 25504,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Loader.h",
+			"settings":
+			{
+				"buffer_size": 4130,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Scene.h",
+			"settings":
+			{
+				"buffer_size": 1020,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "RayGenerator.h",
+			"settings":
+			{
+				"buffer_size": 1083,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Triangle.h",
+			"settings":
+			{
+				"buffer_size": 1551,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Ray.h",
+			"settings":
+			{
+				"buffer_size": 552,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Primitive.h",
+			"settings":
+			{
+				"buffer_size": 879,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Material.h",
+			"settings":
+			{
+				"buffer_size": 1306,
 				"line_ending": "Unix"
 			}
 		},
@@ -24,82 +111,10 @@
 			}
 		},
 		{
-			"file": "objload/obj_parser.h",
+			"file": "HitPoint.h",
 			"settings":
 			{
-				"buffer_size": 25504,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "RayTracer.h",
-			"settings":
-			{
-				"buffer_size": 373,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "RayTracer.cpp",
-			"settings":
-			{
-				"buffer_size": 1352,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "ioTest.cpp",
-			"settings":
-			{
-				"buffer_size": 1587,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "SphereTest.cpp",
-			"settings":
-			{
-				"buffer_size": 1106,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Loader.h",
-			"settings":
-			{
-				"buffer_size": 1434,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Scene.h",
-			"settings":
-			{
-				"buffer_size": 838,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "RayGenerator.h",
-			"settings":
-			{
-				"buffer_size": 1301,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Ray.h",
-			"settings":
-			{
-				"buffer_size": 302,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Primitive.h",
-			"settings":
-			{
-				"buffer_size": 665,
+				"buffer_size": 242,
 				"line_ending": "Unix"
 			}
 		},
@@ -107,7 +122,7 @@
 			"file": "Sphere.h",
 			"settings":
 			{
-				"buffer_size": 781,
+				"buffer_size": 1113,
 				"line_ending": "Unix"
 			}
 		},
@@ -115,16 +130,16 @@
 			"file": "camera.h",
 			"settings":
 			{
-				"buffer_size": 1326,
+				"buffer_size": 1360,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "objload/test.cpp",
+			"file": "RayTracer.h",
 			"settings":
 			{
-				"buffer_size": 4318,
-				"line_ending": "Windows"
+				"buffer_size": 440,
+				"line_ending": "Unix"
 			}
 		},
 		{
@@ -168,16 +183,19 @@
 	},
 	"file_history":
 	[
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Scene.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Loader.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/SphereTest.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/SphereTest1.obj",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/objload/test.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Scene.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/ioTest.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Loader.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Sphere.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayGenerator.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/camera.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/png/simplePNG.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/png/test.c",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/objload/test.cpp",
 		"/home/caudeljn/csse332/examples/maketutorial/Makefile",
 		"/home/caudeljn/Desktop/raytracer/makefile",
 		"/usr/share/applications/sublime_text.desktop",
@@ -220,6 +238,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"clone",
+			"copy",
+			"clone",
 			"NULL",
 			"length",
 			"cross",
@@ -243,7 +264,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -251,15 +272,15 @@
 					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 					"settings":
 					{
-						"buffer_size": 1481,
+						"buffer_size": 1803,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1481,
-								1481
+								1761,
+								1761
 							]
 						],
 						"settings":
@@ -274,18 +295,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "objload/objLoader.hpp",
+					"file": "RayTracer.cpp",
 					"settings":
 					{
-						"buffer_size": 1815,
+						"buffer_size": 1897,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								663,
-								663
+								1700,
+								1700
 							]
 						],
 						"settings":
@@ -294,13 +315,40 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 720.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "Light.h",
+					"settings":
+					{
+						"buffer_size": 198,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								174,
+								174
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "objload/obj_parser.h",
 					"settings":
 					{
@@ -321,51 +369,52 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4275.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "RayTracer.h",
-					"settings":
-					{
-						"buffer_size": 373,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								325,
-								325
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4050.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "RayTracer.cpp",
+					"file": "Loader.h",
 					"settings":
 					{
-						"buffer_size": 1352,
+						"buffer_size": 4130,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								93,
-								93
+								2868,
+								2868
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 990.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Scene.h",
+					"settings":
+					{
+						"buffer_size": 1020,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33,
+								33
 							]
 						],
 						"settings":
@@ -380,46 +429,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "ioTest.cpp",
-					"settings":
-					{
-						"buffer_size": 1587,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1095,
-								1095
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 405.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 6,
-					"file": "SphereTest.cpp",
+					"file": "RayGenerator.h",
 					"settings":
 					{
-						"buffer_size": 1106,
+						"buffer_size": 1083,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1083,
-								1083
+								335,
+								335
 							]
 						],
 						"settings":
@@ -435,18 +457,18 @@
 				},
 				{
 					"buffer": 7,
-					"file": "Loader.h",
+					"file": "Triangle.h",
 					"settings":
 					{
-						"buffer_size": 1434,
+						"buffer_size": 1551,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1406,
-								1406
+								542,
+								542
 							]
 						],
 						"settings":
@@ -455,25 +477,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "Scene.h",
+					"file": "Ray.h",
 					"settings":
 					{
-						"buffer_size": 838,
+						"buffer_size": 552,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								411,
-								411
+								538,
+								538
 							]
 						],
 						"settings":
@@ -489,18 +511,18 @@
 				},
 				{
 					"buffer": 9,
-					"file": "RayGenerator.h",
+					"file": "Primitive.h",
 					"settings":
 					{
-						"buffer_size": 1301,
+						"buffer_size": 879,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1256,
-								1256
+								866,
+								866
 							]
 						],
 						"settings":
@@ -509,31 +531,30 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 10,
-					"file": "Ray.h",
+					"file": "Material.h",
 					"settings":
 					{
-						"buffer_size": 302,
+						"buffer_size": 1306,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								295,
-								295
+								225,
+								225
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -543,18 +564,18 @@
 				},
 				{
 					"buffer": 11,
-					"file": "Primitive.h",
+					"file": "objload/objLoader.hpp",
 					"settings":
 					{
-						"buffer_size": 665,
+						"buffer_size": 1815,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								634,
-								634
+								663,
+								663
 							]
 						],
 						"settings":
@@ -563,31 +584,30 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 450.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 12,
-					"file": "Sphere.h",
+					"file": "HitPoint.h",
 					"settings":
 					{
-						"buffer_size": 781,
+						"buffer_size": 242,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								423,
-								423
+								144,
+								144
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -597,18 +617,18 @@
 				},
 				{
 					"buffer": 13,
-					"file": "camera.h",
+					"file": "Sphere.h",
 					"settings":
 					{
-						"buffer_size": 1326,
+						"buffer_size": 1113,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								303,
-								303
+								413,
+								413
 							]
 						],
 						"settings":
@@ -617,25 +637,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 14,
-					"file": "objload/test.cpp",
+					"file": "camera.h",
 					"settings":
 					{
-						"buffer_size": 4318,
+						"buffer_size": 1360,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								276,
-								276
+								551,
+								551
 							]
 						],
 						"settings":
@@ -644,13 +664,39 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1215.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 15,
+					"file": "RayTracer.h",
+					"settings":
+					{
+						"buffer_size": 440,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								350,
+								350
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 16,
 					"file": "vector/GenVector.h",
 					"settings":
 					{
@@ -671,13 +717,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3889.0,
+						"translation.y": 5670.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 17,
 					"file": "buffer/Buffer.h",
 					"settings":
 					{
@@ -739,7 +785,7 @@
 	"menu_visible": true,
 	"replace":
 	{
-		"height": 0.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":

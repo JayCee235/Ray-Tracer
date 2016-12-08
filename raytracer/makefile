@@ -61,6 +61,9 @@ runNormalShadingTest: RayTracer
 	./RayTracer res/NormalShadingTest1.obj res/NormalShadingTest1.png
 	./RayTracer res/NormalShadingTest2.obj res/NormalShadingTest2.png
 
+runBlueSphereTest: RayTracer
+	./RayTracer res/blue_sphere.obj res/blue_sphere.png
+
 all: RayTracer
 
 clean: 

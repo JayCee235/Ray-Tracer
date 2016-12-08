@@ -8,15 +8,24 @@ class Sphere : public Primitive {
 private:
 	Vector3 center;
 	float radius;
+	Material* m;
 public:
 	Sphere() {
 		radius = 0;
 		center = Vector3(0, 0, 0);
+		this-> m = new Material();
 	}
 	Sphere(Vector3 center, float radius) {
 		this->center = center;
 		this->radius = radius;
 	}
+	Sphere(Vector3 center, float radius, Material* m) {
+		this->center = center;
+		this->radius = radius;
+		this->m = m;
+	}
+
+
 	float intersect(Ray* r) {
 		Vector3 ec = (r->getP() - this->center);
 
@@ -43,6 +52,10 @@ public:
 		Vector3 toReturn = x - this->center;
 		toReturn.normalize();
 		return toReturn;
+	}
+
+	Material* getMaterial() {
+		return this->m;
 	}
 
 };
