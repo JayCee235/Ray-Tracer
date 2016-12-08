@@ -17,6 +17,7 @@ Vector3 objToGenVec(obj_vector const * objVec)
 #include "Sphere.h"
 #include "Triangle.h"
 #include "camera.h"
+#include "Light.h"
 #include <vector>
 
 class Loader {
@@ -228,6 +229,10 @@ public:
 
 	int getPrimCount() {
 		return data->sphereCount + getTriangleCount();
+	}
+
+	int getLightCount() {
+		return data->lightPointCount;
 	}
 
 

@@ -64,6 +64,12 @@ runNormalShadingTest: RayTracer
 runBlueSphereTest: RayTracer
 	./RayTracer res/blue_sphere.obj res/blue_sphere.png
 
+runCornellBoxTest: RayTracer
+	./RayTracer res/cornell_box.obj res/cornell_box.png
+
+runMultiSphereTest: RayTracer
+	./RayTracer res/spheres.obj res/spheres.mtl
+
 all: RayTracer
 
 clean: 

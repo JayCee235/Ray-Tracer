@@ -78,12 +78,23 @@ int main(int argc, char* argv[]) {
 				Material* m = hp.p->getMaterial();
 				// m->printInfo();
 
+				std::vector<Light*>* lightsHit;
+				std::vector<Ray*>* raysHit;
+				int numLightsHit;
+
+				numLightsHit = scene->checkForLights(ray->getPointAt(hp.t), lightsHit, raysHit);
+
+				Vector3 dif = Vector3(0, 0, 0);
+				for(int i = 0; i < numLightsHit; i++) {
+					
+				}
+
 				Vector3 c = m->ambient + Vector3(0, 0, 0);
 				// printf("%f %f %f    ", c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
-				Color col = Color(c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
+				Color amb = Color(c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
 
 
-				buffer->at(x,y) = col;
+				buffer->at(x,y) = amb;
 			}
 
 		}

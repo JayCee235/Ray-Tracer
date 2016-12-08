@@ -9,6 +9,7 @@
 #define __RAYTRACER
 
 #include <stdio.h>
+#include <vector>
 
 #include "buffer/Buffer.h"
 #include "objload/objLoader.hpp"

@@ -8,8 +8,9 @@ private:
 	Vector3 p, d;
 public:
 	Ray(Vector3 p, Vector3 d) {
-		this->p = p;
-		this->d = d;
+		this->p = p + Vector3(0, 0, 0);
+		this->d = d + Vector3(0, 0, 0);
+		this->d.normalize();
 	}
 
 	Vector3 getP() {

@@ -2,6 +2,7 @@
 #define __LIGHTSOURCE
 
 #include "vector/GenVector.h"
+#include "Material.h"
 
 class Light
 {
@@ -17,6 +18,10 @@ public:
 
 	Material* getMaterial() {
 		return this->m;
+	}
+
+	Vector3 getP() {
+		return this->p;
 	}
 
 	~Light() {};
