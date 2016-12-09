@@ -161,13 +161,13 @@ public:
 		for(i = 0; i < count; i++) {
 			obj_face* faceToCheck = faceList[i];
 			if(faceToCheck->vertex_count == 3) {
-				int ai = faceToCheck->vertex_index[0];
-				int bi = faceToCheck->vertex_index[1];
-				int ci = faceToCheck->vertex_index[2];
+				// int ai = faceToCheck->vertex_index[0];
+				// int bi = faceToCheck->vertex_index[1];
+				// int ci = faceToCheck->vertex_index[2];
 
-				Vector3 aVec = objToGenVec(vecLs[ai]);
-				Vector3 bVec = objToGenVec(vecLs[bi]);
-				Vector3 cVec = objToGenVec(vecLs[ci]);
+				// Vector3 aVec = objToGenVec(vecLs[ai]);
+				// Vector3 bVec = objToGenVec(vecLs[bi]);
+				// Vector3 cVec = objToGenVec(vecLs[ci]);
 
 				// printf("Getting material for triangle...\n");
 				// printf("Triangle uses index %d.\n", faceToCheck->material_index);
@@ -182,7 +182,7 @@ public:
 				// printf("Gathered material.\n");
 				// m->printAbbrInfo();
 
-				Triangle* toAdd = new Triangle(aVec, bVec, cVec, m);
+				Triangle* toAdd = new Triangle(faceToCheck, vecLs, normLs, m);
 
 				toReturn->push_back(toAdd);
 			}

@@ -35,6 +35,12 @@ public:
 		Ray *out = new Ray(this->p, toReturn);
 		return out;
 	}
+
+	void printRay() {
+		printf("Position: (%.2f, %.2f, %.2f).\nDirection: (%.2f, %.2f, %.2f).\n", 
+			p[0], p[1], p[2],
+			d[0], d[1], d[2]);
+	}
 };
 
 #endif

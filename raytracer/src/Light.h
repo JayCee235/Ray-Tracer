@@ -26,7 +26,10 @@ public:
 
 	~Light() {};
 
-	/* data */
+	void printLight() {
+		printf("Position: (%.2f, %.2f, %.2f).\n", 
+			p[0], p[1], p[2]);
+	}
 };
 
 #endif

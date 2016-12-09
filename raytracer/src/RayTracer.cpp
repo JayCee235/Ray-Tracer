@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 				// printf("Getting Lights hit...\n");
 
 				numLightsHit = scene->checkForLights(ray->getPointAt(hp.t), lightsHit, raysHit);
-				printf("%d ", numLightsHit);
+				// printf("%d ", numLightsHit);
 
 				// printf("Hit %d lights.\n", numLightsHit);
 
@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
 				buffer->at(x,y) = ambientFinal + diffuseFinal + specularFinal;
 				// buffer->at(x, y) = specularFinal;
 				// buffer->at(x, y) = ambientFinal + diffuseFinal;
-				buffer->at(x,y) = diffuseFinal + specularFinal;
+				// buffer->at(x,y) = diffuseFinal + specularFinal;
 
 			}
 

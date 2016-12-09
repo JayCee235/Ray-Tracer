@@ -22,6 +22,9 @@ quadAnswer calculateQuadratic(float a, float b, float c) {
 	struct quadAnswer ans;
 
 	float quad = b*b - 4*a*c;
+	if(quad > -0.001 && quad < 0.001) {
+		quad = 0;
+	}
 	if(quad < 0) {
 		ans.numAnswers = 0;
 	} else if(quad == 0) {

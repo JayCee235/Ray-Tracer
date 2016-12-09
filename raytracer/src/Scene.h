@@ -25,7 +25,7 @@ public:
 		this->loader = loader;
 		printf("Loading prims\n");
 		this->primList = this->loader->getPrimitives();
-		printf("Loading Lights,,,\n");
+		printf("Loading Lights...\n");
 		this->lightList = this->loader->getLights();
 		printf("loading camera.\n");
 		this->camera = this->loader->getCamera();
@@ -72,17 +72,27 @@ public:
 		int count = 0;
 		for(int i = 0; i < this->lightCount; i++) {
 			struct HitPoint temp;
-			printf("Checking light %d\n", i);
+			// printf("Checking light %d\n", i);
 			Light* work = lightList[0][i];
 			Vector3 dif = work->getP() - pos;
 			Ray* posToLight = new Ray(pos, dif);
 			float len = dif.length();
 
+			// printf("Pos:\n");
+			// printf("Position: (%.2f, %.2f, %.2f).\n", 
+			// pos[0], pos[1], pos[2]);
+
+			// printf("Light:\n");
+			// work->printLight();
+
+			// printf("posToLight:\n");
+			// posToLight->printRay();
+
 			// printf("Getting ray trace...\n");
 			float returnValue = intersect(posToLight, &temp);
-			printf("Returned %d\n", returnValue);
+			// printf("Returned %.2f\n", returnValue);
 
-			if(returnValue >= len - 0.01) {
+			if(returnValue >= len - 0.01 || returnValue < 0.001) {
 				// printf("Hit light!\n");
 				lBuffer->push_back(work);
 				// printf("Added to light Buffer.\n");

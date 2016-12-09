@@ -28,9 +28,10 @@ public:
 
 	float intersect(Ray* r) {
 		Vector3 ec = (r->getP() - this->center);
+		// ec.normalize();
 
 		float a = r->getD().dot(r->getD());
-		float b = (2.0f*r->getD()).dot(ec);
+		float b = (r->getD()*2.0f).dot(ec);
 		float c = ec.dot(ec) - this->radius * this->radius;
 
 		struct quadAnswer ans;
