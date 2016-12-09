@@ -16,6 +16,7 @@ private:
 	Camera* camera;
 	int primCount;
 	int lightCount;
+	float lightScale;
 public:
 	Scene() {}
 
@@ -31,6 +32,9 @@ public:
 		printf("loading counts.\n");
 		this->primCount = this->loader->getPrimCount();
 		this->lightCount = this->loader->getLightCount();
+		printf("Found %d primitives and %d lights.\n", primCount, lightCount);
+
+
 
 	}
 
@@ -42,39 +46,51 @@ public:
 			Primitive* work = ls[i];
  			if(out < 0) {
  				out = work->intersect(r);
- 				hp->t = out;
- 				hp->p = work;
+ 				if(out > 0.001) {
+ 					hp->t = out;
+ 					hp->p = work;
+ 				} else {
+ 					out = -1;
+ 				}		
  			} else {
  				float temp = work->intersect(r);
- 				if (temp >= 0 && temp < out) {
+ 				if (temp >= 0.001 && temp < out) {
  					out = temp;
+ 					hp->t = out;
+ 					hp->p = work;
  				}
  			}
 		}
 		return out;
 	}
 
+	int getNumLights() {
+		return this->lightCount;
+	}
+
 	int checkForLights(Vector3 pos, std::vector<Light*>* lBuffer, std::vector<Ray*>* rBuffer) {
-		std::vector<Light*>* out = new std::vector<Light*>();
-		std::vector<Ray*>* rOut = new std::vector<Ray*>();
-		struct HitPoint temp;
 		int count = 0;
 		for(int i = 0; i < this->lightCount; i++) {
+			struct HitPoint temp;
+			printf("Checking light %d\n", i);
 			Light* work = lightList[0][i];
 			Vector3 dif = work->getP() - pos;
 			Ray* posToLight = new Ray(pos, dif);
 			float len = dif.length();
 
-			float return = intersect(posToLight, temp);
+			// printf("Getting ray trace...\n");
+			float returnValue = intersect(posToLight, &temp);
+			printf("Returned %d\n", returnValue);
 
-			if(return >= len) {
-				out->push_back(work);
-				rOut->push_back(posToLight);
+			if(returnValue >= len - 0.01) {
+				// printf("Hit light!\n");
+				lBuffer->push_back(work);
+				// printf("Added to light Buffer.\n");
+				rBuffer->push_back(posToLight);
+				// printf("Added to ray Buffer.\n");
 				count++;
 			}
 		}
-		*lBuffer = *out;
-		*rBuffer = *rOut;
 		return count;
 	}
 

@@ -133,11 +133,15 @@ public:
 		std::vector<Light*>* toReturn = new std::vector<Light*>();
 
 		for(int i = 0; i < count; i++) {
+			printf("Getting light...\n");
 			obj_light_point* objLight = lightList[i];
 			Vector3 p = objToGenVec(vecLs[objLight->pos_index]);
 			int matIndex = objLight->material_index;
 			Material* m = this->matList[0][matIndex];
 			Light* newLight = new Light(p, m);
+			printf("Found light with position (%.2f, %.2f, %.2f) and color (%.2f, %.2f, %.2f)\n",
+				p[0], p[1], p[2],
+				m->diffuse[0], m->diffuse[1], m->diffuse[2]);
 			toReturn->push_back(newLight);
 		}
 		return toReturn;

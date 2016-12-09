@@ -68,7 +68,7 @@ runCornellBoxTest: RayTracer
 	./RayTracer res/cornell_box.obj res/cornell_box.png
 
 runMultiSphereTest: RayTracer
-	./RayTracer res/spheres.obj res/spheres.mtl
+	./RayTracer res/spheres.obj res/spheres.png
 
 all: RayTracer
 

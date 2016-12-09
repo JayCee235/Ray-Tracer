@@ -29,8 +29,9 @@ public:
 
 	Ray* reflect(Vector3 normal) {
 		Vector3 old = this->d + Vector3(0, 0, 0);
-		Vector3 dif = old - normal;
-		Vector3 toReturn = normal - dif;
+		Vector3 correctedNormal = normal * normal.dot(old);
+		Vector3 dif = old - correctedNormal;
+		Vector3 toReturn = old - dif - dif;
 		Ray *out = new Ray(this->p, toReturn);
 		return out;
 	}

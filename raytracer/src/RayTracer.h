@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <math.h>
 
 #include "buffer/Buffer.h"
 #include "objload/objLoader.hpp"
