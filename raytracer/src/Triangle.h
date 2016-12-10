@@ -59,15 +59,21 @@ public:
 		this->b = objToGenVec(vertexList[face->vertex_index[1]]);
 		this->c = objToGenVec(vertexList[face->vertex_index[2]]);
 
-		this->normalA = objToGenVec(normalList[face->normal_index[0]]);
-		this->normalB = objToGenVec(normalList[face->normal_index[1]]);
-		this->normalC = objToGenVec(normalList[face->normal_index[2]]);
-
 		Vector3 n1 = this->b - this->a;
 		Vector3 n2 = this->c - this->a;
 
 		this->normal = n1.cross(n2);
 		this->normal.normalize();
+
+		if(face->normal_index[0] >= 0) {
+			this->normalA = objToGenVec(normalList[face->normal_index[0]]);
+			this->normalB = objToGenVec(normalList[face->normal_index[1]]);
+			this->normalC = objToGenVec(normalList[face->normal_index[2]]);
+		} else {
+			this->normalA = this->normal;
+			this->normalB = this->normal;
+			this->normalC = this->normal;
+		}
 
 		this->m = m;
 
@@ -77,7 +83,7 @@ public:
 		Vector3 ae = this->a - r->getP();
 		float out = ae.dot(this->normal);
 		out = out / (r->getD().dot(this->normal));
-		if(out < 0) {
+		if(out < 0.000000001) {
 			//Don't bother with intersection calculations, as the ray doesn't intersect above t=0
 			return out;
 		}
@@ -93,7 +99,7 @@ public:
 		Vector3 cbxb = cb.cross(xb);
 		Vector3 acxc = ac.cross(xc);
 
-		if(baxa.dot(this->normal) > 0 && cbxb.dot(this->normal) > 0 && acxc.dot(this->normal) > 0) {
+		if(baxa.dot(this->normal) > -0.000001 && cbxb.dot(this->normal) > -0.000001 && acxc.dot(this->normal) > -0.000001) {
 			return out;
 		} else {
 			return -1;

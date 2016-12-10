@@ -46,12 +46,13 @@ public:
 
 		for(int i = 0; i < numMat; i++) {
 			obj_material* work = ls[i];
-			printf("Incoming material name: %s\n", work->name);
+			printf("Incoming material name: %s", work->name);
 			Material* newMat = new Material(*work);
 			matList->push_back(newMat);
 			printf("Material added.\n");
 			printf("Material info:\n");
 			newMat->printInfo();
+			printf("\n");
 		}
 
 		printMaterialTest();
@@ -84,6 +85,7 @@ public:
 
 
 	std::vector<Sphere*>* getSpheres() {
+		printf("Getting spheres...\n");
 		obj_sphere** sphereList = data->sphereList;
 		int count = data->sphereCount;
 
@@ -149,6 +151,7 @@ public:
 	}
 
 	std::vector<Triangle*>* getTriangles() {
+		printf("Getting triangles...\n");
 		obj_face** faceList = data->faceList;
 		int count = data->faceCount;
 

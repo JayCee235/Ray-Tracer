@@ -7,8 +7,131 @@
 #include "RayTracer.h"
 
 
-#define RES 100
+#define RES 300
 #define FOV 90
+
+#define REFLECT_LIMIT 5
+
+
+
+Vector3 castRay(Ray* ray, Scene* scene, Camera* camera, Vector3 clearColor, int numReflected) {
+	struct HitPoint hp;
+	float t = scene->intersect(ray, &hp);
+	Vector3 out = clearColor + Vector3(0, 0, 0);
+	if(t > 0) {
+	// printf("Hit!\n");
+		hp.normal = hp.p->getNormal(ray, &hp);
+		hp.normal.normalize();
+
+		Vector3 pointHit = ray->getPointAt(hp.t);
+
+		// printf("Gathering Material from HitPoint...\n");
+		Material* m = hp.p->getMaterial();
+		// m->printInfo();
+
+		Vector3 reflectColor = clearColor + Vector3(0, 0, 0);
+		Vector3 transColor = clearColor + Vector3(0, 0, 0);
+
+		float reflectRatio = 0;
+		float transRatio = 0;
+
+		if(m->reflect > 0 && numReflected < REFLECT_LIMIT) {
+			reflectRatio = m->reflect;
+			Ray* toReflect = new Ray(ray->getP(), -ray->getD());
+			Ray* newReflectRay = toReflect->reflect(ray->getPointAt(hp.t), hp.normal);
+			// printf("Ray set: \n"); ray->printRay(); printVector(hp.normal); newReflectRay->printRay(); printf("\n");
+			reflectColor = castRay(newReflectRay, scene, camera, clearColor, numReflected+1);
+		}
+
+		//TODO: Add transparency.
+		if(m->trans < 1) {
+			transRatio = 1 - m->trans;
+		}
+
+
+		if(reflectRatio > 1) {
+			reflectRatio = 1;
+		}
+		if(transRatio > 1) {
+			transRatio = 1;
+		}
+
+		if(reflectRatio + transRatio > 1) {
+			transRatio = 1 - reflectRatio;
+		}
+
+		float realRatio = 1 - transRatio - reflectRatio;
+
+		std::vector<Light*>* lightsHit = new std::vector<Light*>();
+		std::vector<Ray*>* raysHit = new std::vector<Ray*>();
+		int numLightsHit;
+
+		// printf("Getting Lights hit...\n");
+
+		numLightsHit = scene->checkForLights(ray->getPointAt(hp.t), lightsHit, raysHit);
+		// printf("%d ", numLightsHit);
+
+		// printf("Hit %d lights.\n", numLightsHit);
+		Vector3 dif = Vector3(0, 0, 0);
+		Vector3 spec = Vector3(0, 0, 0);
+		if(numLightsHit > 0) {
+			for(int i = 0; i < numLightsHit; i++) {
+				Light* work = lightsHit[0][i];
+				Ray* workRay = raysHit[0][i];
+				float dott = workRay->getD().dot(hp.normal);
+				if(dott > 0.9999) {
+					dott = 1;
+				}
+				if(dott > 0) {
+					Vector3 lightDif = work->getMaterial()->diffuse + Vector3(0, 0, 0);
+					lightDif = lightDif * dott;
+					dif = dif + lightDif;
+
+					Ray* reflection = workRay->reflect(workRay->getP(), hp.normal);
+					Vector3 reflectionDir = reflection->getD() + Vector3(0, 0, 0);
+					reflectionDir.normalize();
+					Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
+					hpToCam.normalize();
+					float specMult = reflectionDir.dot(hpToCam);
+
+					if(specMult > 0.99999) {
+						specMult = 1;
+					}
+
+					if(specMult > 0) {
+						specMult = pow(specMult, m->shiny);
+						Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
+						lightSpec = lightSpec * specMult;
+						spec = spec + lightSpec;
+					}							
+				}
+			}					
+		}
+		Vector3 difC = m->diffuse + Vector3(0, 0, 0);
+		difC = difC * dif;
+
+		Vector3 specC = m->specular + Vector3(0, 0, 0);
+		specC = specC * spec;
+
+		// printf("%.2f %.2f %.2f   ", difC[0], difC[1], difC[2]);
+
+		Vector3 c = m->ambient + Vector3(0, 0, 0);
+		// printf("%f %f %f    ", c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
+		Vector3 ambientFinal = Vector3(c[0], c[1], c[2]);
+		Vector3 diffuseFinal = Vector3(difC[0], difC[1], difC[2]);
+		Vector3 specularFinal = Vector3(specC[0], specC[1], specC[2]);
+
+		// printf("Specular: (%.2f, %.2f, %.2f)\n", specC[0], specC[1], specC[2]);
+
+		out = ambientFinal + diffuseFinal + specularFinal;
+
+		// realRatio = 0.01; reflectRatio = 0.99; transRatio = 0.0;
+
+		out = out * realRatio + reflectColor * reflectRatio + transColor * transRatio;
+
+	}
+	return out;
+}
 
 int main(int argc, char* argv[]) {
 	Buffer<Vector3>* buffer = new Buffer<Vector3>(RES, RES);
@@ -66,106 +189,106 @@ int main(int argc, char* argv[]) {
 			// buffer->at(x,y) = col;
 			buffer->at(x,y) = black;
 
-			struct HitPoint hp;
-			float t = scene->intersect(ray, &hp);
+			// struct HitPoint hp;
+			// float t = scene->intersect(ray, &hp);
 
-			if(t > 0) {
-				// printf("Hit!\n");
-				hp.normal = hp.p->getNormal(ray, &hp);
-				hp.normal.normalize();
-				// Vector3 direction = hp.normal;
-				// Vector3 dir = direction*255.0f;
-				// Vector3 col = Vector3( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
-				// printf("Gathering Material from HitPoint...\n");
-				Material* m = hp.p->getMaterial();
-				// m->printInfo();
+			// if(t > 0) {
+			// 	// printf("Hit!\n");
+			// 	hp.normal = hp.p->getNormal(ray, &hp);
+			// 	hp.normal.normalize();
+			// 	// Vector3 direction = hp.normal;
+			// 	// Vector3 dir = direction*255.0f;
+			// 	// Vector3 col = Vector3( abs(dir[0]), abs(dir[1]), abs(dir[2]) );
+			// 	// printf("Gathering Material from HitPoint...\n");
+			// 	Material* m = hp.p->getMaterial();
+			// 	// m->printInfo();
 
-				std::vector<Light*>* lightsHit = new std::vector<Light*>();
-				std::vector<Ray*>* raysHit = new std::vector<Ray*>();
-				int numLightsHit;
+			// 	std::vector<Light*>* lightsHit = new std::vector<Light*>();
+			// 	std::vector<Ray*>* raysHit = new std::vector<Ray*>();
+			// 	int numLightsHit;
 
-				// printf("Getting Lights hit...\n");
+			// 	// printf("Getting Lights hit...\n");
 
-				numLightsHit = scene->checkForLights(ray->getPointAt(hp.t), lightsHit, raysHit);
-				// printf("%d ", numLightsHit);
+			// 	numLightsHit = scene->checkForLights(ray->getPointAt(hp.t), lightsHit, raysHit);
+			// 	// printf("%d ", numLightsHit);
 
-				// printf("Hit %d lights.\n", numLightsHit);
+			// 	// printf("Hit %d lights.\n", numLightsHit);
 
-				Vector3 dif = Vector3(0, 0, 0);
-				Vector3 spec = Vector3(0, 0, 0);
+			// 	Vector3 dif = Vector3(0, 0, 0);
+			// 	Vector3 spec = Vector3(0, 0, 0);
 
-				if(numLightsHit > 0) {
-					for(int i = 0; i < numLightsHit; i++) {
-						Light* work = lightsHit[0][i];
-						Ray* workRay = raysHit[0][i];
+			// 	if(numLightsHit > 0) {
+			// 		for(int i = 0; i < numLightsHit; i++) {
+			// 			Light* work = lightsHit[0][i];
+			// 			Ray* workRay = raysHit[0][i];
 
-						float dott = workRay->getD().dot(hp.normal);
+			// 			float dott = workRay->getD().dot(hp.normal);
 
 						
 
-						if(dott > 0.9999) {
-							dott = 1;
-						}
+			// 			if(dott > 0.9999) {
+			// 				dott = 1;
+			// 			}
 
-						if(dott > 0) {
-							Vector3 lightDif = work->getMaterial()->diffuse + Vector3(0, 0, 0);
-							lightDif = lightDif * dott;
-							dif = dif + lightDif;
+			// 			if(dott > 0) {
+			// 				Vector3 lightDif = work->getMaterial()->diffuse + Vector3(0, 0, 0);
+			// 				lightDif = lightDif * dott;
+			// 				dif = dif + lightDif;
 
-							Ray* reflection = workRay->reflect(hp.normal);
-							Vector3 reflectionDir = reflection->getD() + Vector3(0, 0, 0);
-							reflectionDir.normalize();
-							Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
-							hpToCam.normalize();
-							float specMult = reflectionDir.dot(hpToCam);
+			// 				Ray* reflection = workRay->reflect(hp.normal);
+			// 				Vector3 reflectionDir = reflection->getD() + Vector3(0, 0, 0);
+			// 				reflectionDir.normalize();
+			// 				Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
+			// 				hpToCam.normalize();
+			// 				float specMult = reflectionDir.dot(hpToCam);
 
-							if(specMult > 0.99999) {
-								specMult = 1;
-							}
+			// 				if(specMult > 0.99999) {
+			// 					specMult = 1;
+			// 				}
 
-							if(specMult > 0) {
-								// specMult = pow(specMult, m->shiny);
-								Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
-								lightSpec = lightSpec * specMult;
-								spec = spec + lightSpec;
-							}
+			// 				if(specMult > 0) {
+			// 					specMult = pow(specMult, m->shiny);
+			// 					Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
+			// 					lightSpec = lightSpec * specMult;
+			// 					spec = spec + lightSpec;
+			// 				}
 							
-						}
-					}
-					// dif = dif / scene->getNumLights();
+			// 			}
+			// 		}
+			// 		// dif = dif / scene->getNumLights();
 
-					// float mx = dif[dif.maxComponent()];
-					// if(mx > 1) {
-					// 	dif = dif / mx;
-					// }
+			// 		// float mx = dif[dif.maxComponent()];
+			// 		// if(mx > 1) {
+			// 		// 	dif = dif / mx;
+			// 		// }
  
 					
-				}
-				Vector3 difC = m->diffuse + Vector3(0, 0, 0);
-				difC = difC * dif;
+			// 	}
+			// 	Vector3 difC = m->diffuse + Vector3(0, 0, 0);
+			// 	difC = difC * dif;
 
-				Vector3 specC = m->specular + Vector3(0, 0, 0);
-				specC = specC * spec;
+			// 	Vector3 specC = m->specular + Vector3(0, 0, 0);
+			// 	specC = specC * spec;
 
-				// printf("%.2f %.2f %.2f   ", difC[0], difC[1], difC[2]);
+			// 	// printf("%.2f %.2f %.2f   ", difC[0], difC[1], difC[2]);
 
-				// difC = difC / difC.maxComponent();
+			// 	// difC = difC / difC.maxComponent();
 
-				Vector3 c = m->ambient + Vector3(0, 0, 0);
-				// printf("%f %f %f    ", c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
-				Vector3 ambientFinal = Vector3(c[0], c[1], c[2]);
-				Vector3 diffuseFinal = Vector3(difC[0], difC[1], difC[2]);
-				Vector3 specularFinal = Vector3(specC[0], specC[1], specC[2]);
+			// 	Vector3 c = m->ambient + Vector3(0, 0, 0);
+			// 	// printf("%f %f %f    ", c[0]*255.0f, c[1]*255.0f, c[2]*255.0f);
+			// 	Vector3 ambientFinal = Vector3(c[0], c[1], c[2]);
+			// 	Vector3 diffuseFinal = Vector3(difC[0], difC[1], difC[2]);
+			// 	Vector3 specularFinal = Vector3(specC[0], specC[1], specC[2]);
 
-				// printf("Specular: (%.2f, %.2f, %.2f)\n", specC[0], specC[1], specC[2]);
+			// 	// printf("Specular: (%.2f, %.2f, %.2f)\n", specC[0], specC[1], specC[2]);
 
 
-				buffer->at(x,y) = ambientFinal + diffuseFinal + specularFinal;
+				buffer->at(x,y) = castRay(ray, scene, camera, black, 0);
 				// buffer->at(x, y) = specularFinal;
 				// buffer->at(x, y) = ambientFinal + diffuseFinal;
 				// buffer->at(x,y) = diffuseFinal + specularFinal;
 
-			}
+			// }
 
 		}
 	}

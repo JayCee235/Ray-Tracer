@@ -27,12 +27,12 @@ public:
 		return dis + this->p;
 	}
 
-	Ray* reflect(Vector3 normal) {
+	Ray* reflect(Vector3 point, Vector3 normal) {
 		Vector3 old = this->d + Vector3(0, 0, 0);
 		Vector3 correctedNormal = normal * normal.dot(old);
 		Vector3 dif = old - correctedNormal;
 		Vector3 toReturn = old - dif - dif;
-		Ray *out = new Ray(this->p, toReturn);
+		Ray *out = new Ray(point, toReturn);
 		return out;
 	}
 

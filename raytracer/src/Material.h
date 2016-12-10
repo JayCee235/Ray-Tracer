@@ -53,11 +53,14 @@ public:
 	~Material() {};
 
 	void printInfo() {
-		printf("\tMaterial Name: %s\tAmbient color: (%.2f, %.2f, %.2f)\n\tDiffuse color: (%.2f, %.2f, %.2f)\n\tSpecular color: (%.2f, %.2f, %.2f)\n\n",
+		printf("\tMaterial Name: %s\tAmbient color: (%.2f, %.2f, %.2f)\n\tDiffuse color: (%.2f, %.2f, %.2f)\n\tSpecular color: (%.2f, %.2f, %.2f)\n",
 			name.data(),
 			ambient[0], ambient[1], ambient[2],
 			diffuse[0], diffuse[1], diffuse[2],
 			specular[0], specular[1], specular[2]);
+		printf("\tReflection: %.2f\n\tRefraction: %.2f\n\tTransparency: %.2f\n\tShininess: %.2f\n\tGlossiness: %.2f\n\tIndex of Refraction: %.2f\n",
+			reflect, refract, trans, shiny, glossy, refractIndex);
+		printf("\n");
 	}
 
 	void printAbbrInfo() {
