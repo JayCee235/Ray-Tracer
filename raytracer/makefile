@@ -70,7 +70,11 @@ runCornellBoxTest: RayTracer
 runMultiSphereTest: RayTracer
 	./RayTracer res/spheres.obj res/spheres.png
 
-all: RayTracer
+runTestNewCode: RayTracer
+	./RayTracer res/cornell_box.obj res/cornell_box_test.png
+
+all: runBlueSphereTest runCornellBoxTest runMultiSphereTest
+	
 
 clean: 
 	rm -f core *.o  *Test RayTracer

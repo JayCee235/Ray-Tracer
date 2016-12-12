@@ -18,23 +18,36 @@ Vector3 objToGenVec(obj_vector const * objVec)
 
 class Camera {
 private:
+	Vector3 at, lookingAt, up;
 	Vector3 p, u, v, w;
 public:
 	Camera() {}
+	Camera(Vector3 p, Vector3 u, Vector3 v, Vector3 w) {
+		this->p = p + Vector3(0, 0, 0);
+		this->u = u + Vector3(0, 0, 0);
+		this->v = v + Vector3(0, 0, 0);
+		this->w = w + Vector3(0, 0, 0);
+	}
+
 	Camera(obj_camera* cam, obj_vector** vecLs, obj_vector** normLs) {
+		this->cam = cam;
 		obj_vector* atObj = vecLs[cam->camera_pos_index];
 		obj_vector* lookingAtObj = vecLs[cam->camera_look_point_index];
 		obj_vector* upObj = normLs[cam->camera_up_norm_index];
 
-		Vector3 at = objToGenVec(atObj);
-		Vector3 lookingAt = objToGenVec(lookingAtObj);
-		Vector3 up = objToGenVec(upObj);
+		this->at = objToGenVec(atObj);
+		this->lookingAt = objToGenVec(lookingAtObj);
+		this->up = objToGenVec(upObj);
 
 		if(up == Vector3(0, 0, 0)) {
 			up = Vector3(0, 1, 0);
 		}
 
 		Vector3 looking = lookingAt - at;
+
+		if(looking == Vector3(0, 0, 0)) {
+			looking = Vector3(0, 0, -1);
+		}
 
 		up.normalize();
 
@@ -49,6 +62,51 @@ public:
 		this->u.normalize();
 		this->v = this->w.cross(this->u);
 		this->v.normalize();
+	}
+
+	Camera* getOffset(float dis) {
+		Vector3 at = this->at
+		Vector3 lookingAt = this->lookingAt
+		Vector3 up = this->up
+
+		if(up == Vector3(0, 0, 0)) {
+			up = Vector3(0, 1, 0);
+		}
+
+		Vector3 looking = lookingAt - at;
+
+		if(looking == Vector3(0, 0, 0)) {
+			looking = Vector3(0, 0, -1);
+		}
+
+		up.normalize();
+
+		Vector3 right = looking.cross(up);
+		right.normalize();
+
+		at = at - right*dis;
+
+		looking = lookingAt - at;
+
+		if(looking == Vector3(0, 0, 0)) {
+			looking = Vector3(0, 0, -1);
+		}
+
+		Vector3 p = at;
+		Vector3 w = -looking;
+		w.normalize();
+		Vector3 u = up.cross(w);
+		u.normalize();
+		Vector3 v = w.cross(u);
+		v.normalize();
+
+		Camera* out = new Camera(p, u, v, w);
+		out->up = up;
+		out->lookingAt = lookingAt;
+		out->at = at;
+
+		return out;
+
 	}
 
 	Vector3 getP() {

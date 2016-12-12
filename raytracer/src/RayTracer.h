@@ -24,6 +24,7 @@
 #include "Loader.h"
 #include "Scene.h"
 #include "Triangle.h"
+#include "Shader.h"
 
 
 #endif
