@@ -97,7 +97,7 @@ public:
 				float dom = 1 / (Kc + Kl * dis + Kq * dis * dis);
 
 				float dott = workRay->getD().dot(hp.normal);
-				if(dott > 0.9999) {
+				if(dott > 1) {
 					dott = 1;
 				}
 				if(dott > 0) {
@@ -113,17 +113,20 @@ public:
 					hpToCam.normalize();
 					float specMult = reflectionDir.dot(hpToCam);
 
-					if(specMult > 0.99999) {
+					if(specMult > 1) {
 						specMult = 1;
 					}
 
-					if(specMult > 0) {
-						specMult = pow(specMult, m->shiny);
-						Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
-						lightSpec = lightSpec * specMult;
-						lightSpec = lightSpec * dom;
-						spec = spec + lightSpec;
-					}							
+					if(specMult < 0) {
+						specMult = 0;
+					}
+
+					specMult = pow(specMult, m->shiny);
+					Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
+					lightSpec = lightSpec * specMult;
+					lightSpec = lightSpec * dom;
+					spec = spec + lightSpec;
+											
 				}
 			}					
 		}

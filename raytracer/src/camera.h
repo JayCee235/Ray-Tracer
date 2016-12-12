@@ -30,7 +30,6 @@ public:
 	}
 
 	Camera(obj_camera* cam, obj_vector** vecLs, obj_vector** normLs) {
-		this->cam = cam;
 		obj_vector* atObj = vecLs[cam->camera_pos_index];
 		obj_vector* lookingAtObj = vecLs[cam->camera_look_point_index];
 		obj_vector* upObj = normLs[cam->camera_up_norm_index];
@@ -65,9 +64,9 @@ public:
 	}
 
 	Camera* getOffset(float dis) {
-		Vector3 at = this->at
-		Vector3 lookingAt = this->lookingAt
-		Vector3 up = this->up
+		Vector3 at = this->at + Vector3(0, 0, 0);
+		Vector3 lookingAt = this->lookingAt + Vector3(0, 0, 0);
+		Vector3 up = this->up + Vector3(0, 0, 0);
 
 		if(up == Vector3(0, 0, 0)) {
 			up = Vector3(0, 1, 0);

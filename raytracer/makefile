@@ -34,6 +34,12 @@ RayTracer.o: src/RayTracer.cpp
 RayTracer: RayTracer.o
 	g++ RayTracer.o -o RayTracer
 
+Blend.o: src/Blend.cpp
+	g++ src/Blend.cpp -c -o Blend.o
+
+Blend: Blend.o
+	g++ Blend.o -o Blend
+
 SphereTest.o: src/SphereTest.cpp
 	g++ src/SphereTest.cpp -c -o SphereTest.o
 
@@ -73,8 +79,10 @@ runMultiSphereTest: RayTracer
 runTestNewCode: RayTracer
 	./RayTracer res/cornell_box.obj res/cornell_box_test.png
 
+runBlendTest: Blend
+	./Blend res/cornell_box.obj res/cornell_box_blend.png
+
 all: runBlueSphereTest runCornellBoxTest runMultiSphereTest
-	
 
 clean: 
-	rm -f core *.o  *Test RayTracer
+	rm -f core *.o  *Test RayTracer Blend
