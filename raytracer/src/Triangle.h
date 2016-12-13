@@ -14,7 +14,6 @@ class Triangle : public Primitive {
 private:
 	Vector3 a, b, c, normal;
 	Vector3 normalA, normalB, normalC;
-	float d;
 	Material* m;
 public:
 	Triangle() {}
@@ -82,10 +81,14 @@ public:
 	float intersect(Ray* r) {
 		Vector3 ae = this->a - r->getP();
 		float out = ae.dot(this->normal);
+		if(out > -0.0001 && out < 0.0001) {
+			//The point is very close to the plane, so to avoid floating point problems, just return -1.
+			return -1;
+		}
 		out = out / (r->getD().dot(this->normal));
-		if(out < 0.000000001) {
+		if(out < 0) {
 			//Don't bother with intersection calculations, as the ray doesn't intersect above t=0
-			return out;
+			return -1;
 		}
 		Vector3 x = r->getPointAt(out);
 		Vector3 ba = this->b - this->a;

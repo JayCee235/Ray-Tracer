@@ -7,7 +7,7 @@
 #include "RayTracer.h"
 
 
-#define RES 300
+#define RES 500
 #define FOV 90
 
 
@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
 	{
-		printf("Usage %s input.obj output.png\n [-d]", argv[0]);
+		printf("Usage %s input.obj output.png\n", argv[0]);
 		exit(0);
 	}
 
@@ -68,32 +68,8 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	Buffer<Color>* image = new Buffer<Color>(RES, RES);
-	float max = 0;
-
-	for(int x = 0; x < RES; x++) {
-		for(int y = 0; y < RES; y++) {
-			Vector3 work = buffer->at(x, y);
-			if(work[0] > max) {
-				max = work[0];
-			}
-			if(work[1] > max) {
-				max = work[1];
-			}
-			if(work[2] > max) {
-				max = work[2];
-			}
-		}
-	}
-
-	for(int x = 0; x < RES; x++) {
-		for(int y = 0; y < RES; y++) {
-			Vector3 ccc = buffer->at(x, y);
-			ccc = ccc * 255.0f / max;
-			Color fin = Color(ccc[0], ccc[1], ccc[2]);
-			image->at(x, y) = fin;
-		}
-	}
+	Blender* b = new Blender();
+	Buffer<Color>* image = b->bufferToImage(buffer);
 
 	//Write output buffer to file argv2
 	simplePNG_write(argv[2], image->getWidth(), image->getHeight(), (unsigned char*)&image->at(0,0));

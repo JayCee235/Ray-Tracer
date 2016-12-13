@@ -45,8 +45,9 @@ public:
 		for(i = 0; i < primCount; i++) {
 			Primitive* work = ls[i];
  			if(out < 0) {
- 				out = work->intersect(r);
- 				if(out > 0.001) {
+ 				float temp = work->intersect(r);
+ 				if(temp > 0.001) {
+ 					out = temp;
  					hp->t = out;
  					hp->p = work;
  				} else {
@@ -92,7 +93,7 @@ public:
 			float returnValue = intersect(posToLight, &temp);
 			// printf("Returned %.2f\n", returnValue);
 
-			if(returnValue >= len - 0.01 || returnValue < 0.001) {
+			if(returnValue > len - 0.001 || returnValue < 0.001) {
 				// printf("Hit light!\n");
 				lBuffer->push_back(work);
 				// printf("Added to light Buffer.\n");

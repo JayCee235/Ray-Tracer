@@ -40,6 +40,12 @@ Blend.o: src/Blend.cpp
 Blend: Blend.o
 	g++ Blend.o -o Blend
 
+Binocular.o: src/Binocular.cpp
+	g++ src/Binocular.cpp -c -o Binocular.o
+
+Binocular: Binocular.o
+	g++ Binocular.o -o Binocular
+
 SphereTest.o: src/SphereTest.cpp
 	g++ src/SphereTest.cpp -c -o SphereTest.o
 
@@ -79,10 +85,17 @@ runMultiSphereTest: RayTracer
 runTestNewCode: RayTracer
 	./RayTracer res/cornell_box.obj res/cornell_box_test.png
 
+runBinocularTest: Binocular
+	./Binocular res/cornell_box.obj res/cornell_box_binocular.png
+	./Binocular res/spheres.obj res/spheres_binocular.png
+	./Binocular res/blue_sphere.obj res/blue_sphere_binocular.png
+
 runBlendTest: Blend
-	./Blend res/cornell_box.obj res/cornell_box_blend.png
+	./Blend res/cornell_box.obj res/cornell_box_blended.png res/cornell_box_unblended.png
+	./Blend res/spheres.obj res/spheres_blended.png res/spheres_unblended.png
+	./Blend res/blue_sphere.obj res/blue_sphere_blended.png res/blue_sphere_unblended.png
 
 all: runBlueSphereTest runCornellBoxTest runMultiSphereTest
 
 clean: 
-	rm -f core *.o  *Test RayTracer Blend
+	rm -f core *.o  *Test RayTracer Binocular

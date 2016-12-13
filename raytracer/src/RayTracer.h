@@ -25,6 +25,7 @@
 #include "Scene.h"
 #include "Triangle.h"
 #include "Shader.h"
+#include "Blender.h"
 
 
 #endif

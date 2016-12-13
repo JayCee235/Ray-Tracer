@@ -36,13 +36,21 @@ public:
 
 		struct quadAnswer ans;
 		ans = calculateQuadratic(a, b, c);
+		float ans1 = ans.ans1;
+		float ans2 = ans.ans2;
 		if(ans.numAnswers == 2) {
-			if(ans.ans1 < 0) {
-				return ans.ans2;
+			if(ans1 < 0.001) {
+				if(ans2 < 0.001) {
+					return -1;
+				}
+				return ans2;
 			}
-			return ans.ans1;
+			return ans1;
 		} else if (ans.numAnswers == 1) {
-			return ans.ans1;
+			if(ans1 < 0.001) {
+				return -1;
+			}
+			return ans1;
 		} else {
 			return -1;
 		}

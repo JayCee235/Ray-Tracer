@@ -63,6 +63,11 @@ public:
 		this->v.normalize();
 	}
 
+	float getFocusDistance() {
+		Vector3 looking = lookingAt - at;
+		return looking.length();
+	}
+
 	Camera* getOffset(float dis) {
 		Vector3 at = this->at + Vector3(0, 0, 0);
 		Vector3 lookingAt = this->lookingAt + Vector3(0, 0, 0);

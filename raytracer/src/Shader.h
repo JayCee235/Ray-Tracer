@@ -96,11 +96,17 @@ public:
 
 				float dom = 1 / (Kc + Kl * dis + Kq * dis * dis);
 
-				float dott = workRay->getD().dot(hp.normal);
+				Vector3 rayDir = workRay->getD() + Vector3(0 ,0 ,0);
+				rayDir.normalize();
+
+				Vector3 hpDir = hp.normal + Vector3(0, 0, 0);
+				hpDir.normalize();
+
+				float dott = rayDir.dot(hpDir);
 				if(dott > 1) {
 					dott = 1;
 				}
-				if(dott > 0) {
+				if(dott > 0) {				
 					Vector3 lightDif = work->getMaterial()->diffuse + Vector3(0, 0, 0);
 					lightDif = lightDif * dott;
 					lightDif = lightDif * dom;
@@ -117,17 +123,15 @@ public:
 						specMult = 1;
 					}
 
-					if(specMult < 0) {
-						specMult = 0;
+					if(specMult > 0) {
+						specMult = pow(specMult, m->shiny);
+						Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
+						lightSpec = lightSpec * specMult;
+						lightSpec = lightSpec * dom;
+						spec = spec + lightSpec;
 					}
-
-					specMult = pow(specMult, m->shiny);
-					Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
-					lightSpec = lightSpec * specMult;
-					lightSpec = lightSpec * dom;
-					spec = spec + lightSpec;
-											
 				}
+					
 			}					
 		}
 		Vector3 difC = m->diffuse + Vector3(0, 0, 0);
@@ -141,7 +145,9 @@ public:
 		Vector3 diffuseFinal = Vector3(difC[0], difC[1], difC[2]);
 		Vector3 specularFinal = Vector3(specC[0], specC[1], specC[2]);
 
-		out = ambientFinal + diffuseFinal + specularFinal;
+		out = ambientFinal;
+		out = out + diffuseFinal;
+		out = out + specularFinal;
 
 		out = out * realRatio + reflectColor * reflectRatio + transColor * transRatio;
 
