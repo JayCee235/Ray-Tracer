@@ -7,6 +7,8 @@
 #include "Ray.h"
 #include <vector>
 #include "HitPoint.h"
+#include "AABB.h"
+#include "BVHTree.h"
 
 class Scene {
 private:
@@ -17,6 +19,8 @@ private:
 	int primCount;
 	int lightCount;
 	float lightScale;
+	BVHTree* tree;
+	Vector3 ambient;
 public:
 	Scene() {}
 
@@ -34,11 +38,36 @@ public:
 		this->lightCount = this->loader->getLightCount();
 		printf("Found %d primitives and %d lights.\n", primCount, lightCount);
 
+		this->tree = this->loader->getTree();
+		this->ambient = Vector3(0, 0, 0);
+		for(int i = 0; i < lightList->size(); i++) {
+			this->ambient = this->ambient + lightList[0][i]->getMaterial()->ambient;
+		}
+	}
 
+	Vector3 getAmbient() {
+		return this->ambient;
+	}
 
+	void printTree() {
+		tree->printTree();
 	}
 
 	float intersect(Ray* r, HitPoint* hp) {
+		// printf("I am beginning an intersection.\n");
+		float out = this->tree->intersect(r);
+		if(out > 0.001) {
+			hp->t = out;
+			hp->p = tree->getPrimitive();
+			hp->normal = hp->p->getNormal(r, hp);
+			// printf("Hit! %.2f\n", out);
+			return out;
+		} else {
+			return -1;
+		}
+	}
+
+	float oldIntersect(Ray* r, HitPoint* hp) {
 		float out = -1;
 		int i;
 		std::vector<Primitive*> ls = *this->primList;
@@ -50,6 +79,7 @@ public:
  					out = temp;
  					hp->t = out;
  					hp->p = work;
+ 					hp->normal = hp->p->getNormal(r, hp);
  				} else {
  					out = -1;
  				}		
@@ -59,6 +89,7 @@ public:
  					out = temp;
  					hp->t = out;
  					hp->p = work;
+ 					hp->normal = hp->p->getNormal(r, hp);
  				}
  			}
 		}

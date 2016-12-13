@@ -7,8 +7,9 @@
 #include "RayTracer.h"
 
 
-#define RES 900
+#define RES 1500
 #define FOV 90
+#define SCALE 3
 
 Vector3 filterRed(Vector3 in) {
 	return Vector3(0, in[1], in[2]);
@@ -81,8 +82,13 @@ int main(int argc, char* argv[]) {
 	//Convert vectors to RGB colors for testing results
 	Vector3 white = Vector3(255.0f, 255.0f, 255.0f);
 	Vector3 black = Vector3(0.0f, 0.0f, 0.0f);
+	int traceCount = -1;
 	for(int y=0; y<RES; y++)
 	{
+		if(y%(RES/10) == 0) {
+			traceCount++;
+			printf("finished %d%%\n", traceCount*10);
+		}
 		for(int x=0; x<RES; x++)
 		{
 			Ray* lray = leftGen->getRay(x, y);
@@ -98,32 +104,37 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	Buffer<Color>* image = new Buffer<Color>(buffer->getWidth(), buffer->getHeight());
-	float max = 0;
+	Blender* b = new Blender();
+	Buffer<Color>* image = b->bufferToImage(b->blend(buffer, SCALE));
 
-	for(int x = 0; x < image->getWidth(); x++) {
-		for(int y = 0; y < image->getHeight(); y++) {
-			Vector3 work = buffer->at(x, y);
-			if(work[0] > max) {
-				max = work[0];
-			}
-			if(work[1] > max) {
-				max = work[1];
-			}
-			if(work[2] > max) {
-				max = work[2];
-			}
-		}
-	}
 
-	for(int x = 0; x < image->getWidth(); x++) {
-		for(int y = 0; y < image->getHeight(); y++) {
-			Vector3 ccc = buffer->at(x, y);
-			ccc = ccc * 255.0f / max;
-			Color fin = Color(ccc[0], ccc[1], ccc[2]);
-			image->at(x, y) = fin;
-		}
-	}
+
+	// Buffer<Color>* image = new Buffer<Color>(buffer->getWidth(), buffer->getHeight());
+	// float max = 0;
+
+	// for(int x = 0; x < image->getWidth(); x++) {
+	// 	for(int y = 0; y < image->getHeight(); y++) {
+	// 		Vector3 work = buffer->at(x, y);
+	// 		if(work[0] > max) {
+	// 			max = work[0];
+	// 		}
+	// 		if(work[1] > max) {
+	// 			max = work[1];
+	// 		}
+	// 		if(work[2] > max) {
+	// 			max = work[2];
+	// 		}
+	// 	}
+	// }
+
+	// for(int x = 0; x < image->getWidth(); x++) {
+	// 	for(int y = 0; y < image->getHeight(); y++) {
+	// 		Vector3 ccc = buffer->at(x, y);
+	// 		ccc = ccc * 255.0f / max;
+	// 		Color fin = Color(ccc[0], ccc[1], ccc[2]);
+	// 		image->at(x, y) = fin;
+	// 	}
+	// }
 
 	//Write output buffer to file argv2
 	simplePNG_write(argv[2], image->getWidth(), image->getHeight(), (unsigned char*)&image->at(0,0));

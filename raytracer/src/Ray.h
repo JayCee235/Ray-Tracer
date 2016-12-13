@@ -6,11 +6,14 @@
 class Ray {
 private:
 	Vector3 p, d;
+	Vector3 invD;
 public:
 	Ray(Vector3 p, Vector3 d) {
 		this->p = p + Vector3(0, 0, 0);
 		this->d = d + Vector3(0, 0, 0);
 		this->d.normalize();
+
+		this->invD = Vector3(1, 1, 1)/this->d;
 	}
 
 	Vector3 getP() {
@@ -40,6 +43,10 @@ public:
 		printf("Position: (%.2f, %.2f, %.2f).\nDirection: (%.2f, %.2f, %.2f).\n", 
 			p[0], p[1], p[2],
 			d[0], d[1], d[2]);
+	}
+
+	Vector3 getInverseDirection() {
+		return this->invD + Vector3(0, 0, 0);
 	}
 };
 

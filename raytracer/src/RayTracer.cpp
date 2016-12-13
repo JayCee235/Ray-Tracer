@@ -51,22 +51,30 @@ int main(int argc, char* argv[]) {
 	printf("Camera loaded.\n");
 
 	RayGenerator* generator = new RayGenerator(camera, RES, RES, FOV);
-
 	printf("Generator ready.\n");
 
 	Shader* shader = new Shader(scene, camera, Vector3(0, 0, 0));
+	printf("Shader ready.\n");
 
 	//Convert vectors to RGB colors for testing results
 	Vector3 white = Vector3(255.0f, 255.0f, 255.0f);
 	Vector3 black = Vector3(0.0f, 0.0f, 0.0f);
+	int traceCount = -1;
 	for(int y=0; y<RES; y++)
 	{
+		if(y%(RES/10) == 0) {
+			traceCount++;
+			printf("finished %d%%\n", traceCount*10);
+		}
 		for(int x=0; x<RES; x++)
 		{
 			Ray* ray = generator->getRay(x, y);
 			buffer->at(x,y) = shader->shadePoint(ray);
 		}
 	}
+	printf("finished 100%%\n");
+
+	// scene->printTree();
 
 	Blender* b = new Blender();
 	Buffer<Color>* image = b->bufferToImage(buffer);

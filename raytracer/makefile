@@ -98,4 +98,4 @@ runBlendTest: Blend
 all: runBlueSphereTest runCornellBoxTest runMultiSphereTest
 
 clean: 
-	rm -f core *.o  *Test RayTracer Binocular
+	rm -f core *.o  *Test RayTracer Binocular Blend

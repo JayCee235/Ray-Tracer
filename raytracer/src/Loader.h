@@ -18,7 +18,9 @@ Vector3 objToGenVec(obj_vector const * objVec)
 #include "Triangle.h"
 #include "camera.h"
 #include "Light.h"
+#include "AABB.h"
 #include <vector>
+#include "BVHTree.h"
 
 class Loader {
 private:
@@ -36,7 +38,7 @@ public:
 
 		obj_material **ls = this->data->materialList;
 
-		numMat = this->data->materialCount;
+		this->numMat = this->data->materialCount;
 
 		printf("Found %d materials.\n", numMat);
 
@@ -54,6 +56,8 @@ public:
 			newMat->printInfo();
 			printf("\n");
 		}
+		matList->push_back(new Material());
+		this->numMat = this->numMat + 1;
 
 		printMaterialTest();
 		
@@ -81,6 +85,19 @@ public:
 
 	std::vector<Material*>* getMatList() {
 		return this->matList;
+	}
+
+	BVHTree* getTree() {
+		std::vector<Primitive*>* primList = this->getPrimitives();
+		BVHTree* out = new BVHTree(primList[0][0]);
+
+		printf("Constructing BVH tree...\n");
+		for(int i = 1; i < primList->size(); i++) {
+			out = out->insertPrimitive(primList[0][i]);
+		}
+		out->forceCheck();
+		out->printTree();
+		return out;
 	}
 
 
@@ -111,7 +128,7 @@ public:
 			float radius = norm.length();
 
 			int matIndex = sphereToCalc->material_index;
-			if(matIndex >= numMat) {
+			if(matIndex >= numMat || matIndex < 0) {
 				matIndex = numMat - 1;
 			}
 
@@ -139,6 +156,11 @@ public:
 			obj_light_point* objLight = lightList[i];
 			Vector3 p = objToGenVec(vecLs[objLight->pos_index]);
 			int matIndex = objLight->material_index;
+			if(matIndex >= this->numMat || matIndex < 0) {
+				matIndex = this->numMat - 1;
+			}
+
+
 			Material* m = this->matList[0][matIndex];
 			Light* newLight = new Light(p, m);
 			printf("Found light with position (%.2f, %.2f, %.2f) and color (%.2f, %.2f, %.2f)\n",
@@ -148,6 +170,16 @@ public:
 		}
 		return toReturn;
 
+	}
+
+	std::vector<AABB*>* getAABBs() {
+		std::vector<Primitive*>* prims = getPrimitives();
+		std::vector<AABB*>* out = new std::vector<AABB*>();
+		for(int i = 0; i < prims->size(); i++) {
+			AABB* in = new AABB(prims[0][i]);
+			out->push_back(in);
+		}
+		return out;
 	}
 
 	std::vector<Triangle*>* getTriangles() {
@@ -176,7 +208,7 @@ public:
 				// printf("Triangle uses index %d.\n", faceToCheck->material_index);
 
 				int matIndex = faceToCheck->material_index;
-				if(matIndex >= numMat) {
+				if(matIndex >= numMat || matIndex < 0) {
 					matIndex = numMat - 1;
 				}
 
@@ -203,6 +235,8 @@ public:
 
 		return camera;
 	}
+
+
 
 	std::vector<Primitive*>* getPrimitives() {
 		std::vector<Primitive*>* toReturn = new std::vector<Primitive*>();

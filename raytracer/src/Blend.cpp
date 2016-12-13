@@ -60,8 +60,13 @@ int main(int argc, char* argv[]) {
 	//Convert vectors to RGB colors for testing results
 	Vector3 white = Vector3(255.0f, 255.0f, 255.0f);
 	Vector3 black = Vector3(0.0f, 0.0f, 0.0f);
+	int traceCount = -1;
 	for(int y=0; y<RES; y++)
 	{
+		if(y%(RES/10) == 0) {
+			traceCount++;
+			printf("finished %d%%\n", traceCount*10);
+		}
 		for(int x=0; x<RES; x++)
 		{
 			Ray* ray = generator->getRay(x, y);

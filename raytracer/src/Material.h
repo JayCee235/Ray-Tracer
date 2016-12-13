@@ -15,12 +15,12 @@ public:
 	Material() {
 		this->name = "Default material";
 		this->ambient = Vector3(1, 0, 1);
-		this->diffuse = Vector3(0, 0, 0);
-		this->specular = Vector3(0, 0, 0);
+		this->diffuse = Vector3(1, 0, 1);
+		this->specular = Vector3(1, 1, 1);
 		this->reflect = 0;
 		this->refract = 0;
-		this->trans = 0;
-		this->shiny = 0;
+		this->trans = 1;
+		this->shiny = 1;
 		this->glossy = 0;
 		this->refractIndex = 0;
 	};

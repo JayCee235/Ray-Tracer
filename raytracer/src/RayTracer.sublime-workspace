@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"insert",
+				"insertPrimitive"
+			],
+			[
+				"ins",
+				"insertPrimitive"
+			],
+			[
+				"rec",
+				"recalculateBounds"
+			],
+			[
+				"v",
+				"v"
+			],
+			[
+				"ami",
+				"ambientFinal"
+			],
+			[
 				"trans",
 				"transRatio"
 			],
@@ -27,7 +47,7 @@
 			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 			"settings":
 			{
-				"buffer_size": 2045,
+				"buffer_size": 2893,
 				"line_ending": "Unix"
 			}
 		},
@@ -35,7 +55,31 @@
 			"file": "RayTracer.cpp",
 			"settings":
 			{
-				"buffer_size": 8796,
+				"buffer_size": 1736,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Binocular.cpp",
+			"settings":
+			{
+				"buffer_size": 3360,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Blend.cpp",
+			"settings":
+			{
+				"buffer_size": 2013,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Blender.h",
+			"settings":
+			{
+				"buffer_size": 1771,
 				"line_ending": "Unix"
 			}
 		},
@@ -59,7 +103,31 @@
 			"file": "Loader.h",
 			"settings":
 			{
-				"buffer_size": 5945,
+				"buffer_size": 6778,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "AABB.h",
+			"settings":
+			{
+				"buffer_size": 2384,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "BVHNode.h",
+			"settings":
+			{
+				"buffer_size": 1429,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "BVHTree.h",
+			"settings":
+			{
+				"buffer_size": 12797,
 				"line_ending": "Unix"
 			}
 		},
@@ -67,7 +135,7 @@
 			"file": "Scene.h",
 			"settings":
 			{
-				"buffer_size": 2461,
+				"buffer_size": 3272,
 				"line_ending": "Unix"
 			}
 		},
@@ -83,7 +151,7 @@
 			"file": "Triangle.h",
 			"settings":
 			{
-				"buffer_size": 3738,
+				"buffer_size": 4275,
 				"line_ending": "Unix"
 			}
 		},
@@ -91,7 +159,7 @@
 			"file": "Sphere.h",
 			"settings":
 			{
-				"buffer_size": 1183,
+				"buffer_size": 1426,
 				"line_ending": "Unix"
 			}
 		},
@@ -99,7 +167,7 @@
 			"file": "Ray.h",
 			"settings":
 			{
-				"buffer_size": 872,
+				"buffer_size": 1006,
 				"line_ending": "Unix"
 			}
 		},
@@ -107,7 +175,7 @@
 			"file": "Primitive.h",
 			"settings":
 			{
-				"buffer_size": 932,
+				"buffer_size": 1068,
 				"line_ending": "Unix"
 			}
 		},
@@ -116,6 +184,22 @@
 			"settings":
 			{
 				"buffer_size": 2061,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box.obj",
+			"settings":
+			{
+				"buffer_size": 1981,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/NormalShadingTest1.obj",
+			"settings":
+			{
+				"buffer_size": 255,
 				"line_ending": "Unix"
 			}
 		},
@@ -131,7 +215,7 @@
 			"file": "camera.h",
 			"settings":
 			{
-				"buffer_size": 1360,
+				"buffer_size": 2568,
 				"line_ending": "Unix"
 			}
 		},
@@ -139,7 +223,15 @@
 			"file": "RayTracer.h",
 			"settings":
 			{
-				"buffer_size": 476,
+				"buffer_size": 577,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Shader.h",
+			"settings":
+			{
+				"buffer_size": 4035,
 				"line_ending": "Unix"
 			}
 		},
@@ -184,6 +276,7 @@
 	},
 	"file_history":
 	[
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/NormalShadingTest1.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Sphere.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Light.h",
@@ -242,6 +335,37 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"printtree",
+			"[ ]*printf[\\S ]*;",
+			"//[ ]*printf[\\S ]*;",
+			"PLS",
+			"right",
+			"left",
+			"printf[\\S ]*;",
+			"p->inform",
+			"\\):",
+			"():",
+			"informChildren():",
+			"printf[\\S ]*;",
+			"printf[\\S ];",
+			"printf[\\S]*;",
+			"printf[\\s\\S]*;",
+			"[\\D]",
+			"[\\d]",
+			"printf[\\s~\\s]+;",
+			"printf[\\d\\s\\w]+",
+			"printf[\\d\\s\\w]*;",
+			"printf[\\d\\s\\w]*",
+			"printf[\\d\\s\\w]",
+			"printf[\\d\\s\\w];",
+			"[\\d]",
+			"[/d]",
+			"printf[/s/w/d]*;",
+			"printf([/s/d/w]*);",
+			"printf*;",
+			"FIDGET",
+			"right",
+			"left",
 			"project",
 			"scale",
 			"Color",
@@ -262,7 +386,7 @@
 		"highlight": false,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
 		],
@@ -275,7 +399,7 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -283,15 +407,15 @@
 					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 					"settings":
 					{
-						"buffer_size": 2045,
+						"buffer_size": 2893,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1912,
-								1912
+								2893,
+								2893
 							]
 						],
 						"settings":
@@ -299,7 +423,7 @@
 							"syntax": "Packages/Makefile/Makefile.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 315.0,
+						"translation.y": 1035.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -309,15 +433,15 @@
 					"file": "RayTracer.cpp",
 					"settings":
 					{
-						"buffer_size": 8796,
+						"buffer_size": 1736,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								901,
-								901
+								1189,
+								1189
 							]
 						],
 						"settings":
@@ -326,13 +450,94 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 450.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "Binocular.cpp",
+					"settings":
+					{
+						"buffer_size": 3360,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1891,
+								1891
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 675.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "Blend.cpp",
+					"settings":
+					{
+						"buffer_size": 2013,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								721,
+								721
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Blender.h",
+					"settings":
+					{
+						"buffer_size": 1771,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1760,
+								1760
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 315.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
 					"file": "Light.h",
 					"settings":
 					{
@@ -359,7 +564,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 6,
 					"file": "HitPoint.h",
 					"settings":
 					{
@@ -385,19 +590,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 7,
 					"file": "Loader.h",
 					"settings":
 					{
-						"buffer_size": 5945,
+						"buffer_size": 6778,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								704,
-								704
+								2116,
+								2116
 							]
 						],
 						"settings":
@@ -406,52 +611,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 360.0,
+						"translation.y": 810.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "Scene.h",
+					"buffer": 8,
+					"file": "AABB.h",
 					"settings":
 					{
-						"buffer_size": 2461,
+						"buffer_size": 2384,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1283,
-								1283
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 450.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "RayGenerator.h",
-					"settings":
-					{
-						"buffer_size": 1083,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								335,
-								335
+								1762,
+								1762
 							]
 						],
 						"settings":
@@ -466,19 +644,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "Triangle.h",
+					"buffer": 9,
+					"file": "BVHNode.h",
 					"settings":
 					{
-						"buffer_size": 3738,
+						"buffer_size": 1429,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2480,
-								2480
+								1041,
+								1041
 							]
 						],
 						"settings":
@@ -486,26 +664,53 @@
 							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 83.0,
-						"translation.y": 990.0,
+						"translation.x": 0.0,
+						"translation.y": 315.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "Sphere.h",
+					"buffer": 10,
+					"file": "BVHTree.h",
 					"settings":
 					{
-						"buffer_size": 1183,
+						"buffer_size": 12797,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								936,
-								936
+								4124,
+								4124
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1890.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Scene.h",
+					"settings":
+					{
+						"buffer_size": 3272,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1058,
+								1058
 							]
 						],
 						"settings":
@@ -520,19 +725,100 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 12,
+					"file": "RayGenerator.h",
+					"settings":
+					{
+						"buffer_size": 1083,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								976,
+								976
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 90.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "Triangle.h",
+					"settings":
+					{
+						"buffer_size": 4275,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3811,
+								3811
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1575.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "Sphere.h",
+					"settings":
+					{
+						"buffer_size": 1426,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								487,
+								487
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
 					"file": "Ray.h",
 					"settings":
 					{
-						"buffer_size": 872,
+						"buffer_size": 1006,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								439,
-								439
+								271,
+								271
 							]
 						],
 						"settings":
@@ -547,19 +833,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 16,
 					"file": "Primitive.h",
 					"settings":
 					{
-						"buffer_size": 932,
+						"buffer_size": 1068,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								458,
-								458
+								176,
+								176
 							]
 						],
 						"settings":
@@ -574,7 +860,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 17,
 					"file": "Material.h",
 					"settings":
 					{
@@ -585,8 +871,8 @@
 						"selection":
 						[
 							[
-								1002,
-								1002
+								1285,
+								1285
 							]
 						],
 						"settings":
@@ -595,13 +881,65 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 234.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 18,
+					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box.obj",
+					"settings":
+					{
+						"buffer_size": 1981,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1909,
+								1909
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1575.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/NormalShadingTest1.obj",
+					"settings":
+					{
+						"buffer_size": 255,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								193,
+								193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 20,
 					"file": "objload/objLoader.hpp",
 					"settings":
 					{
@@ -628,19 +966,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 21,
 					"file": "camera.h",
 					"settings":
 					{
-						"buffer_size": 1360,
+						"buffer_size": 2568,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								551,
-								551
+								1083,
+								1083
 							]
 						],
 						"settings":
@@ -649,25 +987,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 225.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 22,
 					"file": "RayTracer.h",
 					"settings":
 					{
-						"buffer_size": 476,
+						"buffer_size": 577,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								165,
-								165
+								540,
+								540
 							]
 						],
 						"settings":
@@ -681,7 +1019,34 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 23,
+					"file": "Shader.h",
+					"settings":
+					{
+						"buffer_size": 4035,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3559,
+								3559
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1440.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 24,
 					"file": "vector/GenVector.h",
 					"settings":
 					{
@@ -692,8 +1057,8 @@
 						"selection":
 						[
 							[
-								6337,
-								6337
+								3988,
+								3988
 							]
 						],
 						"settings":
@@ -702,13 +1067,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5374.0,
+						"translation.y": 5646.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 25,
 					"file": "buffer/Buffer.h",
 					"settings":
 					{

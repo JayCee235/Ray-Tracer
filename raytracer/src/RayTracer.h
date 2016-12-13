@@ -26,6 +26,9 @@
 #include "Triangle.h"
 #include "Shader.h"
 #include "Blender.h"
+#include "AABB.h"
+#include "BVHNode.h"
+#include "BVHTree.h"
 
 
 #endif

@@ -56,5 +56,13 @@ public:
 	virtual Material* getMaterial() {
 		return new Material();
 	}
+
+	virtual Vector3 getMinimumPoint() {
+		return Vector3(0, 0, 0);
+	}
+
+	virtual Vector3 getMaximumPoint() {
+		return Vector3(0, 0, 0);
+	}
 };
 #endif

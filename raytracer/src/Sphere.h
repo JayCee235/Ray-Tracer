@@ -67,6 +67,14 @@ public:
 		return this->m;
 	}
 
+	Vector3 getMinimumPoint() {
+		return center - radius;
+	}
+
+	Vector3 getMaximumPoint() {
+		return center + radius;
+	}
+
 };
 
 #endif

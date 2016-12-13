@@ -134,14 +134,17 @@ public:
 					
 			}					
 		}
+		Vector3 ambC = scene->getAmbient();
+		Vector3 c = m->ambient + Vector3(0, 0, 0);
+		ambC = ambC * c;
+
 		Vector3 difC = m->diffuse + Vector3(0, 0, 0);
 		difC = difC * dif;
 
 		Vector3 specC = m->specular + Vector3(0, 0, 0);
 		specC = specC * spec;
 
-		Vector3 c = m->ambient + Vector3(0, 0, 0);
-		Vector3 ambientFinal = Vector3(c[0], c[1], c[2]);
+		Vector3 ambientFinal = Vector3(ambC[0], ambC[1], ambC[2]);
 		Vector3 diffuseFinal = Vector3(difC[0], difC[1], difC[2]);
 		Vector3 specularFinal = Vector3(specC[0], specC[1], specC[2]);
 

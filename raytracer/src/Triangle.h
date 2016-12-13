@@ -156,11 +156,31 @@ public:
 
 		Vector3 out = (normalA * baryA) + (normalB * baryB) + (normalC * baryC);
 
+		out.normalize();
+
 		return out;
 	}
 
 	Material* getMaterial() {
 		return this->m;
+	}
+
+	Vector3 getMinimumPoint() {
+		Vector3 min = a + Vector3(0, 0, 0);
+		for(int i = 0 ; i < 3; i++) {
+			if(b[i] < min[i]) min[i] = b[i];
+			if(c[i] < min[i]) min[i] = c[i];
+		}
+		return min;
+	}
+
+	Vector3 getMaximumPoint() {
+		Vector3 max = a + Vector3(0, 0, 0);
+		for(int i = 0 ; i < 3; i++) {
+			if(b[i] > max[i]) max[i] = b[i];
+			if(c[i] > max[i]) max[i] = c[i];
+		}
+		return max;
 	}
 };
 
