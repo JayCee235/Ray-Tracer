@@ -29,6 +29,39 @@ public:
 		this->w = w + Vector3(0, 0, 0);
 	}
 
+	Camera(Camera* start, Camera* end, float time) {
+		float s = time;
+		float t = 1-s;
+
+		Vector3 newAt = start->at * s + end->at * t;
+		Vector3 newLookingAt = start->lookingAt * s + end->lookingAt * t;
+		Vector3 newUp = start->up * s + end->up * t;
+
+		if(newUp == Vector3(0, 0, 0)) {
+			newUp = Vector3(0, 1, 0);
+		}
+
+		Vector3 looking = newLookingAt - newAt;
+
+		if(looking == Vector3(0, 0, 0)) {
+			looking = Vector3(0, 0, -1);
+		}
+
+		newUp.normalize();
+
+		this->at = newAt;
+		this->lookingAt = newLookingAt;
+		this->up = newUp;
+
+		this->p = newAt;
+		this->w = -looking;
+		this->w.normalize();
+		this->u = newUp.cross(this->w);
+		this->u.normalize();
+		this->v = this->w.cross(this->u);
+		this->v.normalize();
+	}
+
 	Camera(Camera* copy) {
 		this->at = copy->at;
 		this->lookingAt = copy->lookingAt;
