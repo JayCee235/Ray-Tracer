@@ -31,7 +31,7 @@ public:
 
 	Camera(Camera* start, Camera* end, float time) {
 		float s = time;
-		float t = 1-s;
+		float t = 1-time;
 
 		Vector3 newAt = start->at * s + end->at * t;
 		Vector3 newLookingAt = start->lookingAt * s + end->lookingAt * t;
@@ -172,6 +172,20 @@ public:
 
 	}
 
+	Camera* travelForward(float dis) {
+		Vector3 newAt = this->at - this->w * dis;
+		Vector3 newUp = this->up + Vector3(0, 0, 0);
+		Vector3 newLookingAt = this->lookingAt + Vector3(0, 0, 0);
+
+		return new Camera(newAt, newLookingAt, newUp);
+	}
+
+	Camera* changeLookingAt(Vector3 newLookingAt) {
+		Vector3 newAt = this->at;
+		Vector3 newUp = this->up;
+		return new Camera(newAt, newLookingAt, newUp);
+	}
+
 	Camera* getOffset(float dis) {
 		Vector3 at = this->at + Vector3(0, 0, 0);
 		Vector3 lookingAt = this->lookingAt + Vector3(0, 0, 0);
@@ -231,6 +245,18 @@ public:
 
 	Vector3 getW() {
 		return this->w;
+	}
+
+	Vector3 getAt() {
+		return this->at * 1;
+	}
+
+	Vector3 getLookingAt() {
+		return this->lookingAt * 1;
+	}
+
+	Vector3 getUp() {
+		return this->up * 1;
 	}
 };
 

@@ -7,7 +7,6 @@
 struct AnimPair {
 	Camera* from;
 	Camera* to; 
-	float t;
 
 	float start;
 	float end;
@@ -18,31 +17,61 @@ class AnimationPath
 {
 private:
 	struct AnimPair* first;
+	struct AnimPair* last;
 public:
 	AnimationPath() {}
 	AnimationPath(Camera* start, Camera* next, float t) {
+		this->first = (struct AnimPair*) malloc(sizeof(struct AnimPair));
 
+		this->first->from = start;
+		this->first->to = next;
+		this->first->start = 0;
+		this->first->end = t;
+		this->first->next = NULL;
+
+		this->last = this->first;
+		printf("AnimationPath created.\n");
 	}
-	~AnimationPath() {}
+	~AnimationPath() {
+		struct AnimPair* cur = first;
+		while(cur != NULL) {
+			struct AnimPair* killd = cur;
+			cur = cur->next;
+			free(killd);
+		}
+	}
+
+	void addCamera(Camera* camera, float timeToReach) {
+		struct AnimPair* newPair = (struct AnimPair*) malloc(sizeof(struct AnimPair));
+		newPair->from = last->to;
+		newPair->to = camera;
+		newPair->start = last->end;
+		newPair->end = last->end + timeToReach;
+
+		last->next = newPair;
+		this->last = newPair;
+	}
 
 	float getTotalDis() {
-		struct AnimPair* cur = first;
-		while(cur->next != NULL) {
-			cur = cur->next;
-		}
-		return cur->end;
+		return last->end;
 	}
 
 	Camera* getCameraAt(float t) {
-		if(t <= 0) {
-			return path[0][0]->from;
-		}
-		if(t >= 1) {
-			return path[0][path->size()]->to;
+		printf("Getting camera at %.2f\n", t);
+		if(t < 0) {
+			return first->from;
 		}
 		float time = t*getTotalDis();
 
-
+		struct AnimPair* cur = first;
+		while(cur != NULL) {
+			if(time >= cur->start && time < cur->end) {
+				float fav = (cur->end - time) / (cur->end - cur->start);
+				return new Camera(cur->from, cur->to, fav);
+			}
+			cur = cur->next;
+		}	
+		return new Camera(last->to);
 	}
 
 

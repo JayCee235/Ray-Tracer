@@ -52,6 +52,16 @@ Animation.o: src/Animation.cpp
 Animation: Animation.o
 	g++ -O3 Animation.o -o Animation
 
+AnimationPath.o: src/AnimPairTest.cpp
+	g++ -O3 src/AnimPairTest.cpp -c -o AnimationPath.o
+
+AnimationPath: AnimationPath.o
+	g++ -O3 AnimationPath.o -o AnimationPath
+
+AnimationPathTest: AnimationPath
+	./AnimationPath res/cornell_box.obj res/testFolder/cornell_ -res 200
+
+
 SphereTest.o: src/SphereTest.cpp
 	g++ src/SphereTest.cpp -c -o SphereTest.o
 
@@ -107,7 +117,7 @@ runBunnyTests: RayTracer Blend Binocular
 	./Binocular res/bunny-scene.obj res/bunny-scene_binocular.png -res 1000 -scale 3	
 
 megaBunny: Blend
-	./Blend res/bunny-scene.obj res/bunny-scene_mega.png res/bunny-scene_lessMega.png -res 100 -scale 100
+	./Blend res/bunny-scene.obj res/bunny-scene_mega.png res/bunny-scene_lessMega.png -res 100 -scale 10
 
 runHappyTest: RayTracer res/happy-scene.obj res/happy-scene.mtl
 	./RayTracer res/happy-scene.obj res/happy-scene.png -res 1000

@@ -2,6 +2,7 @@ newmtl grey
 Ka  0.3 0.3 0.3 
 Kd  0.5 0.5 0.5
 Ks  0.8 0.8 0.8
+r 0.7
 
 newmtl light
 Ka 1.0 1.0 1.0

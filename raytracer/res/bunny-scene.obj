@@ -1,6 +1,6 @@
 # Blender3D v249 OBJ File: 
 # www.blender3d.org
-mtllib bunny_scene.mtl
+mtllib bunny-scene.mtl
 usemtl grey
 v -0.037830 0.127940 0.004475
 v -0.044779 0.128887 0.001905

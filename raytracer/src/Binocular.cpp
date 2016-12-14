@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 	int SCALE = 3;
 	float FOV = 90;
 	float EYEDIS = 0.03;
+	bool REDBLUE = false;
 
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
@@ -61,10 +62,18 @@ int main(int argc, char* argv[]) {
 			}
 			SCALE = check;
 		}
+		if(strcmp(argv[i], "-rb") == 0) {
+			REDBLUE = true;
+		}
 	}
 	RES *= SCALE;
+	int xRes = RES;
+	int yRes = RES;
+	if(!REDBLUE) {
+		xRes *= 2;
+	}
 
-	Buffer<Vector3>* buffer = new Buffer<Vector3>(2*RES, RES);
+	Buffer<Vector3>* buffer = new Buffer<Vector3>(xRes, yRes);
 
 	// bool debug = false;
 
@@ -128,8 +137,15 @@ int main(int argc, char* argv[]) {
 			// right = filterBlue(right);
 			// right = filterGreen(right);
 			// buffer->at(x, y) = right + left;
-			buffer->at(x, y) = left;
-			buffer->at(x+RES, y) = right;
+			if(REDBLUE) {
+				left = filterGreen(left);
+				left = filterBlue(left);
+				right = filterRed(right);
+				buffer->at(x, y) = left + right;
+			} else {
+				buffer->at(x, y) = left;
+				buffer->at(x+RES, y) = right;
+			}
 		}
 	}
 

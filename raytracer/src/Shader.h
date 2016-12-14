@@ -26,10 +26,10 @@ public:
 	}
 
 	Vector3 shadePoint(Ray* ray) {
-		return castRay(ray, scene, camera, clearColor, 0, 0);
+		return castRay(ray, scene, camera, clearColor, 0, 0, 0);
 	}
 
-	Vector3 castRay(Ray* ray, Scene* scene, Camera* camera, Vector3 clearColor, int numReflected, float totalDis) {
+	Vector3 castRay(Ray* ray, Scene* scene, Camera* camera, Vector3 clearColor, int numReflected, int numTrans, float totalDis) {
 	struct HitPoint hp;
 	float t = scene->intersect(ray, &hp);
 	Vector3 out = clearColor + Vector3(0, 0, 0);
@@ -55,7 +55,9 @@ public:
 			if(numReflected > 0) {
 				dis = t;
 			}
-			reflectColor = castRay(newReflectRay, scene, camera, clearColor, numReflected+1, totalDis+dis);
+			reflectColor = castRay(newReflectRay, scene, camera, clearColor, numReflected+1, numTrans, totalDis+dis);
+			delete(toReflect);
+			delete(newReflectRay);
 		}
 
 		//TODO: Add transparency.
@@ -63,11 +65,11 @@ public:
 			transRatio = 1 - m->trans;
 			Ray* transRay = new Ray(ray->getPointAt(hp.t), ray->getD());
 			float dis = 0;
-			if(numReflected > 0) {
+			if(numTrans > 0) {
 				dis = t;
 			}
-			transColor = castRay(transRay, scene, camera, clearColor, numReflected, totalDis+dis);
-
+			transColor = castRay(transRay, scene, camera, clearColor, numReflected, numTrans++, totalDis+dis);
+			delete(transRay);
 		}
 
 
@@ -125,6 +127,7 @@ public:
 					Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
 					hpToCam.normalize();
 					float specMult = reflectionDir.dot(hpToCam);
+					delete(reflection);
 
 					if(specMult > 1) {
 						specMult = 1;
@@ -141,6 +144,12 @@ public:
 					
 			}					
 		}
+		for(int i = 0; i < raysHit->size(); i++) {
+			delete(raysHit[0][i]);
+		}
+		delete(raysHit);
+		delete(lightsHit);
+
 		Vector3 ambC = scene->getAmbient();
 		Vector3 c = m->ambient + Vector3(0, 0, 0);
 		ambC = ambC * c;
