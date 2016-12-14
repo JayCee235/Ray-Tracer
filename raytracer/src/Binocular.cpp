@@ -7,9 +7,6 @@
 #include "RayTracer.h"
 
 
-#define RES 1500
-#define FOV 90
-#define SCALE 3
 
 Vector3 filterRed(Vector3 in) {
 	return Vector3(0, in[1], in[2]);
@@ -25,10 +22,11 @@ Vector3 filterBlue(Vector3 in) {
 
 
 int main(int argc, char* argv[]) {
-	// Buffer<Vector3>* lbuffer = new Buffer<Vector3>(RES, RES);
-	// Buffer<Vector3>* rbuffer = new Buffer<Vector3>(RES, RES);
-	Buffer<Vector3>* buffer = new Buffer<Vector3>(2*RES, RES);
-
+	
+	int RES = 300;
+	int SCALE = 3;
+	float FOV = 90;
+	float EYEDIS = 0.03;
 
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
@@ -36,6 +34,37 @@ int main(int argc, char* argv[]) {
 		printf("Usage %s input.obj output.png\n", argv[0]);
 		exit(0);
 	}
+
+	//parse args
+	for(int i = 3; i < argc; i++) {
+		if(strcmp(argv[i], "-res") == 0) {
+			int check = atoi(argv[i+1]);
+			if(check == 0) {
+				printf("Size not an int//Cannot use zero.\n");
+				exit(2);
+			}
+			if(check < 0) {
+				printf("size must be positive.\n");
+				exit(3);
+			}
+			RES = check;
+		}
+		if(strcmp(argv[i], "-scale") == 0) {
+			int check = atoi(argv[i+1]);
+			if(check == 0) {
+				printf("scale not an int//Cannot use zero.\n");
+				exit(2);
+			}
+			if(check < 0) {
+				printf("scale must be positive.\n");
+				exit(3);
+			}
+			SCALE = check;
+		}
+	}
+	RES *= SCALE;
+
+	Buffer<Vector3>* buffer = new Buffer<Vector3>(2*RES, RES);
 
 	// bool debug = false;
 
@@ -63,8 +92,8 @@ int main(int argc, char* argv[]) {
 
 	Camera* camera = loader->getCamera();
 	float dis = camera->getFocusDistance();
-	Camera* leftCam = camera->getOffset(-0.01*dis);
-	Camera* rightCam = camera->getOffset(0.01*dis);
+	Camera* leftCam = camera->getOffset(-EYEDIS*dis);
+	Camera* rightCam = camera->getOffset(EYEDIS*dis);
 
 	printVector(leftCam->getW());
 	printVector(rightCam->getW());
@@ -103,6 +132,8 @@ int main(int argc, char* argv[]) {
 			buffer->at(x+RES, y) = right;
 		}
 	}
+
+	printf("Blending...\n");
 
 	Blender* b = new Blender();
 	Buffer<Color>* image = b->bufferToImage(b->blend(buffer, SCALE));

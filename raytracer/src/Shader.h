@@ -59,8 +59,15 @@ public:
 		}
 
 		//TODO: Add transparency.
-		if(m->trans < 1) {
+		if(m->trans < 0.999) {
 			transRatio = 1 - m->trans;
+			Ray* transRay = new Ray(ray->getPointAt(hp.t), ray->getD());
+			float dis = 0;
+			if(numReflected > 0) {
+				dis = t;
+			}
+			transColor = castRay(transRay, scene, camera, clearColor, numReflected, totalDis+dis);
+
 		}
 
 

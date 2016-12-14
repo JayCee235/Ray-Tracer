@@ -168,6 +168,11 @@ public:
 				m->diffuse[0], m->diffuse[1], m->diffuse[2]);
 			toReturn->push_back(newLight);
 		}
+
+		if(toReturn->size() == 0) {
+			Light* l = new Light(Vector3(0, 100, 0), new Material());
+			toReturn->push_back(l);
+		}
 		return toReturn;
 
 	}
@@ -233,6 +238,7 @@ public:
 
 		Camera* camera = new Camera(cam, vecLs, normLs);
 
+
 		return camera;
 	}
 
@@ -273,7 +279,11 @@ public:
 	}
 
 	int getLightCount() {
-		return data->lightPointCount;
+		int out = data->lightPointCount;
+		if(out == 0) {
+			return 1;
+		}
+		return out;
 	}
 
 

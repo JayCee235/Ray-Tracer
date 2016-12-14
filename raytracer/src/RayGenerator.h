@@ -1,7 +1,9 @@
 #ifndef __RAY_GEN
 #define __RAY_GEN
 
+#ifndef PI
 #define PI 3.141592653589793238
+#endif
 
 #include <stdio.h>
 #include <math.h>

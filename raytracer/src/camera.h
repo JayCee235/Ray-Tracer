@@ -29,14 +29,62 @@ public:
 		this->w = w + Vector3(0, 0, 0);
 	}
 
-	Camera(obj_camera* cam, obj_vector** vecLs, obj_vector** normLs) {
-		obj_vector* atObj = vecLs[cam->camera_pos_index];
-		obj_vector* lookingAtObj = vecLs[cam->camera_look_point_index];
-		obj_vector* upObj = normLs[cam->camera_up_norm_index];
+	Camera(Camera* copy) {
+		this->at = copy->at;
+		this->lookingAt = copy->lookingAt;
+		this->up = copy->up;
+		this->p = copy->p;
+		this->u = copy->u;
+		this->v = copy->v;
+		this->w = copy->w;
+	}
 
-		this->at = objToGenVec(atObj);
-		this->lookingAt = objToGenVec(lookingAtObj);
-		this->up = objToGenVec(upObj);
+	Camera(Vector3 at, Vector3 lookingAt, Vector3 up) {
+		if(up == Vector3(0, 0, 0)) {
+			up = Vector3(0, 1, 0);
+		}
+
+		Vector3 looking = lookingAt - at;
+
+		if(looking == Vector3(0, 0, 0)) {
+			looking = Vector3(0, 0, -1);
+		}
+
+		up.normalize();
+
+		this->at = at;
+		this->lookingAt = lookingAt;
+		this->up = up;
+
+		this->p = at;
+		this->w = -looking;
+		this->w.normalize();
+		this->u = up.cross(this->w);
+		this->u.normalize();
+		this->v = this->w.cross(this->u);
+		this->v.normalize();
+	}
+
+	Camera(obj_camera* cam, obj_vector** vecLs, obj_vector** normLs) {
+		if(vecLs != NULL) {
+			obj_vector* atObj = vecLs[cam->camera_pos_index];
+			obj_vector* lookingAtObj = vecLs[cam->camera_look_point_index];
+			this->at = objToGenVec(atObj);
+			this->lookingAt = objToGenVec(lookingAtObj);
+		} else {
+			this->at = Vector3(0, 0, 0);
+			this->lookingAt = Vector3(0, 0, -100);
+		}
+		if(normLs!=NULL) {
+			obj_vector* upObj = normLs[cam->camera_up_norm_index];
+			this->up = objToGenVec(upObj);
+		} else {
+			this->up = Vector3(0, 1, 0);
+		}
+		printf("Loaded vectors.\n");
+
+		
+		// this->up = objToGenVec(upObj);
 
 		if(up == Vector3(0, 0, 0)) {
 			up = Vector3(0, 1, 0);
@@ -66,6 +114,29 @@ public:
 	float getFocusDistance() {
 		Vector3 looking = lookingAt - at;
 		return looking.length();
+	}
+
+	Camera* rotateAroundFocus(float rad) {
+		Vector3 newLookingAt = this->lookingAt;
+		Vector3 newUp = this->up;
+		Vector3 newAt = this->at;
+		newAt -= newLookingAt;
+
+		float radius = this->getFocusDistance();
+
+		float x1 = cos(rad)*radius;
+		float y1 = sin(rad)*radius;
+
+		printf("%.2f, %.2f, %.2f\n", radius, x1, y1);
+
+		newAt -= this->w * radius;
+		newAt += this->w * x1;
+		newAt += this->u * y1;
+
+		newAt += newLookingAt;
+
+		return new Camera(newAt, newLookingAt, newUp);
+
 	}
 
 	Camera* getOffset(float dis) {

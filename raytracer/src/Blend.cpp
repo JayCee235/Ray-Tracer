@@ -6,22 +6,49 @@
 
 #include "RayTracer.h"
 
-
-#define RES 900
-#define FOV 90
-#define SCALE 3
-
-
 int main(int argc, char* argv[]) {
-	Buffer<Vector3>* buffer = new Buffer<Vector3>(RES, RES);
-
+	
+	int RES = 300;
+	int SCALE = 3;
+	float FOV = 90;
 
 	//Need at least two arguments (obj input and png output)
-	if(argc < 4)
+	if(argc < 3)
 	{
-		printf("Usage %s input.obj output.png output2.png\n", argv[0]);
+		printf("Usage %s input.obj output.png\n", argv[0]);
 		exit(0);
 	}
+
+	//parse args
+	for(int i = 3; i < argc; i++) {
+		if(strcmp(argv[i], "-res") == 0) {
+			int check = atoi(argv[i+1]);
+			if(check == 0) {
+				printf("Size not an int//Cannot use zero.\n");
+				exit(2);
+			}
+			if(check < 0) {
+				printf("size must be positive.\n");
+				exit(3);
+			}
+			RES = check;
+		}
+		if(strcmp(argv[i], "-scale") == 0) {
+			int check = atoi(argv[i+1]);
+			if(check == 0) {
+				printf("scale not an int//Cannot use zero.\n");
+				exit(2);
+			}
+			if(check < 0) {
+				printf("scale must be positive.\n");
+				exit(3);
+			}
+			SCALE = check;
+		}
+	}
+	RES *= SCALE;
+
+	Buffer<Vector3>* buffer = new Buffer<Vector3>(RES, RES);
 
 	// bool debug = false;
 
@@ -75,18 +102,18 @@ int main(int argc, char* argv[]) {
 	}
 
 	Buffer<Color>* image = new Buffer<Color>(RES/SCALE, RES/SCALE);
-	Buffer<Color>* image2 = new Buffer<Color>(RES/SCALE, RES/SCALE);
+	// Buffer<Color>* image2 = new Buffer<Color>(RES/SCALE, RES/SCALE);
 
 	Blender* b = new Blender();
 
 	image = b->bufferToImage(b->blend(buffer, SCALE));
-	image2 = b->bufferToImage(b->scaleDown(buffer, SCALE));
+	// image2 = b->bufferToImage(b->scaleDown(buffer, SCALE));
 
 
 
 	//Write output buffer to file argv2
 	simplePNG_write(argv[2], image->getWidth(), image->getHeight(), (unsigned char*)&image->at(0,0));
-	simplePNG_write(argv[3], image2->getWidth(), image2->getHeight(), (unsigned char*)&image2->at(0,0));
+	// simplePNG_write(argv[3], image2->getWidth(), image2->getHeight(), (unsigned char*)&image2->at(0,0));
 	printf("Finished.\n");
 
 	return 0;

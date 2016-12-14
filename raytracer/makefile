@@ -29,22 +29,28 @@ bufferTest: bufferTest.o
 	g++ bufferTest.o -o bufferTest
 
 RayTracer.o: src/RayTracer.cpp
-	g++ src/RayTracer.cpp -c -o RayTracer.o
+	g++ -O3 src/RayTracer.cpp -c -o RayTracer.o
 
 RayTracer: RayTracer.o
-	g++ RayTracer.o -o RayTracer
+	g++ -O3 RayTracer.o -o RayTracer
 
 Blend.o: src/Blend.cpp
-	g++ src/Blend.cpp -c -o Blend.o
+	g++ -O3 src/Blend.cpp -c -o Blend.o
 
 Blend: Blend.o
-	g++ Blend.o -o Blend
+	g++ -O3 Blend.o -o Blend
 
 Binocular.o: src/Binocular.cpp
-	g++ src/Binocular.cpp -c -o Binocular.o
+	g++ -O3 src/Binocular.cpp -c -o Binocular.o
 
 Binocular: Binocular.o
-	g++ Binocular.o -o Binocular
+	g++ -O3 Binocular.o -o Binocular
+
+Animation.o: src/Animation.cpp
+	g++ -O3 src/Animation.cpp -c -o Animation.o
+
+Animation: Animation.o
+	g++ -O3 Animation.o -o Animation
 
 SphereTest.o: src/SphereTest.cpp
 	g++ src/SphereTest.cpp -c -o SphereTest.o
@@ -95,7 +101,34 @@ runBlendTest: Blend
 	./Blend res/spheres.obj res/spheres_blended.png res/spheres_unblended.png
 	./Blend res/blue_sphere.obj res/blue_sphere_blended.png res/blue_sphere_unblended.png
 
-all: runBlueSphereTest runCornellBoxTest runMultiSphereTest
+runBunnyTests: RayTracer Blend Binocular
+	./RayTracer res/bunny-scene.obj res/bunny-scene.png -res 1000
+	./Blend res/bunny-scene.obj res/bunny-scene_blended.png res/bunny-scene_unblended.png -res 1000 -scale 3
+	./Binocular res/bunny-scene.obj res/bunny-scene_binocular.png -res 1000 -scale 3	
+
+megaBunny: Blend
+	./Blend res/bunny-scene.obj res/bunny-scene_mega.png res/bunny-scene_lessMega.png -res 100 -scale 100
+
+runHappyTest: RayTracer res/happy-scene.obj res/happy-scene.mtl
+	./RayTracer res/happy-scene.obj res/happy-scene.png -res 1000
+
+runHappyTestBlend: Blend res/happy-scene.obj res/happy-scene.mtl
+	./Blend res/happy-scene.obj res/happy-scene_blended.png res/happy-scene_unblended.png -res 1000 -scale 3
+
+runHappyTestBinocular: Binocular res/happy-scene.obj res/happy-scene.mtl
+	./Binocular res/happy-scene.obj res/happy-scene_binocular.png -res 1000 -scale 3
+
+bunnyIcon: RayTracer
+	./RayTracer res/bunny-scene.obj res/bunny_icon.png -res 32
+
+megaResCornell: Blend
+	./Blend res/cornell_box.obj res/cornell_box_hd.png -res 100 -scale 10
+
+megaResSpheres: Blend
+	./Blend res/spheres.obj res/spheres_hd.png -res 100 -scale 10
+
+
+all: RayTracer Binocular Blend
 
 clean: 
 	rm -f core *.o  *Test RayTracer Binocular Blend

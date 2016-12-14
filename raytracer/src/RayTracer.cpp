@@ -5,22 +5,37 @@
  */
 
 #include "RayTracer.h"
-
-
-#define RES 500
-#define FOV 90
+#include <cstring>
 
 
 int main(int argc, char* argv[]) {
-	Buffer<Vector3>* buffer = new Buffer<Vector3>(RES, RES);
-
+	int RES = 500;
+	float FOV = 90;
 
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
 	{
 		printf("Usage %s input.obj output.png\n", argv[0]);
-		exit(0);
+		exit(1);
 	}
+
+	//parse args
+	for(int i = 3; i < argc; i++) {
+		if(strcmp(argv[i], "-res") == 0) {
+			int check = atoi(argv[i+1]);
+			if(check == 0) {
+				printf("Size not an int//Cannot use zero.\n");
+				exit(2);
+			}
+			if(check < 0) {
+				printf("size must be positive.\n");
+				exit(3);
+			}
+			RES = check;
+		}
+	}
+
+	Buffer<Vector3>* buffer = new Buffer<Vector3>(RES, RES);
 
 	// bool debug = false;
 
