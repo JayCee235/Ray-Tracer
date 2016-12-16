@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
 	int RES = 300;
 	int SCALE = 3;
 	float FOV = 90;
+	bool IMPLICITCALC = false;
 
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
@@ -45,6 +46,9 @@ int main(int argc, char* argv[]) {
 			}
 			SCALE = check;
 		}
+		if(strcmp(argv[i], "-calcNormal") == 0) {
+				IMPLICITCALC = true;
+			}
 	}
 	RES *= SCALE;
 
@@ -63,7 +67,7 @@ int main(int argc, char* argv[]) {
 	// objLoader objDat = objLoader();
 	// objDat.load(argv[1]);
 
-	Loader* loader = new Loader();
+	Loader* loader = new Loader(IMPLICITCALC);
 	loader->load(argv[1]);
 
 	printf("Loader loaded.\n");

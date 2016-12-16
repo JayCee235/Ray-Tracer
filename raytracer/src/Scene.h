@@ -28,7 +28,8 @@ public:
 		printf("Making Loader\n");
 		this->loader = loader;
 		printf("Loading prims\n");
-		this->primList = this->loader->getPrimitives();
+		// this->primList = this->loader->getPrimitives();
+		this->primList = new std::vector<Primitive*>();
 		printf("Loading Lights...\n");
 		this->lightList = this->loader->getLights();
 		printf("loading camera.\n");
@@ -43,6 +44,7 @@ public:
 		for(int i = 0; i < lightList->size(); i++) {
 			this->ambient = this->ambient + lightList[0][i]->getMaterial()->ambient;
 		}
+		this->primList->push_back(this->tree);
 	}
 
 	Vector3 getAmbient() {

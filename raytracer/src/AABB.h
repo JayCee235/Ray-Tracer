@@ -11,6 +11,7 @@ class AABB : public Primitive
 private:
 	Vector3 min, max;
 public:
+	AABB() {}
 	AABB(Primitive* p) {
 		this->min = p->getMinimumPoint();
 		this->max = p->getMaximumPoint();
@@ -20,10 +21,10 @@ public:
 		this->max = max;
 	}
 
-	AABB(AABB* copy) {
-		this->min  = copy->min + Vector3(0, 0, 0);
-		this->max = copy->max + Vector3(0, 0, 0);
-	}
+	// AABB(AABB* copy) {
+	// 	this->min  = copy->min + Vector3(0, 0, 0);
+	// 	this->max = copy->max + Vector3(0, 0, 0);
+	// }
 	~AABB() {}
 
 	void resizeToFit(AABB* a) {
@@ -46,16 +47,40 @@ public:
 		this->max = newMax;
 	}
 
+	bool isCenteredInside(AABB* a) {
+		// this->printBox();
+		// a->printBox();
+		printf("\n");
+		Vector3 mid = a->min + a->max;
+		mid = mid * 0.5;
+		for(int i = 0; i < 3; i++) {
+			if(mid[i] < min[i] || mid[i] > max[i]) {
+				// printf("For every night\n");
+				return false;
+			}
+		}
+		// printf("There is day\n");
+		return true;
+	}
+
 	float getCurrentVolume() {
-		Vector3 lwh = max - min;
+		Vector3 lwh = this->max - this->min;
 		float out = lwh[0] * lwh[1] * lwh[2];
 		return out;
 	}
 
 	float getNewVolume(AABB* a) {
+		AABB toCheck = AABB(this);
+		toCheck.resizeToFit(a);
+		return toCheck.getCurrentVolume();
+	}
+
+	float getAddedVolume(AABB* a) {
 		AABB* toCheck = new AABB(this);
 		toCheck->resizeToFit(a);
-		return toCheck->getCurrentVolume();
+		float toReturn = toCheck->getCurrentVolume() - this->getCurrentVolume();
+		delete(toCheck);
+		return toReturn;
 	}
 
 	float intersect(Ray* r) {
@@ -117,11 +142,58 @@ public:
 	}
 
 	Vector3 getMinimumPoint() {
-		return min + Vector3(0, 0, 0);
+		return min;
 	}
 
 	Vector3 getMaximumPoint() {
-		return max + Vector3(0, 0, 0);
+		return max;
+	}
+
+	void setBounds(Vector3 min, Vector3 max) {
+		this->min = min;
+		this->max = max;
+	}
+
+	void split(AABB* a1, AABB* a2) {
+		Vector3 dif = this->max - this->min;
+		if(dif[0] > dif[1] && dif[0] > dif[2]) {
+			float newx = (this->max[0] + this->min[0]) * 0.5;
+			a1->setBounds(Vector3(min[0], min[1], min[2]), Vector3(newx, max[1], max[2]));
+			a2->setBounds(Vector3(newx, min[1], min[2]), Vector3(max[0], max[1], max[2]));
+		} else if(dif[1] > dif[2]) {
+			float newy = (this->max[1] + this->min[1]) * 0.5;
+			a1->setBounds(Vector3(min[0], min[1], min[2]), Vector3(max[0], newy, max[2]));
+			a2->setBounds(Vector3(min[0], newy, min[2]), Vector3(max[0], max[1], max[2]));
+		} else {
+			float newz = (this->max[2] + this->min[2]) * 0.5;
+			a1->setBounds(Vector3(min[0], min[1], min[2]), Vector3(max[0], max[1], newz));
+			a2->setBounds(Vector3(min[0], min[1], newz), Vector3(max[0], max[1], max[2]));
+		}
+		// a1->printBox();
+		// a2->printBox();
+		// printf("\n");
+	}
+
+	void splitAt(Vector3 center, AABB* a1, AABB* a2) {
+		Vector3 dif = this->max - this->min;
+		if(dif[0] > dif[1] && dif[0] > dif[2]) {
+			float newx = center[0];
+			a1->setBounds(Vector3(min[0], min[1], min[2]), Vector3(newx, max[1], max[2]));
+			a2->setBounds(Vector3(newx, min[1], min[2]), Vector3(max[0], max[1], max[2]));
+		} else if(dif[1] > dif[2]) {
+			float newy = center[1];
+			a1->setBounds(Vector3(min[0], min[1], min[2]), Vector3(max[0], newy, max[2]));
+			a2->setBounds(Vector3(min[0], newy, min[2]), Vector3(max[0], max[1], max[2]));
+		} else {
+			float newz = center[2];
+			a1->setBounds(Vector3(min[0], min[1], min[2]), Vector3(max[0], max[1], newz));
+			a2->setBounds(Vector3(min[0], min[1], newz), Vector3(max[0], max[1], max[2]));
+		}
+	}
+
+	void printBox() {
+		printf("Min: (%.4f, %.4f, %.4f)\n", min[0], min[1], min[2]);
+		printf("Max: (%.4f, %.4f, %.4f)\n", max[0], max[1], max[2]);
 	}
 };
 

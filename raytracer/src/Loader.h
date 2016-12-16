@@ -13,13 +13,15 @@ Vector3 objToGenVec(obj_vector const * objVec)
 }
 #endif
 
+#include <vector>
+#include <map>
+
 #include "Primitive.h"
 #include "Sphere.h"
 #include "Triangle.h"
 #include "camera.h"
 #include "Light.h"
 #include "AABB.h"
-#include <vector>
 #include "BVHTree.h"
 
 class Loader {
@@ -27,8 +29,14 @@ private:
 	objLoader* data;
 	std::vector<Material*>* matList; 
 	int numMat;
+	bool implicitTriangleCalculation;
 public:
-	Loader() {}
+	Loader() {
+		this->implicitTriangleCalculation = false;
+	}
+	Loader(bool implicitTriangleCalculation) {
+		this->implicitTriangleCalculation = implicitTriangleCalculation;
+	}
 
 	void load(const char* filename) {
 		printf("Loading loader... ");
@@ -59,7 +67,7 @@ public:
 		matList->push_back(new Material());
 		this->numMat = this->numMat + 1;
 
-		printMaterialTest();
+		// printMaterialTest();
 		
 	}
 
@@ -89,15 +97,17 @@ public:
 
 	BVHTree* getTree() {
 		std::vector<Primitive*>* primList = this->getPrimitives();
-		BVHTree* out = new BVHTree(primList[0][0]);
+		printf("Construcint BVH tree...\n");
+		return new BVHTree(primList);
+		// BVHTree* out = new BVHTree(primList[0][0]);
 
-		printf("Constructing BVH tree...\n");
-		for(int i = 1; i < primList->size(); i++) {
-			out = out->insertPrimitive(primList[0][i]);
-		}
-		out->forceCheck();
-		out->printTree();
-		return out;
+		// printf("Constructing BVH tree...\n");
+		// for(int i = 1; i < primList->size(); i++) {
+		// 	out = out->insertPrimitive(primList[0][i]);
+		// }
+		// out->forceCheck();
+		// out->printTree();
+		// return out;
 	}
 
 
@@ -195,23 +205,29 @@ public:
 		obj_vector** vecLs = data->vertexList;
 		obj_vector** normLs = data->normalList;
 
+		bool implicitTriangleCalculation = this->implicitTriangleCalculation && 
+			(normLs == NULL || data->normalCount <= 1);
+		// implicitTriangleCalculation = false;
+
 		std::vector<Triangle*>* toReturn = new std::vector<Triangle*>();
+
+
+		std::vector<Ray*> vertices = std::vector<Ray*>();
+		std::map<Ray*, std::vector<Triangle*> > vertexMap = std::map<Ray*, std::vector<Triangle*> >();
+		if(implicitTriangleCalculation) {
+			printf("Calculating triangle normals...\n");
+			for(int i = 0; i < data->vertexCount; i++) {
+				Ray* vert = new Ray();
+				vert->setP(objToGenVec(vecLs[i]));
+				vertices.push_back(vert);
+				vertexMap[vert] = std::vector<Triangle*>();
+			}
+		}
 
 		int i;
 		for(i = 0; i < count; i++) {
 			obj_face* faceToCheck = faceList[i];
 			if(faceToCheck->vertex_count == 3) {
-				// int ai = faceToCheck->vertex_index[0];
-				// int bi = faceToCheck->vertex_index[1];
-				// int ci = faceToCheck->vertex_index[2];
-
-				// Vector3 aVec = objToGenVec(vecLs[ai]);
-				// Vector3 bVec = objToGenVec(vecLs[bi]);
-				// Vector3 cVec = objToGenVec(vecLs[ci]);
-
-				// printf("Getting material for triangle...\n");
-				// printf("Triangle uses index %d.\n", faceToCheck->material_index);
-
 				int matIndex = faceToCheck->material_index;
 				if(matIndex >= numMat || matIndex < 0) {
 					matIndex = numMat - 1;
@@ -222,12 +238,55 @@ public:
 				// printf("Gathered material.\n");
 				// m->printAbbrInfo();
 
-				Triangle* toAdd = new Triangle(faceToCheck, vecLs, normLs, m);
+				if(implicitTriangleCalculation) {
+					Ray* a = vertices[faceToCheck->vertex_index[0]];
+					Ray* b = vertices[faceToCheck->vertex_index[1]];
+					Ray* c = vertices[faceToCheck->vertex_index[2]];
 
-				toReturn->push_back(toAdd);
+					Triangle* toAdd = new Triangle(a, b, c, m);
+					vertexMap[a].push_back(toAdd);
+					vertexMap[b].push_back(toAdd);
+					vertexMap[c].push_back(toAdd);
+					toReturn->push_back(toAdd);
+				} else {
+					Triangle* toAdd = new Triangle(faceToCheck, vecLs, normLs, m);
+					toReturn->push_back(toAdd);
+				}
 			}
 		}
-
+		if(implicitTriangleCalculation){
+			for(int i = 0; i < vertices.size(); i++) {
+				Ray* work = vertices[i];
+				std::vector<Triangle*> workList = vertexMap[work];
+				Vector3 normal = Vector3(0, 0, 0);
+				for(int j = 0; j < workList.size(); j++) {
+					normal = normal + workList[j]->getTriangleCrossProduct();
+				}
+					// Vector3 oldNormal = Vector3(normal);
+					// if(normal == Vector3(0, 0, 0)) {
+					// 	normal == Vector3(0, 1, 0);
+					// }
+					// oldNormal.normalize();
+					// normal = Vector3(0, 0, 0);
+					// for(int j = 0; j < workList.size(); j++) {
+					// 	Vector3 checkVec = Vector3(workList[j]->getTriangleCrossProduct());
+					// 	checkVec.normalize();
+					// 	float ratio = checkVec.dot(oldNormal);
+					// 	normal = normal + workList[j]->getTriangleCrossProduct()*ratio;
+					// }
+					// if(normal == Vector3(0, 0, 0)) {
+					// 	normal == Vector3(0, 1, 0);
+					// }
+				normal.normalize();
+				work->setD(normal);
+			}
+			for(int i = 0; i < toReturn->size(); i++) {
+				toReturn[0][i]->clonePoints();
+			}
+			for(int i = 0; i < vertices.size(); i++) {
+				delete(vertices[i]);
+			}
+		}
 		return toReturn;
 	}
 

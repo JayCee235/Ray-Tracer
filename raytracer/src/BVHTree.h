@@ -1,6 +1,7 @@
 #ifndef __BVHTREE
 #define __BVHTREE
 
+#include <vector>
 #include "vector/GenVector.h"
 #include "Primitive.h"
 #include "HitPoint.h"
@@ -47,6 +48,108 @@ public:
 		this->data = new BVHNode(copy->data);
 		this->red = copy->red;
 		this->parent = NULL;
+	}
+
+	BVHTree(std::vector<Primitive*>* prims) {
+		// printf("Who1\n");
+		if(prims == NULL) {
+			this->left = NULL;
+			this->right = NULL;
+			this->data = NULL;
+			this->parent = NULL;
+			this->red = 1;
+		} else if(prims->size() == 1) {
+			this->data = new BVHNode(prims[0][0]);
+			this->left = NULL;
+			this->right = NULL;
+			this->parent = NULL;
+			this->red = 0;
+		} else {
+			AABB* totalBox = new AABB(prims[0][0]);
+			Vector3 calcCenter = Vector3(0, 0, 0);
+			// printf("Initial volume is %f\n", totalBox->getCurrentVolume());
+			for(int i = 0; i < prims->size(); i++) {
+				AABB coolBox = AABB(prims[0][i]);
+				totalBox->resizeToFit(&coolBox);
+				calcCenter += (coolBox.getMaximumPoint() + coolBox.getMinimumPoint());
+				// printf("Now volume is %.2f\n", totalBox->getCurrentVolume());
+			}
+			calcCenter /= prims->size()*2;
+			Vector3 dif = totalBox->getMaximumPoint() - totalBox->getMinimumPoint();
+			AABB* split1 = new AABB();
+			AABB* split2 = new AABB();
+			std::vector<Primitive*> left = std::vector<Primitive*>();
+			std::vector<Primitive*> right = std::vector<Primitive*>();
+			totalBox->splitAt(calcCenter, split1, split2);
+			// split1->printBox();
+			// split2->printBox();
+			// printf("\n");
+			// printf("Volumes: %.2f and %.2f\n", split1->getCurrentVolume(), split2->getCurrentVolume());
+			// printf("Wh3o\n");
+			AABB* check;
+			for(int i = 0; i < prims->size(); i++) {
+				// printf("Who4\n");
+				check = new AABB(prims[0][i]);
+				// printf("Who5\n");
+				float leftSide = split1->getAddedVolume(check);
+				float rightSide = split2->getAddedVolume(check);
+
+				// if(leftSide > -0.0000001 && leftSide < 0.0000001 && rightSide > -0.0000001 && rightSide < 0.0000001) {
+				// 	leftSide = 1.0f * left.size();
+				// 	rightSide = 1.0f * right.size();
+				// }
+
+				if(leftSide < rightSide) {
+					// printf("Who6\n");
+					left.push_back(prims[0][i]);
+				} else {
+					// printf("Who7\n");
+					right.push_back(prims[0][i]);
+				}
+				delete(check);
+			}
+			// printf("Wh8o\n");
+			if(left.size() == 0) {
+				AABB cool = AABB(right[0]);
+				float min = split1->getAddedVolume(&cool);
+				int minIndex = 0;
+				for(int i = 1; i < right.size(); i++) {
+					cool = AABB(right[i]);
+					float check = split1->getAddedVolume(&cool);
+					if(check < min) {
+						min = check;
+						minIndex = i;
+					}
+				}
+				left.push_back(right[minIndex]);
+				right.erase(right.begin()+minIndex);
+			}
+			// printf("Wh9o\n");
+			if(right.size() == 0) {
+				AABB cool = AABB(left[0]);
+				float min = split1->getAddedVolume(&cool);
+				int minIndex = 0;
+				for(int i = 1; i < left.size(); i++) {
+					cool = AABB(left[i]);
+					float check = split1->getAddedVolume(&cool);
+					if(check < min) {
+						min = check;
+						minIndex = i;
+					}
+				}
+				right.push_back(left[minIndex]);
+				left.erase(left.begin()+minIndex);
+			}
+			// printf("Who10\n");
+			delete(split1);
+			delete(split2);
+			// printf("Who11\n");
+			this->data = new BVHNode(totalBox);
+			this->red = 0;
+			this->left = new BVHTree(&left);
+			this->right = new BVHTree(&right);
+			this->informChildren();
+		}
 	}
 
 	BVHTree* getParent() {

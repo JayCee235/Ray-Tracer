@@ -1,0 +1,10 @@
+#ifndef __HITPOINT
+#define __HITPOINT
+
+#include "Primitive.h"
+#include "vector/GenVector.h"
+
+struct HitPoint;
+void printHitPoint(struct HitPoint* hp);
+
+#endif

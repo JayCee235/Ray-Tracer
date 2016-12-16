@@ -1,35 +1,65 @@
-vecTest.o: src/vector/test.cpp src/vector/GenVector.h
-	g++ src/vector/test.cpp -c -o vecTest.o
+#Classes
+# AABB.o: src/AABB.cpp
+# 	g++ src/AABB.cpp -c -O3 -o AABB.o
 
-pngTest.o: src/png/test.c src/png/simplePNG.h
-	gcc -std=c99 src/png/test.c -c -o pngTest.o
+# AnimationPath.o: src/AnimationPath.cpp
+# 	g++ src/AnimationPath.cpp -c -O3 -o AnimationPath.o
 
-objLoadTest.o: src/objload/objLoader.hpp src/objload/obj_parser.h src/objload/test.cpp res/test.mtl res/test.obj
-	g++ src/objload/test.cpp -c -o objLoadTest.o
+# Blender.o: src/Blender.cpp
+# 	g++ src/Blender.cpp -c -O3 -o Blender.o
 
-bufferTest.o: src/buffer/Buffer.h src/buffer/test.cpp
-	g++ src/buffer/test.cpp -c -o bufferTest.o
+# BVHNode.o: src/BVHNode.cpp
+# 	g++ src/BVHNode.cpp -c -O3 -o BVHNode.o
 
-ioTest.o: src/ioTest.cpp
-	g++ src/ioTest.cpp -c -o ioTest.o
+# BVHTree.o: src/BVHTree.cpp
+# 	g++ src/BVHTree.cpp -c -O3 -o BVHTree.o
 
-ioTest: ioTest.o
-	g++ ioTest.o -o ioTest
+# calcQuad.o: src/calcQuad.cpp
+# 	g++ src/calcQuad.cpp -c -O3 -o BVHTree.o
 
-vecTest: vecTest.o
-	g++ vecTest.o -o vecTest
+# Camera.o: src/camera.cpp
+# 	g++ src/camera.cpp -c -O3 -o Camera.o
 
-pngTest: pngTest.o
-	gcc pngTest.o -o pngTest
+# HitPoint.o: src/HitPoint.cpp
+# 	g++ src/HitPoint.cpp -c -O3 -o HitPoint.o
 
-objLoadTest: objLoadTest.o
-	g++ objLoadTest.o -o objLoadTest
+# Light.o: src/Light.cpp
+# 	g++ src/Light.cpp -c -O3 -o Light.o
 
-bufferTest: bufferTest.o
-	g++ bufferTest.o -o bufferTest
+# Loader.o: src/Loader.cpp
+# 	g++ src/Loader.cpp -c -O3 -o Loader.o
+
+# Material.o: src/Material.cpp
+# 	g++ src/Material.cpp -c -O3 -o Material.o
+
+# ObjToGenVec.o: src/ObjToGenVec.cpp
+# 	g++ src/ObjToGenVec.cpp -c -O3 -o ObjToGenVec.o
+
+# Primitive.o: src/Primitive.cpp
+# 	g++ src/Primitive.cpp -c -O3 -o Primitive.o
+
+# Ray.o: src/Ray.cpp
+# 	g++ src/Ray.cpp -c -O3 -o Ray.o
+
+# RayGenerator.o: src/RayGenerator.cpp
+# 	g++ src/RayGenerator.cpp -c -O3 -o RayGenerator.o
+
+# Scene.o: src/Scene.cpp
+# 	g++ src/Scene.cpp -c -O3 -o Scene.o
+
+# Sphere.o: src/Sphere.cpp
+# 	g++ src/Sphere.cpp -c -O3 -o Sphere.o
+
+# Triangle.o: src/Triangle.cpp
+# 	g++ src/Triangle.cpp -c -O3 -o Triangle.o
+
+
 
 RayTracer.o: src/RayTracer.cpp
 	g++ -O3 src/RayTracer.cpp -c -o RayTracer.o
+
+#RayTracer: RayTracer.o AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
+#	g++ -O3 RayTracer.o -o RayTracer
 
 RayTracer: RayTracer.o
 	g++ -O3 RayTracer.o -o RayTracer
@@ -37,57 +67,35 @@ RayTracer: RayTracer.o
 Blend.o: src/Blend.cpp
 	g++ -O3 src/Blend.cpp -c -o Blend.o
 
-Blend: Blend.o
+Blend: Blend.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 	g++ -O3 Blend.o -o Blend
 
 Binocular.o: src/Binocular.cpp
 	g++ -O3 src/Binocular.cpp -c -o Binocular.o
 
-Binocular: Binocular.o
+Binocular: Binocular.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 	g++ -O3 Binocular.o -o Binocular
 
 Animation.o: src/Animation.cpp
 	g++ -O3 src/Animation.cpp -c -o Animation.o
 
-Animation: Animation.o
+Animation: Animation.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 	g++ -O3 Animation.o -o Animation
 
-AnimationPath.o: src/AnimPairTest.cpp
+AnimPairTest.o: src/AnimPairTest.cpp
 	g++ -O3 src/AnimPairTest.cpp -c -o AnimationPath.o
 
-AnimationPath: AnimationPath.o
+AnimPairTest: AnimationPath.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 	g++ -O3 AnimationPath.o -o AnimationPath
 
-AnimationPathTest: AnimationPath
+
+
+AnimationPathTest: AnimPairTest
 	./AnimationPath res/cornell_box.obj res/testFolder/cornell_ -res 200
 
-
-SphereTest.o: src/SphereTest.cpp
-	g++ src/SphereTest.cpp -c -o SphereTest.o
-
-SphereTest: SphereTest.o
-	g++ SphereTest.o -o SphereTest
-
-allTest: vecTest pngTest objLoadTest bufferTest ioTest SphereTest
-
-runIOTest: ioTest
-	./ioTest res/test1.obj res/test1.png
-	./ioTest res/test2.obj res/test2.png
-	./ioTest res/test3.obj res/test3.png
-	./ioTest res/test4.obj res/test4.png
-	./ioTest res/test5.obj res/test5.png
-
-runSphereTest: SphereTest
-	./SphereTest res/SphereTest1.obj res/SphereTest1.png
-	./SphereTest res/SphereTest2.obj res/SphereTest2.png
-
-runTriangleTest: SphereTest
-	./SphereTest res/triangleTest1.obj res/triangleTest1.png
-	./SphereTest res/triangleTest2.obj res/triangleTest2.png
-
 runNormalShadingTest: RayTracer
-	./RayTracer res/NormalShadingTest1.obj res/NormalShadingTest1.png
-	./RayTracer res/NormalShadingTest2.obj res/NormalShadingTest2.png
+	./RayTracer res/bunny-scene.obj res/bunny-scene_normal1.png -res 1000 -calcNormal
+	./RayTracer res/bunny-scene.obj res/bunny-scene_normal2.png -res 1000
 
 runBlueSphereTest: RayTracer
 	./RayTracer res/blue_sphere.obj res/blue_sphere.png
@@ -112,9 +120,9 @@ runBlendTest: Blend
 	./Blend res/blue_sphere.obj res/blue_sphere_blended.png res/blue_sphere_unblended.png
 
 runBunnyTests: RayTracer Blend Binocular
-	./RayTracer res/bunny-scene.obj res/bunny-scene.png -res 1000
-	./Blend res/bunny-scene.obj res/bunny-scene_blended.png res/bunny-scene_unblended.png -res 1000 -scale 3
-	./Binocular res/bunny-scene.obj res/bunny-scene_binocular.png -res 1000 -scale 3	
+	./RayTracer res/bunny-scene.obj res/bunny-scene.png -res 1000 -calcNormal
+	./Blend res/bunny-scene.obj res/bunny-scene_blended.png res/bunny-scene_unblended.png -res 1000 -scale 3 -calcNormal
+	./Binocular res/bunny-scene.obj res/bunny-scene_binocular.png -res 1000 -scale 3 -calcNormal
 
 megaBunny: Blend
 	./Blend res/bunny-scene.obj res/bunny-scene_mega.png res/bunny-scene_lessMega.png -res 100 -scale 10
@@ -126,7 +134,7 @@ runHappyTestBlend: Blend res/happy-scene.obj res/happy-scene.mtl
 	./Blend res/happy-scene.obj res/happy-scene_blended.png res/happy-scene_unblended.png -res 1000 -scale 3
 
 runHappyTestBinocular: Binocular res/happy-scene.obj res/happy-scene.mtl
-	./Binocular res/happy-scene.obj res/happy-scene_binocular.png -res 1000 -scale 3
+	./Binocular res/happy-scene.obj res/happy-scene_binocular.png -res 1000 -scale 3 -calcNormal
 
 bunnyIcon: RayTracer
 	./RayTracer res/bunny-scene.obj res/bunny_icon.png -res 32
@@ -136,7 +144,6 @@ megaResCornell: Blend
 
 megaResSpheres: Blend
 	./Blend res/spheres.obj res/spheres_hd.png -res 100 -scale 10
-
 
 all: RayTracer Binocular Blend
 

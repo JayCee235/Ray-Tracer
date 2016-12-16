@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 	float FOV = 90;
 	float EYEDIS = 0.03;
 	bool REDBLUE = false;
-
+	bool IMPLICITCALC = false;
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
 	{
@@ -65,6 +65,9 @@ int main(int argc, char* argv[]) {
 		if(strcmp(argv[i], "-rb") == 0) {
 			REDBLUE = true;
 		}
+		if(strcmp(argv[i], "-calcNormal") == 0) {
+			IMPLICITCALC = true;
+		}
 	}
 	RES *= SCALE;
 	int xRes = RES;
@@ -88,7 +91,7 @@ int main(int argc, char* argv[]) {
 	// objLoader objDat = objLoader();
 	// objDat.load(argv[1]);
 
-	Loader* loader = new Loader();
+	Loader* loader = new Loader(IMPLICITCALC);
 	loader->load(argv[1]);
 
 	printf("Loader loaded.\n");

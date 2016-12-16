@@ -1,0 +1,63 @@
+#ifndef __LOADER
+#define __LOADER
+
+#include <vector>
+#include <map>
+
+#include "objToGenVec.h"
+#include "Primitive.h"
+#include "Sphere.h"
+#include "Triangle.h"
+#include "camera.h"
+#include "Light.h"
+#include "AABB.h"
+#include "BVHTree.h"
+
+class Loader {
+private:
+	objLoader* data;
+	std::vector<Material*>* matList; 
+	int numMat;
+	bool implicitTriangleCalculation;
+public:
+	Loader() ;
+	Loader(bool implicitTriangleCalculation) ;
+
+	void load(const char* filename) ;
+
+	void printMaterialTest() ;
+
+	objLoader* getObjData() ;
+	obj_vector** getObjVertexList() ;
+	obj_sphere** getObjSphereList() ;
+	obj_camera* getObjCamera() ;
+
+	std::vector<Material*>* getMatList() ;
+
+	BVHTree* getTree() ;
+
+
+	std::vector<Sphere*>* getSpheres() ;
+
+	std::vector<Light*>* getLights() ;
+
+	std::vector<AABB*>* getAABBs() ;
+
+	std::vector<Triangle*>* getTriangles() ;
+
+	Camera* getCamera() ;
+
+
+
+	std::vector<Primitive*>* getPrimitives() ;
+
+	int getTriangleCount() ;
+
+	int getPrimCount() ;
+
+	int getLightCount() ;
+
+
+};
+
+#endif

@@ -16,6 +16,29 @@ public:
 		this->invD = Vector3(1, 1, 1)/this->d;
 	}
 
+	Ray() {
+		this->p = Vector3(0, 0, 0);
+		this->d = Vector3(0, 1, 0);
+		this->invD = Vector3(1, 1, 1)/this->d;
+	}
+
+	Ray(Ray* copy) {
+		this->p = copy->p + Vector3(0, 0, 0);
+		this->d = copy->d + Vector3(0, 0, 0);
+		this->invD = copy->invD + Vector3(0, 0, 0);
+	}
+
+	void setP(Vector3 p) {
+		this->p = p + Vector3(0, 0, 0);
+	}
+
+	void setD(Vector3 d) {
+		this->d = d + Vector3(0, 0, 0);
+		this->d.normalize();
+
+		this->invD = Vector3(1, 1, 1)/this->d;
+	} 
+
 	Vector3 getP() {
 		return this->p;
 	}

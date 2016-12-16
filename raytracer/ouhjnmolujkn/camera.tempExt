@@ -1,0 +1,48 @@
+#ifndef __CAMERA
+#define __CAMERA
+
+#include <stdio.h>
+#include "vector/GenVector.h"
+
+class Camera {
+private:
+	Vector3 at, lookingAt, up;
+	Vector3 p, u, v, w;
+public:
+	Camera() ;
+	Camera(Vector3 p, Vector3 u, Vector3 v, Vector3 w) ;
+
+	Camera(Camera* start, Camera* end, float time) ;
+
+	Camera(Camera* copy) ;
+
+	Camera(Vector3 at, Vector3 lookingAt, Vector3 up) ;
+
+	Camera(obj_camera* cam, obj_vector** vecLs, obj_vector** normLs) ;
+
+	float getFocusDistance() ;
+
+	Camera* rotateAroundFocus(float rad) ;
+
+	Camera* travelForward(float dis) ;
+
+	Camera* changeLookingAt(Vector3 newLookingAt) ;
+
+	Camera* getOffset(float dis) ;
+
+	Vector3 getP() ;
+
+	Vector3 getU() ;
+
+	Vector3 getV() ;
+
+	Vector3 getW() ;
+
+	Vector3 getAt() ;
+
+	Vector3 getLookingAt() ;
+
+	Vector3 getUp() ;
+};
+
+#endif

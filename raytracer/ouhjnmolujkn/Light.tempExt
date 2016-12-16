@@ -1,0 +1,25 @@
+#ifndef __LIGHTSOURCE
+#define __LIGHTSOURCE
+
+#include "vector/GenVector.h"
+#include "Material.h"
+
+class Light
+{
+private:
+	Vector3 p;
+	Material* m;
+public:
+	Light() ;
+	Light(Vector3 p, Material* m) ;
+
+	Material* getMaterial() ;
+
+	Vector3 getP() ;
+
+	~Light() ;;
+
+	void printLight() ;
+};
+
+#endif

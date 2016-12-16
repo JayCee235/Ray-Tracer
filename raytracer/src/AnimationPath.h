@@ -19,28 +19,9 @@ private:
 	struct AnimPair* first;
 	struct AnimPair* last;
 public:
-	AnimationPath() {}
-	AnimationPath(Camera* start, Camera* next, float t) {
-		this->first = (struct AnimPair*) malloc(sizeof(struct AnimPair));
-
-		this->first->from = start;
-		this->first->to = next;
-		this->first->start = 0;
-		this->first->end = t;
-		this->first->next = NULL;
-
-		this->last = this->first;
-		printf("AnimationPath created.\n");
-	}
-	~AnimationPath() {
-		struct AnimPair* cur = first;
-		while(cur != NULL) {
-			struct AnimPair* killd = cur;
-			cur = cur->next;
-			free(killd);
-		}
-	}
-
+	AnimationPath();
+	AnimationPath(Camera* start, Camera* next, float t);
+	~AnimationPath();
 	void addCamera(Camera* camera, float timeToReach) {
 		struct AnimPair* newPair = (struct AnimPair*) malloc(sizeof(struct AnimPair));
 		newPair->from = last->to;
