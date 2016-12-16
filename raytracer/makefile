@@ -145,6 +145,9 @@ megaResCornell: Blend
 megaResSpheres: Blend
 	./Blend res/spheres.obj res/spheres_hd.png -res 100 -scale 10
 
+HappyTime: RayTracer
+	time ./RayTracer res/happy-scene.obj res/happy-time.png -res 1000 -calcNormal
+
 all: RayTracer Binocular Blend
 
 clean: 

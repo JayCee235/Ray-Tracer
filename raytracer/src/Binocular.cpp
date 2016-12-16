@@ -29,6 +29,7 @@ int main(int argc, char* argv[]) {
 	float EYEDIS = 0.03;
 	bool REDBLUE = false;
 	bool IMPLICITCALC = false;
+	bool OVERLAP = false;
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
 	{
@@ -68,11 +69,14 @@ int main(int argc, char* argv[]) {
 		if(strcmp(argv[i], "-calcNormal") == 0) {
 			IMPLICITCALC = true;
 		}
+		if(strcmp(argv[i], "-depth") == 0) {
+			OVERLAP = true;
+		}
 	}
 	RES *= SCALE;
 	int xRes = RES;
 	int yRes = RES;
-	if(!REDBLUE) {
+	if(!(REDBLUE||OVERLAP)) {
 		xRes *= 2;
 	}
 
@@ -106,6 +110,7 @@ int main(int argc, char* argv[]) {
 	float dis = camera->getFocusDistance();
 	Camera* leftCam = camera->getOffset(-EYEDIS*dis);
 	Camera* rightCam = camera->getOffset(EYEDIS*dis);
+	Camera* cam3 = camera->travelForward(EYEDIS*dis*0.1);
 
 	printVector(leftCam->getW());
 	printVector(rightCam->getW());
@@ -114,12 +119,13 @@ int main(int argc, char* argv[]) {
 
 	RayGenerator* leftGen = new RayGenerator(leftCam, RES, RES, FOV);
 	RayGenerator* rightGen = new RayGenerator(rightCam, RES, RES, FOV);
+	RayGenerator* gen3 = new RayGenerator(cam3, RES, RES, FOV);
 
 	printf("Generator ready.\n");
 
 	Shader* leftShader = new Shader(scene, leftCam, Vector3(0, 0, 0));
 	Shader* rightShader = new Shader(scene, rightCam, Vector3(0, 0, 0));
-
+	Shader* thirdShader = new Shader(scene, cam3, Vector3(0, 0, 0));
 	//Convert vectors to RGB colors for testing results
 	Vector3 white = Vector3(255.0f, 255.0f, 255.0f);
 	Vector3 black = Vector3(0.0f, 0.0f, 0.0f);
@@ -140,11 +146,18 @@ int main(int argc, char* argv[]) {
 			// right = filterBlue(right);
 			// right = filterGreen(right);
 			// buffer->at(x, y) = right + left;
-			if(REDBLUE) {
-				left = filterGreen(left);
-				left = filterBlue(left);
-				right = filterRed(right);
-				buffer->at(x, y) = left + right;
+			if(REDBLUE || OVERLAP) {
+				if(REDBLUE) {
+					left = filterGreen(left);
+					left = filterBlue(left);
+					right = filterRed(right);
+				}
+				Vector3 center = Vector3(0, 0, 0);
+				if(OVERLAP) {
+					Ray* cRay = gen3->getRay(x, y);
+					center = thirdShader->shadePoint(cRay);
+				}
+				buffer->at(x, y) = left + right + center;
 			} else {
 				buffer->at(x, y) = left;
 				buffer->at(x+RES, y) = right;

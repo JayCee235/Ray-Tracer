@@ -85,7 +85,7 @@ Animation: Animation.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o cal
 AnimPairTest.o: src/AnimPairTest.cpp
 	g++ -O3 src/AnimPairTest.cpp -c -o AnimationPath.o
 
-AnimPairTest: AnimationPath.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
+AnimPairTest: AnimPairTest.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 	g++ -O3 AnimationPath.o -o AnimationPath
 
 
@@ -134,7 +134,7 @@ runHappyTestBlend: Blend res/happy-scene.obj res/happy-scene.mtl
 	./Blend res/happy-scene.obj res/happy-scene_blended.png res/happy-scene_unblended.png -res 1000 -scale 3
 
 runHappyTestBinocular: Binocular res/happy-scene.obj res/happy-scene.mtl
-	./Binocular res/happy-scene.obj res/happy-scene_binocular.png -res 1000 -scale 3
+	./Binocular res/happy-scene.obj res/happy-scene_binocular.png -res 1000 -scale 3 -calcNormal
 
 bunnyIcon: RayTracer
 	./RayTracer res/bunny-scene.obj res/bunny_icon.png -res 32
@@ -145,7 +145,10 @@ megaResCornell: Blend
 megaResSpheres: Blend
 	./Blend res/spheres.obj res/spheres_hd.png -res 100 -scale 10
 
+HappyTime: Blend
+	time ./Blend res/happy-scene.obj res/happy-time.png -res 1000 -scale 1 -calcNormal
+
 all: RayTracer Binocular Blend
 
 clean: 
-	rm -f core *.o  *Test RayTracer Binocular Blend
+	rm -f core *.o  *Test RayTracer Binocular Blend Animation AnimationPath a.out
