@@ -92,13 +92,13 @@ int main(int argc, char* argv[]) {
 	// objDat.load(argv[1]);
 
 	Loader* loader = new Loader(IMPLICITCALC);
-	loader->load(argv[1]);
+	loader->quietLoad(argv[1]);
 
 	printf("Loader loaded.\n");
 
 	Scene* scene = new Scene();
 	printf("New Scene created.\n");
-	scene->load(loader);
+	scene->quietLoad(loader);
 
 	printf("Scene loaded.\n");
 

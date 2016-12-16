@@ -105,17 +105,17 @@ int main(int argc, char* argv[]) {
 		int traceCount = -1;
 		for(int y=0; y<RES; y++)
 		{
-			if(y%(RES/10) == 0) {
-				traceCount++;
-				printf("finished %d%%\n", traceCount*10);
-			}
+			// if(y%(RES/10) == 0) {
+			// 	traceCount++;
+			// 	printf("finished %d%%\n", traceCount*10);
+			// }
 			for(int x=0; x<RES; x++)
 			{
 				Ray* ray = generator->getRay(x, y);
 				buffer->at(x,y) = shader->shadePoint(ray);
 			}
 		}
-		printf("finished 100%%\n");
+		printf("Finished.\n");
 
 	// scene->printTree();
 

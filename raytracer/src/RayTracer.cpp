@@ -55,13 +55,13 @@ int main(int argc, char* argv[]) {
 	// objDat.load(argv[1]);
 
 	Loader* loader = new Loader(implicitCalc);
-	loader->load(argv[1]);
+	loader->quietLoad(argv[1]);
 
 	printf("Loader loaded.\n");
 
 	Scene* scene = new Scene();
 	printf("New Scene created.\n");
-	scene->load(loader);
+	scene->quietLoad(loader);
 
 	printf("Scene loaded.\n");
 
@@ -81,17 +81,17 @@ int main(int argc, char* argv[]) {
 	int traceCount = -1;
 	for(int y=0; y<RES; y++)
 	{
-		if(y%(RES/10) == 0) {
-			traceCount++;
-			printf("finished %d%%\n", traceCount*10);
-		}
+		// if(y%(RES/10) == 0) {
+		// 	traceCount++;
+		// 	printf("finished %d%%\n", traceCount*10);
+		// }
 		for(int x=0; x<RES; x++)
 		{
 			Ray* ray = generator->getRay(x, y);
 			buffer->at(x,y) = shader->shadePoint(ray);
 		}
 	}
-	printf("finished 100%%\n");
+	printf("finished.\n");
 
 	// scene->printTree();
 

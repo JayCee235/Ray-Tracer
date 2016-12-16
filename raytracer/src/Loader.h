@@ -38,6 +38,29 @@ public:
 		this->implicitTriangleCalculation = implicitTriangleCalculation;
 	}
 
+	void quietLoad(const char* filename) {
+		this->data = new objLoader();
+		this->data->load(filename);
+		printf("%d\n", data->faceCount);
+
+		obj_material **ls = this->data->materialList;
+
+		this->numMat = this->data->materialCount;
+
+		this->matList = new std::vector<Material*>();
+
+		for(int i = 0; i < numMat; i++) {
+			obj_material* work = ls[i];
+			Material* newMat = new Material(*work);
+			matList->push_back(newMat);
+			printf("\n");
+		}
+		matList->push_back(new Material());
+		this->numMat = this->numMat + 1;
+
+		
+	}
+
 	void load(const char* filename) {
 		printf("Loading loader... ");
 		this->data = new objLoader();

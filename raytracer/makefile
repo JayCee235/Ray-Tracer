@@ -85,7 +85,7 @@ Animation: Animation.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o cal
 AnimPairTest.o: src/AnimPairTest.cpp
 	g++ -O3 src/AnimPairTest.cpp -c -o AnimationPath.o
 
-AnimPairTest: AnimationPath.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
+AnimPairTest: AnimPairTest.o #AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 	g++ -O3 AnimationPath.o -o AnimationPath
 
 
@@ -148,4 +148,4 @@ megaResSpheres: Blend
 all: RayTracer Binocular Blend
 
 clean: 
-	rm -f core *.o  *Test RayTracer Binocular Blend
+	rm -f core *.o  *Test RayTracer Binocular Blend Animation AnimationPath a.out

@@ -8,6 +8,7 @@
 #include "AnimationPath.h"
 #include <cstring>
 #include <cstdlib>
+// #include "CameraPathLoader.h"
 
 #ifndef PI
 #define PI 3.14159265358
@@ -17,13 +18,14 @@ int main(int argc, char* argv[]) {
 	int RES = 500;
 	float FOV = 90;
 	int SCALE = 3;
+	bool IMPLICITCALC = false;
 
 	int frames = 100;
 
 	//Need at least two arguments (obj input and png output)
 	if(argc < 3)
 	{
-		printf("Usage %s input.obj output\nThe file will attach [a-p].png on the 16 images.\n", argv[0]);
+		printf("Usage %s input.obj output\nThe file will attach [num].png on the 16 images.\n", argv[0]);
 		exit(1);
 	}
 
@@ -40,6 +42,21 @@ int main(int argc, char* argv[]) {
 				exit(3);
 			}
 			RES = check;
+		}
+		if(strcmp(argv[i], "-scale") == 0) {
+			int check = atoi(argv[i+1]);
+			if(check == 0) {
+				printf("scale not an int//Cannot use zero.\n");
+				exit(2);
+			}
+			if(check < 0) {
+				printf("scale must be positive.\n");
+				exit(3);
+			}
+			SCALE = check;
+		}
+		if(strcmp(argv[i], "-calcNormal") == 0) {
+			IMPLICITCALC = true;
 		}
 	}
 
@@ -80,25 +97,43 @@ int main(int argc, char* argv[]) {
 	// objLoader objDat = objLoader();
 	// objDat.load(argv[1]);
 
-	Loader* loader = new Loader();
-	loader->load(argv[1]);
+	Loader* loader = new Loader(IMPLICITCALC);
+	loader->quietLoad(argv[1]);
 
 	printf("Loader loaded.\n");
 
 	Scene* scene = new Scene();
 	printf("New Scene created.\n");
-	scene->load(loader);
+	scene->quietLoad(loader);
 
 	printf("Scene loaded.\n");
 
+
+
 	Camera* init = loader->getCamera();
-	Camera* mid = init->changeLookingAt(init->getLookingAt() + Vector3(100, 0, 0));
-	Camera* finalCamera = mid->travelForward(mid->getFocusDistance() * 0.9);
-	Camera* actualFinalCamera = finalCamera->changeLookingAt(finalCamera->getLookingAt() + Vector3(0, 10, 0));
+	Camera* mid = init->changeLookingAt(init->getLookingAt() + Vector3(0.01, 0, 0));
+	Camera* finalCamera = mid->travelForward(mid->getFocusDistance() * 0.2);
+	Camera* actualFinalCamera = finalCamera->changeLookingAt(finalCamera->getLookingAt() + Vector3(0, 0.03, 0));
+
+	
+	// std::vector<Camera*>* cameras = new std::vector<Camera*>();
+	// std::vector<int>* times = new std::vector<int>();
+
+	// int pathFound = 0;//load(argv[2], cameras, times);
+
+	// printf("Generating animation path...\n");
+	// AnimationPath* ap;
+	// if(pathFound && false) {
+	// 	// ap = new AnimationPath(cameras[0][0], cameras[0][1], times[0][0]);
+	// 	// for(int i = 2; i < cameras->size(); i++) {
+	// 	// 	ap->addCamera(cameras[0][i], times[0][i-1])
+	// 	// }
+	// } else {
+		
+	// }
 
 	delete(loader);
 
-	printf("Generating animation path...\n");
 	AnimationPath* ap = new AnimationPath(init, mid, 1);
 	ap->addCamera(finalCamera, 1);
 	ap->addCamera(actualFinalCamera, 2);
@@ -128,10 +163,10 @@ int main(int argc, char* argv[]) {
 		int traceCount = -1;
 		for(int y=0; y<RES; y++)
 		{
-			if(y%(RES/10) == 0) {
-				traceCount++;
-				printf("finished %d%%\n", traceCount*10);
-			}
+			// if(y%(RES/10) == 0) {
+			// 	traceCount++;
+			// 	printf("finished %d%%\n", traceCount*10);
+			// }
 			for(int x=0; x<RES; x++)
 			{
 				Ray* ray = generator->getRay(x, y);
@@ -139,7 +174,7 @@ int main(int argc, char* argv[]) {
 				delete(ray);
 			}
 		}
-		printf("finished 100%%\n");
+		// printf("finished 100%%\n");
 
 	// scene->printTree();
 

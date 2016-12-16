@@ -24,6 +24,22 @@ private:
 public:
 	Scene() {}
 
+	void quietLoad(Loader* loader) {
+		this->loader = loader;
+		// this->primList = this->loader->getPrimitives();
+		this->primList = new std::vector<Primitive*>();
+		this->lightList = this->loader->getLights();
+		this->camera = this->loader->getCamera();
+		this->primCount = this->loader->getPrimCount();
+		this->lightCount = this->loader->getLightCount();
+		this->tree = this->loader->getTree();
+		this->ambient = Vector3(0, 0, 0);
+		for(int i = 0; i < lightList->size(); i++) {
+			this->ambient = this->ambient + lightList[0][i]->getMaterial()->ambient;
+		}
+		this->primList->push_back(this->tree);
+	}
+
 	void load(Loader* loader) {
 		printf("Making Loader\n");
 		this->loader = loader;

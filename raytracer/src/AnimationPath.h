@@ -19,9 +19,17 @@ private:
 	struct AnimPair* first;
 	struct AnimPair* last;
 public:
-	AnimationPath();
-	AnimationPath(Camera* start, Camera* next, float t);
-	~AnimationPath();
+	AnimationPath() {}
+	AnimationPath(Camera* start, Camera* next, float t) {
+		this->first = (struct AnimPair*) malloc(sizeof(AnimPair));
+		this->first->from = start;
+		this->first->to = next;
+		this->first->start = 0;
+		this->first->end = t;
+		this->last = this->first;
+
+	}
+	~AnimationPath() {}
 	void addCamera(Camera* camera, float timeToReach) {
 		struct AnimPair* newPair = (struct AnimPair*) malloc(sizeof(struct AnimPair));
 		newPair->from = last->to;
