@@ -149,6 +149,28 @@ public:
 		return looking.length();
 	}
 
+	Camera* rotateVerticallyAroundFocus(float rad) {
+		Vector3 newLookingAt = this->lookingAt;
+		Vector3 newUp = this->up;
+		Vector3 newAt = this->at;
+		newAt -= newLookingAt;
+
+		float radius = this->getFocusDistance();
+
+		float x1 = cos(rad)*radius;
+		float y1 = sin(rad)*radius;
+
+		// printf("%.2f, %.2f, %.2f\n", radius, x1, y1);
+
+		newAt -= this->w * radius;
+		newAt += this->w * x1;
+		newAt += this->v * y1;
+
+		newAt += newLookingAt;
+
+		return new Camera(newAt, newLookingAt, newUp);
+	}
+
 	Camera* rotateAroundFocus(float rad) {
 		Vector3 newLookingAt = this->lookingAt;
 		Vector3 newUp = this->up;
@@ -160,7 +182,7 @@ public:
 		float x1 = cos(rad)*radius;
 		float y1 = sin(rad)*radius;
 
-		printf("%.2f, %.2f, %.2f\n", radius, x1, y1);
+		// printf("%.2f, %.2f, %.2f\n", radius, x1, y1);
 
 		newAt -= this->w * radius;
 		newAt += this->w * x1;

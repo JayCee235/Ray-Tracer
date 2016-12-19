@@ -41,7 +41,14 @@ public:
 
 		this->w2 = width/2.0;
 		this->h2 = width/2.0;
+	}
 
+	Camera* getCamera() {
+		return this->camera;
+	}
+
+	Camera* setCamera(Camera* cam) {
+		this->camera = cam;
 	}
 
 	Ray* getRay(int x, int y) {

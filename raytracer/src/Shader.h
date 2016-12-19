@@ -25,6 +25,14 @@ public:
 
 	}
 
+	Camera* getCamera() {
+		return this->camera;
+	}
+
+	Camera* setCamera(Camera* cam) {
+		this->camera = cam;
+	}
+
 	Vector3 shadePoint(Ray* ray) {
 		return castRay(ray, scene, camera, clearColor, 0, 0, 0, 1, 1);
 	}
