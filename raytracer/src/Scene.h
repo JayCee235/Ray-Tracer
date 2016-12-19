@@ -124,24 +124,23 @@ public:
 			struct HitPoint temp;
 			// printf("Checking light %d\n", i);
 			Light* work = lightList[0][i];
+			Vector3 pp = work->getP();
 			Vector3 dif = work->getP() - pos;
 			Ray* posToLight = new Ray(pos, dif);
 			float len = dif.length();
-
 			// printf("Pos:\n");
-			// printf("Position: (%.2f, %.2f, %.2f).\n", 
+			// printf("Position: (%.f, %.2f,%.2f)\n", 
 			// pos[0], pos[1], pos[2]);
-
 			// printf("Light:\n");
 			// work->printLight();
-
 			// printf("posToLight:\n");
 			// posToLight->printRay();
-
 			// printf("Getting ray trace...\n");
 			float returnValue = intersect(posToLight, &temp);
-			// printf("Returned %.2f\n", returnValue);
-
+			// while(returnValue > 0 && temp.p != NULL && temp.p->getMaterial() != NULL && temp.p->getMaterial()->trans < 1) {
+			// 	posToLight->setP(posToLight->getPointAt(temp.t));
+			// 	returnValue = intersect(posToLight, &temp);
+			// }
 			if(returnValue > len - 0.001 || returnValue < 0.001) {
 				// printf("Hit light!\n");
 				lBuffer->push_back(work);
@@ -150,6 +149,9 @@ public:
 				// printf("Added to ray Buffer.\n");
 				count++;
 			}
+			// printf("Returned %.2f\n", returnValue);
+
+			
 		}
 		return count;
 	}

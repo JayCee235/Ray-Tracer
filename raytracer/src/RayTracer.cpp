@@ -4,8 +4,17 @@
  *
  */
 
+#include <stdlib.h>
 #include "RayTracer.h"
 #include <cstring>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <pthread.h>
 
 
 int main(int argc, char* argv[]) {
@@ -78,7 +87,7 @@ int main(int argc, char* argv[]) {
 	//Convert vectors to RGB colors for testing results
 	Vector3 white = Vector3(255.0f, 255.0f, 255.0f);
 	Vector3 black = Vector3(0.0f, 0.0f, 0.0f);
-	int traceCount = -1;
+	// int traceCount = -1;
 	for(int y=0; y<RES; y++)
 	{
 		// if(y%(RES/10) == 0) {

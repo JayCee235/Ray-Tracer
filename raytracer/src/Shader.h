@@ -3,7 +3,7 @@
 
 #include "RayTracer.h"
 
-#define REFLECT_LIMIT 5
+#define REFLECT_LIMIT 20
 
 #define Kc 1
 #define Kl 0.00000000001
@@ -26,10 +26,10 @@ public:
 	}
 
 	Vector3 shadePoint(Ray* ray) {
-		return castRay(ray, scene, camera, clearColor, 0, 0, 0);
+		return castRay(ray, scene, camera, clearColor, 0, 0, 0, 1, 1);
 	}
 
-	Vector3 castRay(Ray* ray, Scene* scene, Camera* camera, Vector3 clearColor, int numReflected, int numTrans, float totalDis) {
+	Vector3 castRay(Ray* ray, Scene* scene, Camera* camera, Vector3 clearColor, int numReflected, int numTrans, float totalDis, float reflectRat, float transRat) {
 	struct HitPoint hp;
 	float t = scene->intersect(ray, &hp);
 	Vector3 out = clearColor + Vector3(0, 0, 0);
@@ -47,7 +47,7 @@ public:
 		float reflectRatio = 0;
 		float transRatio = 0;
 
-		if(m->reflect > 0 && numReflected < REFLECT_LIMIT) {
+		if(m->reflect > 0 && numReflected < REFLECT_LIMIT && m->reflect * reflectRat > 0.01) {
 			reflectRatio = m->reflect;
 			Ray* toReflect = new Ray(ray->getP(), -ray->getD());
 			Ray* newReflectRay = toReflect->reflect(ray->getPointAt(hp.t), hp.normal);
@@ -55,20 +55,20 @@ public:
 			if(numReflected > 0) {
 				dis = t;
 			}
-			reflectColor = castRay(newReflectRay, scene, camera, clearColor, numReflected+1, numTrans, totalDis+dis);
+			reflectColor = castRay(newReflectRay, scene, camera, clearColor, numReflected+1, numTrans, totalDis+dis, reflectRat * reflectRatio, transRat);
 			delete(toReflect);
 			delete(newReflectRay);
 		}
 
 		//TODO: Add transparency.
-		if(m->trans < 0.999) {
+		if(m->trans < 0.999 && (1-m->trans) * transRat > 0.01) {
 			transRatio = 1 - m->trans;
 			Ray* transRay = new Ray(ray->getPointAt(hp.t), ray->getD());
 			float dis = 0;
 			if(numTrans > 0) {
 				dis = t;
 			}
-			transColor = castRay(transRay, scene, camera, clearColor, numReflected, numTrans++, totalDis+dis);
+			transColor = castRay(transRay, scene, camera, clearColor, numReflected, numTrans++, totalDis+dis, reflectRat, transRat * transRatio);
 			delete(transRay);
 		}
 
@@ -116,7 +116,7 @@ public:
 					dott = 1;
 				}
 				if(dott > 0) {				
-					Vector3 lightDif = work->getMaterial()->diffuse + Vector3(0, 0, 0);
+					Vector3 lightDif = work->getMaterial()->diffuse;// *(work->count / 300);
 					lightDif = lightDif * dott;
 					lightDif = lightDif * dom;
 					dif = dif + lightDif;
@@ -135,7 +135,7 @@ public:
 
 					if(specMult > 0) {
 						specMult = pow(specMult, m->shiny);
-						Vector3 lightSpec = work->getMaterial()->specular + Vector3(0, 0, 0);
+						Vector3 lightSpec = work->getMaterial()->specular;// * (work->count / 300);
 						lightSpec = lightSpec * specMult;
 						lightSpec = lightSpec * dom;
 						spec = spec + lightSpec;

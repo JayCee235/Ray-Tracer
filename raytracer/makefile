@@ -148,6 +148,9 @@ megaResSpheres: Blend
 HappyTime: RayTracer
 	time ./RayTracer res/happy-scene.obj res/happy-time.png -res 1000 -calcNormal
 
+crystalGod: Binocular
+	time ./Binocular res/happy-scene-crystal.obj res/happy-scene-crystal.png -res 1000 -scale 3 -calcNormal
+
 all: RayTracer Binocular Blend
 
 clean: 

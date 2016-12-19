@@ -130,6 +130,7 @@ int main(int argc, char* argv[]) {
 	Vector3 white = Vector3(255.0f, 255.0f, 255.0f);
 	Vector3 black = Vector3(0.0f, 0.0f, 0.0f);
 	int traceCount = -1;
+
 	for(int y=0; y<RES; y++)
 	{
 		if(y%(RES/10) == 0) {
