@@ -120,7 +120,7 @@ public:
 
 	BVHTree* getTree() {
 		std::vector<Primitive*>* primList = this->getPrimitives();
-		printf("Construcint BVH tree...\n");
+		printf("Constructing BVH tree...\n");
 		return new BVHTree(primList);
 		// BVHTree* out = new BVHTree(primList[0][0]);
 
@@ -228,8 +228,8 @@ public:
 		obj_vector** vecLs = data->vertexList;
 		obj_vector** normLs = data->normalList;
 
-		bool implicitTriangleCalculation = this->implicitTriangleCalculation && 
-			(normLs == NULL || data->normalCount <= 1);
+		bool implicitTriangleCalculation = this->implicitTriangleCalculation;// && 
+			// (normLs == NULL || data->normalCount <= 1 || true);
 		// implicitTriangleCalculation = false;
 
 		std::vector<Triangle*>* toReturn = new std::vector<Triangle*>();

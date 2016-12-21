@@ -21,12 +21,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-int callWindow(Buffer<Vector3>* b, RayGenerator* generator, Shader* shader, int xRes, int yRes);
+int callWindow(Buffer<Vector3>* b, RayGenerator* generator, Shader* shader, 
+	int xRes, int yRes, int sections, int fade);
 
 int callDoubleWindow(Buffer<Vector3>* rb, Buffer<Vector3>* lb,
 	RayGenerator* lGenerator, RayGenerator* rGenerator,
 	Shader* lShader, Shader* rShader, 
 	int xRes, int yRes, int sections, int fade);
+
+Vector3 updatePixel(int x, int y, RayGenerator* generator, Shader* shader, 
+		float* max, Display* display, int s, Buffer<Vector3>* buffer, 
+		Window window, int wx, int wy, int oldScale, int newScale);
 
 void printHelp() {
 	printf("----------\n");
@@ -60,7 +65,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	//parse args
-	bool implicitCalc = false;
 	for(int i = 1; i < argc; i++) {
 		if(strcmp(argv[i], "?") == 0) {
 			printHelp();
@@ -160,14 +164,18 @@ int main(int argc, char* argv[]) {
 	// objLoader objDat = objLoader();
 	// objDat.load(argv[1]);
 
-	Loader* loader = new Loader(implicitCalc);
-	loader->quietLoad(argv[1]);
+	if(IMPLICITCALC) {
+		printf("Should calculate Normals.\n");
+	}
+
+	Loader* loader = new Loader(IMPLICITCALC);
+	loader->load(argv[1]);
 
 	printf("Loader loaded.\n");
 
 	Scene* scene = new Scene();
 	printf("New Scene created.\n");
-	scene->quietLoad(loader);
+	scene->load(loader);
 
 	printf("Scene loaded.\n");
 
@@ -236,10 +244,13 @@ int main(int argc, char* argv[]) {
 	int pid = fork();
 
 	if(pid == 0) {
-		// callWindow(lBuffer, lGenerator, lShader, xRes, yRes);
-		callDoubleWindow(lBuffer, rBuffer, lGenerator, rGenerator, lShader, rShader, xRes, yRes, section, fade);
-		printf("Window closed.\n");
-		return 0;
+		if(REDBLUE || OVERLAP) {
+			callWindow(lBuffer, lGenerator, lShader, xRes, yRes, section, fade);
+		} else {
+			callDoubleWindow(lBuffer, rBuffer, lGenerator, rGenerator, lShader, rShader, xRes, yRes, section, fade);
+			printf("Window closed.\n");
+			return 0;
+		}
 	}
 
 	// pid = fork();
@@ -272,183 +283,166 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-// int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader, int xRes, int yRes) {
-// 	Display *display;
-// 	Window window;
-// 	XEvent event;
-// 	// char* msg = "Hello, World!";
-// 	int s;
+int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader, 
+	int xRes, int yRes, int sections, int fade) {
 
-// 	display = XOpenDisplay(NULL);
-// 	s = DefaultScreen(display);
+	int cut = sections;
 
-// 	window = XCreateSimpleWindow(display, RootWindow(display, s), 0, 0, xRes, yRes, 1,
-//                            BlackPixel(display, s), WhitePixel(display, s));
+	int oldScale = fade;
+	int newScale = 256 - oldScale;
 
-// 	XSelectInput(display, window, KeyPressMask | KeyReleaseMask);
+	float max = 1;
 
-// 	XMapWindow(display, window);
+	Display *display;
+	Window window;
+	XEvent event;
+	int s;
 
-// 	bool up=false, down=false, left=false, right=false;
+	display = XOpenDisplay(NULL);
+	s = DefaultScreen(display);
 
-// 	int lastx=0, lasty=0;
-// 	int x = 0, y = 0;
+	window = XCreateSimpleWindow(display, RootWindow(display, s), 0, 0, xRes, yRes, 1,
+                           BlackPixel(display, s), WhitePixel(display, s));
 
-// 	// XNextEvent(display, &event);
+	XSelectInput(display, window, KeyPressMask | KeyReleaseMask);
 
-// 	for(int yy=0; yy<yRes; yy++)
-// 	{
-// 		for(int xx=0; xx<xRes; xx++)
-// 		{
-// 			Vector3 ans = buffer->at(xx, yy);
-// 			int red = (int) (255*ans[0]);
-// 			int green = (int) (255*ans[1]);
-// 			int blue = (int) (255*ans[2]);
-// 			int fin = 256*256*red + 256*green + blue;
+	XMapWindow(display, window);
 
-// 			XSetForeground(display, DefaultGC(display, s), fin);
-// 			XDrawPoint(display, window, DefaultGC(display, s), xx, yy);
-// 		}
-// 	}
+	bool up=false, down=false, left=false, right=false;
 
-// 	printf("Displaying...\n");
+	int lastx=0, lasty=0;
+	int x = 0, y = 0;
 
-// 	bool run = true;
+	XNextEvent(display, &event);
 
-// 	while(run) {
-// 		if(XEventsQueued(display, s) > 0) {
-// 			XNextEvent(display, &event);
-// 			if(event.type == KeyPress || event.type == KeyRelease) {
-// 				XKeyEvent e = event.xkey;
-// 				int code = e.keycode;
-// 				printf("%d\n", code);
-// 				if(code == 25) {
-// 					if(event.type == KeyPress) {
-// 						up = true;
-// 					} else {
-// 						up = false;
-// 					}
-// 				}
-// 				if(code == 38) {
-// 					if(event.type == KeyPress) {
-// 						left = true;
-// 					} else {
-// 						left = false;
-// 					}
-// 				}
-// 				if(code == 39) {
-// 					if(event.type == KeyPress) {
-// 						down = true;
-// 					} else {
-// 						down = false;
-// 					}
-// 				}
-// 				if(code == 40) {
-// 					if(event.type == KeyPress) {
-// 						right = true;
-// 					} else {
-// 						right = false;
-// 					}
-// 				}
-// 				if(code == 9) {
-// 					run = false;
-// 				}
+	for(int yy=0; yy<yRes; yy++)
+	{
+		for(int xx=0; xx<xRes; xx++)
+		{
+			Vector3 ans = buffer->at(xx, yy);
+			int red = (int) (255*ans[0]);
+			int green = (int) (255*ans[1]);
+			int blue = (int) (255*ans[2]);
+			int fin = 256*256*red + 256*green + blue;
 
-// 			}
-// 		}
+			XSetForeground(display, DefaultGC(display, s), fin);
+			XDrawPoint(display, window, DefaultGC(display, s), xx, yy);
+		}
+	}
 
-// 		float rot = 0.000003 * cut * cut;
+	printf("Displaying...\n");
 
-// 		if(up) {
-// 			Camera* cam = generator->getCamera();
-// 			cam = cam->rotateVerticallyAroundFocus(rot);
-// 			generator->setCamera(cam);
-// 		}
-// 		if(down) {
-// 			Camera* cam = generator->getCamera();
-// 			cam = cam->rotateVerticallyAroundFocus(-rot);
-// 			generator->setCamera(cam);
-// 		}
-// 		if(left) {
-// 			Camera* cam = generator->getCamera();
-// 			cam = cam->rotateAroundFocus(-rot);
-// 			generator->setCamera(cam);
-// 		}
-// 		if(right) {
-// 			Camera* cam = generator->getCamera();
-// 			cam = cam->rotateAroundFocus(rot);
-// 			generator->setCamera(cam);
-// 		}
+	bool run = true;
 
-// 		// int x = 0;
-// 		// int y = 0;
-// 		lastx = rand() % (xRes/cut);
-// 		lasty = rand() % (yRes/cut);
+	while(run) {
+		if(XEventsQueued(display, s) > 0) {
+			XNextEvent(display, &event);
+			if(event.type == KeyPress || event.type == KeyRelease) {
+				XKeyEvent e = event.xkey;
+				int code = e.keycode;
+				if(code == 25) {
+					if(event.type == KeyPress) {
+						up = true;
+					} else {
+						up = false;
+					}
+				}
+				if(code == 38) {
+					if(event.type == KeyPress) {
+						left = true;
+					} else {
+						left = false;
+					}
+				}
+				if(code == 39) {
+					if(event.type == KeyPress) {
+						down = true;
+					} else {
+						down = false;
+					}
+				}
+				if(code == 40) {
+					if(event.type == KeyPress) {
+						right = true;
+					} else {
+						right = false;
+					}
+				}
+				if(code == 9) {
+					run = false;
+				}
 
+			}
+		}
 
+		float rot = 0.000003 * cut * cut;
 
-// 		// if (lastx < RES/cut) {
-// 		// 	lastx += 1;
-// 		// } else {
-// 		// 	lastx = 0;
-// 		// 	if (lasty < RES/cut) {
-// 		// 		lasty += 1;
-// 		// 	} else {
-// 		// 		lasty = 0;
-// 		// 	}
-// 		// }
+		if(up) {
+			float toRotate = rot;
+			Camera* cam = generator->getCamera();
+			cam = cam->rotateVerticallyAroundFocus(toRotate);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(down) {
+			float toRotate = -rot;
+			Camera* cam = generator->getCamera();
+			cam = cam->rotateVerticallyAroundFocus(toRotate);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(left) {
+			float toRotate = -rot;
+			Camera* cam = generator->getCamera();
+			cam = cam->rotateAroundFocus(toRotate);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(right) {
+			float toRotate = rot;
+			Camera* cam = generator->getCamera();
+			cam = cam->rotateAroundFocus(toRotate);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+
+		lastx = rand() % (xRes/cut);
+		lasty = rand() % (yRes/cut);
+
+		// if (lastx < RES/cut) {
+		// 	lastx += 1;
+		// } else {
+		// 	lastx = 0;
+		// 	if (lasty < RES/cut) {
+		// 		lasty += 1;
+		// 	} else {
+		// 		lasty = 0;
+		// 	}
+		// }
 		
+		x = lastx*cut;
+		y = lasty*cut;
 
-// 		x = lastx*cut;
-// 		y = lasty*cut;
+		for(int i = 0; i < cut; i++) {
+			for(int j = 0; j < cut; j++) {
+				buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
+					&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
+			}
+		}
 
-// 		for(int i = 0; i < cut; i++) {
-// 			for(int j = 0; j < cut; j++) {
-// 				Ray* r = generator->getRay(x+i, y+j);
-// 				Vector3 ans = shader->shadePoint(r);
-// 				delete(r);
+		// max = (max + 1) / 2;
+		if(!up && !down && !left && !right) {
+			// max = (9999*max+1) / 10000;
+		}
+	}
+	XCloseDisplay(display);
 
-// 				int red = (int) (newScale*ans[0]);
-// 				int green = (int) (newScale*ans[1]);
-// 				int blue = (int) (newScale*ans[2]);
-
-// 				Vector3 old = buffer->at(x+i, y+j);
-
-// 				int oldRed = (int) (oldScale*old[0]);
-// 				int oldGreen = (int) (oldScale*old[1]);
-// 				int oldBlue = (int) (oldScale*old[2]);
-
-// 				int fin = 256*256*(red + oldRed) + 256*(green + oldGreen) + blue + oldBlue;
-
-// 				XSetForeground(display, DefaultGC(display, s), fin);
-// 				XDrawPoint(display, window, DefaultGC(display, s), x+i, y+j);
-
-// 				buffer->at(x+i, y+j) = Vector3((red+oldRed)/256.0f, (green+oldGreen)/256.0f, (blue+oldBlue)/256.0f);
-// 			}
-// 		}
-// 		// Ray* r = generator->getRay(x, y);
-// 		// Vector3 ans = shader->shadePoint(r);
-// 		// delete(r);
-
-// 		// int red = (int) (255*ans[0]);
-// 		// int green = (int) (255*ans[1]);
-// 		// int blue = (int) (255*ans[2]);
-
-// 		// int fin = red + 256*green + 256*256*blue;
-
-// 		// XSetForeground(display, DefaultGC(display, s), fin);
-// 		// XDrawPoint(display, window, DefaultGC(display, s), x, y);
-
-// 		// XSetForeground(display, DefaultGC(display, s), 0x00ff0000);
-// 		// // XFillRectangle(display, window, DefaultGC(display, s), 20, 20, 10, 10);
-// 		// XDrawPoint(display, window, DefaultGC(display, s), 20, 20);
-// 		// XDrawString(display, window, DefaultGC(display, s), 50, 50, msg, strlen(msg));
-// 		// if(event.type == KeyPress) break;
-// 	}
-// 	XCloseDisplay(display);
-
-// 	return 0;
-// }
+	return 0;
+}
 
 int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 	RayGenerator* lGenerator, RayGenerator* rGenerator,
@@ -611,12 +605,8 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 			delete(cam);
 		}
 
-		// int x = 0;
-		// int y = 0;
 		lastx = rand() % (xRes/cut);
 		lasty = rand() % (yRes/cut);
-
-
 
 		// if (lastx < RES/cut) {
 		// 	lastx += 1;
@@ -629,73 +619,15 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 		// 	}
 		// }
 		
-
 		x = lastx*cut;
 		y = lasty*cut;
 
-		// int newScale = 256;
-		// int oldScale = 256 - newScale;
-
 		for(int i = 0; i < cut; i++) {
 			for(int j = 0; j < cut; j++) {
-				Ray* r = lGenerator->getRay(x+i, y+j);
-				Vector3 ans = lShader->shadePoint(r);
-				delete(r);
-
-				r = rGenerator->getRay(x+i, y+j);
-				Vector3 ans2 = rShader->shadePoint(r);
-				delete(r);
-
-				for(int q = 0; q < 3; q++) {
-					if(ans[q] > max) {
-						max = ans[q];
-					}
-					if(ans2[q] > max) {
-						max = ans2[q];
-					}
-				}
-
-				int red = (int) (newScale*ans[0] /max);
-				int green = (int) (newScale*ans[1] /max);
-				int blue = (int) (newScale*ans[2] /max);
-
-				Vector3 old = lBuffer->at(x+i, y+j);
-
-				int oldRed = (int) (oldScale*old[0]);
-				int oldGreen = (int) (oldScale*old[1]);
-				int oldBlue = (int) (oldScale*old[2]);
-
-				int fin = 256*256*(red + oldRed) + 256*(green + oldGreen) + blue + oldBlue;
-
-				XSetForeground(display, DefaultGC(display, s), fin);
-				XDrawPoint(display, window, DefaultGC(display, s), x+i, y+j);
-
-				lBuffer->at(x+i, y+j) = Vector3(
-					(red+oldRed)/256.0f, 
-					(green+oldGreen)/256.0f, 
-					(blue+oldBlue)/256.0f);
-
-				//---
-
-				red = (int) (newScale*ans2[0] /max);
-				green = (int) (newScale*ans2[1] /max);
-				blue = (int) (newScale*ans2[2] /max);
-
-				old = rBuffer->at(x+i, y+j);
-
-				oldRed = (int) (oldScale*old[0]);
-				oldGreen = (int) (oldScale*old[1]);
-				oldBlue = (int) (oldScale*old[2]);
-
-				fin = 256*256*(red + oldRed) + 256*(green + oldGreen) + blue + oldBlue;
-
-				XSetForeground(display, DefaultGC(display, s), fin);
-				XDrawPoint(display, window, DefaultGC(display, s), x+i + xRes, y+j);
-
-				rBuffer->at(x+i, y+j) = Vector3(
-					(red+oldRed)/256.0f, 
-					(green+oldGreen)/256.0f, 
-					(blue+oldBlue)/256.0f);
+				lBuffer->at(x+i, y+j) = updatePixel(x+i, y+j, lGenerator, lShader, 
+					&max, display, s, lBuffer, window, x+i, y+j, oldScale, newScale);
+				rBuffer->at(x+i, y+j) = updatePixel(x+i, y+j, rGenerator, rShader, 
+					&max, display, s, rBuffer, window, x+i+xRes, y+j, oldScale, newScale);
 			}
 		}
 
@@ -703,28 +635,42 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 		if(!up && !down && !left && !right) {
 			// max = (9999*max+1) / 10000;
 		}
-
-
-		// Ray* r = generator->getRay(x, y);
-		// Vector3 ans = shader->shadePoint(r);
-		// delete(r);
-
-		// int red = (int) (255*ans[0]);
-		// int green = (int) (255*ans[1]);
-		// int blue = (int) (255*ans[2]);
-
-		// int fin = red + 256*green + 256*256*blue;
-
-		// XSetForeground(display, DefaultGC(display, s), fin);
-		// XDrawPoint(display, window, DefaultGC(display, s), x, y);
-
-		// XSetForeground(display, DefaultGC(display, s), 0x00ff0000);
-		// // XFillRectangle(display, window, DefaultGC(display, s), 20, 20, 10, 10);
-		// XDrawPoint(display, window, DefaultGC(display, s), 20, 20);
-		// XDrawString(display, window, DefaultGC(display, s), 50, 50, msg, strlen(msg));
-		// if(event.type == KeyPress) break;
 	}
 	XCloseDisplay(display);
 
 	return 0;
+}
+
+Vector3 updatePixel(int x, int y, RayGenerator* generator, Shader* shader, 
+		float* max, Display* display, int s, Buffer<Vector3>* buffer, 
+		Window window, int wx, int wy, int oldScale, int newScale) {
+	Ray* r = generator->getRay(x, y);
+	Vector3 ans = shader->shadePoint(r);
+	delete(r);
+
+	for(int q = 0; q < 3; q++) {
+		if(ans[q] > *max) {
+			*max = ans[q];
+		}
+	}
+
+	int red = (int) (newScale*ans[0] / *max);
+	int green = (int) (newScale*ans[1] / *max);
+	int blue = (int) (newScale*ans[2] / *max);
+
+	Vector3 old = buffer->at(x, y);
+
+	int oldRed = (int) (oldScale*old[0]);
+	int oldGreen = (int) (oldScale*old[1]);
+	int oldBlue = (int) (oldScale*old[2]);
+
+	int fin = 256*256*(red + oldRed) + 256*(green + oldGreen) + blue + oldBlue;
+
+	XSetForeground(display, DefaultGC(display, s), fin);
+	XDrawPoint(display, window, DefaultGC(display, s), wx, wy);
+
+	return Vector3(
+		(red+oldRed)/256.0f, 
+		(green+oldGreen)/256.0f, 
+		(blue+oldBlue)/256.0f);
 }

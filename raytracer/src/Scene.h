@@ -142,7 +142,7 @@ public:
 			// 	posToLight->setP(posToLight->getPointAt(temp.t));
 			// 	returnValue = intersect(posToLight, &temp);
 			// }
-			if(returnValue > len - 0.001 || returnValue < 0.01) {
+			if(returnValue > len - 0.001 || returnValue < 0) {
 				// printf("Hit light!\n");
 				lBuffer->push_back(work);
 				// printf("Added to light Buffer.\n");

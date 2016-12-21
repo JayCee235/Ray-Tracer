@@ -104,7 +104,7 @@ WindowTracer: WindowTracer.o
 	g++ -O3 WindowTracer.o -lX11 -o WindowTracer
 
 HappyWindow: WindowTracer
-	./WindowTracer res/happy-scene.obj -res 1000 -scale 1- calcNormal -section 1 -fadeFactor 56
+	./WindowTracer res/happy-scene.obj -res 1000 -scale 1- -calcNormal -pxSize 10
 
 runBlueSphereTest: RayTracer
 	./RayTracer res/blue_sphere.obj res/blue_sphere.png
@@ -167,3 +167,6 @@ clean:
 
 tempTest: clean RayTracer
 	./RayTracer res/NormalShadingTest1.obj res/NormalShadingTest1.png -scale 1000
+
+bunbun: clean WindowTracer
+	./WindowTracer res/bunny-scene.obj -res 1000 -calcNormal -depth -pxSize 50

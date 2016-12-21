@@ -223,7 +223,7 @@ public:
 	Vector3 getNormal(Ray* r, HitPoint* hp) {
 		Vector3 pointToCheck = r->getPointAt(hp->t);
 		Vector3 bary = this->barycentric(pointToCheck);
-		Vector3 out = (this->a->getD() * bary[0]) + (this->b->getD() * bary[1]) + (this->c->getD() * bary[2]);
+		Vector3 out = (this->a->getD() * bary[0]) + (this->b->getD() * bary[2]) + (this->c->getD() * bary[1]);
 		out.normalize();
 		return out;
 
