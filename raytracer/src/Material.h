@@ -14,13 +14,13 @@ public:
 	float reflect, refract, trans, shiny, glossy, refractIndex;
 	Material() {
 		this->name = "Default material";
-		this->ambient = Vector3(1, 0, 1);
-		this->diffuse = Vector3(1, 0, 1);
-		this->specular = Vector3(1, 1, 1);
+		this->ambient = Vector3(1, 1, 0);
+		this->diffuse = Vector3(1, 2, 0);
+		this->specular = Vector3(3, 3, 2);
 		this->reflect = 0;
 		this->refract = 0;
 		this->trans = 1;
-		this->shiny = 1;
+		this->shiny = 50; 
 		this->glossy = 0;
 		this->refractIndex = 0;
 	};
@@ -47,6 +47,9 @@ public:
 		this->refract = om.refract;
 		this->trans = om.trans;
 		this->shiny = om.shiny;
+		if(this->shiny < 10) {
+			this->shiny = 10;
+		}
 		this->glossy = om.glossy;
 		this->refractIndex = om.refract_index;
 	}

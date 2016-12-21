@@ -1,0 +1,7 @@
+#ifndef __OBJTOVEC
+#define __OBJTOVEC
+#include "objload/obj_parser.h"
+#include "vector/GenVector.h"
+
+Vector3 objToGenVec(obj_vector const * objVec);
+#endif

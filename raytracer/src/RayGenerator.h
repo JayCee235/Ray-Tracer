@@ -48,7 +48,8 @@ public:
 	}
 
 	Camera* setCamera(Camera* cam) {
-		this->camera = cam;
+		delete(this->camera);
+		this->camera = new Camera(cam);
 	}
 
 	Ray* getRay(int x, int y) {

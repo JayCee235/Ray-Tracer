@@ -40,13 +40,13 @@ public:
 	} 
 
 	Vector3 getP() {
-		return this->p;
+		return Vector3(this->p);
 	}
 	Vector3 getD() {
-		return this->d;
+		return Vector3(this->d);
 	}
 	Vector3 getDirection() {
-		return this->d;
+		return this->getD();
 	}
 	Vector3 getPointAt(float t) {
 		Vector3 dis = this->d * t;
@@ -54,10 +54,9 @@ public:
 	}
 
 	Ray* reflect(Vector3 point, Vector3 normal) {
-		Vector3 old = this->d + Vector3(0, 0, 0);
+		Vector3 old = this->d;
 		Vector3 correctedNormal = normal * normal.dot(old);
-		Vector3 dif = old - correctedNormal;
-		Vector3 toReturn = old - dif - dif;
+		Vector3 toReturn = old - correctedNormal - correctedNormal;
 		Ray *out = new Ray(point, toReturn);
 		return out;
 	}

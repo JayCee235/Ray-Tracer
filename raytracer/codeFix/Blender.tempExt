@@ -1,0 +1,20 @@
+#ifndef __BLENDER
+#define __BLENDER
+
+#include "buffer/Buffer.h"
+#include "vector/GenVector.h"
+
+class Blender
+{
+public:
+	Blender();
+	~Blender();
+
+	Buffer<Vector3>* blend(Buffer<Vector3>* in, int scale);
+
+	Buffer<Vector3>* scaleDown(Buffer<Vector3>* in, int scale);
+
+	Buffer<Color>* bufferToImage(Buffer<Vector3>* in);
+};
+
+#endif

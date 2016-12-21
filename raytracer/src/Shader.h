@@ -30,7 +30,8 @@ public:
 	}
 
 	Camera* setCamera(Camera* cam) {
-		this->camera = cam;
+		delete(this->camera);
+		this->camera = new Camera(cam);
 	}
 
 	Vector3 shadePoint(Ray* ray) {
@@ -57,14 +58,12 @@ public:
 
 		if(m->reflect > 0 && numReflected < REFLECT_LIMIT && m->reflect * reflectRat > 0.01) {
 			reflectRatio = m->reflect;
-			Ray* toReflect = new Ray(ray->getP(), -ray->getD());
-			Ray* newReflectRay = toReflect->reflect(ray->getPointAt(hp.t), hp.normal);
+			Ray* newReflectRay = ray->reflect(ray->getPointAt(hp.t), hp.normal);
 			float dis = 0;
 			if(numReflected > 0) {
 				dis = t;
 			}
 			reflectColor = castRay(newReflectRay, scene, camera, clearColor, numReflected+1, numTrans, totalDis+dis, reflectRat * reflectRatio, transRat);
-			delete(toReflect);
 			delete(newReflectRay);
 		}
 
@@ -107,34 +106,37 @@ public:
 				Ray* workRay = raysHit[0][i];
 				Vector3 temp = work->getP() - workRay->getP();
 				float dis = temp.length();
-				if(numReflected > 0) {
+				if(numReflected > 0 || numTrans > 0) {
 					dis += t + totalDis;
 				}
 
 				float dom = 1 / (Kc + Kl * dis + Kq * dis * dis);
 
-				Vector3 rayDir = workRay->getD() + Vector3(0 ,0 ,0);
-				rayDir.normalize();
+				Vector3 rayDir = workRay->getD() * -1;
 
-				Vector3 hpDir = hp.normal + Vector3(0, 0, 0);
+				Vector3 hpDir = Vector3(hp.normal);
 				hpDir.normalize();
 
 				float dott = rayDir.dot(hpDir);
 				if(dott > 1) {
 					dott = 1;
 				}
-				if(dott > 0) {				
+				// dott = 0.9;
+				if(dott > -0.001) {		
+					if(dott < 0) {
+						dott = 0;
+					}
+					// dott = 0.9;
 					Vector3 lightDif = work->getMaterial()->diffuse;// *(work->count / 300);
 					lightDif = lightDif * dott;
 					lightDif = lightDif * dom;
 					dif = dif + lightDif;
 
-					Ray* reflection = workRay->reflect(workRay->getP(), hp.normal);
-					Vector3 reflectionDir = reflection->getD() + Vector3(0, 0, 0);
-					reflectionDir.normalize();
-					Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
-					hpToCam.normalize();
-					float specMult = reflectionDir.dot(hpToCam);
+					Ray* reflection = workRay->reflect(Vector3(0, 0, 0), hp.normal);
+					Vector3 reflectionDir = reflection->getD();
+					// Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
+					// hpToCam.normalize();
+					float specMult = reflectionDir.dot(ray->getD()*-1);
 					delete(reflection);
 
 					if(specMult > 1) {
@@ -142,6 +144,7 @@ public:
 					}
 
 					if(specMult > 0) {
+						// specMult *= dott;
 						specMult = pow(specMult, m->shiny);
 						Vector3 lightSpec = work->getMaterial()->specular;// * (work->count / 300);
 						lightSpec = lightSpec * specMult;
@@ -172,7 +175,8 @@ public:
 		Vector3 diffuseFinal = Vector3(difC[0], difC[1], difC[2]);
 		Vector3 specularFinal = Vector3(specC[0], specC[1], specC[2]);
 
-		out = ambientFinal;
+		out = Vector3(0, 0, 0);
+		out = out + ambientFinal;
 		out = out + diffuseFinal;
 		out = out + specularFinal;
 

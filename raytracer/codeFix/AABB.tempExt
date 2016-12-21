@@ -1,0 +1,38 @@
+#ifndef __AABB
+#define __AABB
+
+#include "vector/GenVector.h"
+#include "Primitive.h"
+#include "HitPoint.h"
+#include "Ray.h"
+#include "Material.h"
+
+class AABB : public Primitive
+{
+private:
+	Vector3 min, max;
+public:
+	AABB(Primitive* p);
+	AABB(Vector3 min, Vector3 max);
+
+	AABB(AABB* copy);
+	~AABB();
+
+	void resizeToFit(AABB* a);
+
+	float getCurrentVolume();
+
+	float getNewVolume(AABB* a);
+
+	float intersect(Ray* r);
+
+	Vector3 getNormal(Ray* r, HitPoint* hp);
+
+	Material* getMaterial();
+
+	Vector3 getMinimumPoint();
+
+	Vector3 getMaximumPoint();
+};
+
+#endif

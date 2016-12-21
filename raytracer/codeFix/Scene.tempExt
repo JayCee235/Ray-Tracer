@@ -1,0 +1,43 @@
+#ifndef __SCENE
+#define __SCENE
+
+#include "Primitive.h"
+#include "Sphere.h"
+#include "Loader.h"
+#include "Ray.h"
+#include <vector>
+#include "HitPoint.h"
+#include "AABB.h"
+#include "BVHTree.h"
+
+class Scene {
+private:
+	Loader* loader;
+	std::vector<Primitive*>* primList;
+	std::vector<Light*>* lightList;
+	Camera* camera;
+	int primCount;
+	int lightCount;
+	float lightScale;
+	BVHTree* tree;
+	Vector3 ambient;
+public:
+	Scene() ;
+
+	void load(Loader* loader) ;
+
+	Vector3 getAmbient() ;
+
+	void printTree() ;
+
+	float intersect(Ray* r, HitPoint* hp) ;
+
+	float oldIntersect(Ray* r, HitPoint* hp) ;
+
+	int getNumLights() ;
+
+	int checkForLights(Vector3 pos, std::vector<Light*>* lBuffer, std::vector<Ray*>* rBuffer) ;
+
+};
+
+#endif

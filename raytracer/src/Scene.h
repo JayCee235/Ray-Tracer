@@ -74,7 +74,8 @@ public:
 	float intersect(Ray* r, HitPoint* hp) {
 		// printf("I am beginning an intersection.\n");
 		float out = this->tree->intersect(r);
-		if(out > 0.001) {
+		if(out > -0.00001) {
+			if(out < 0.00001) out = 0.00001;
 			hp->t = out;
 			hp->p = tree->getPrimitive();
 			hp->normal = hp->p->getNormal(r, hp);
@@ -141,10 +142,11 @@ public:
 			// 	posToLight->setP(posToLight->getPointAt(temp.t));
 			// 	returnValue = intersect(posToLight, &temp);
 			// }
-			if(returnValue > len - 0.001 || returnValue < 0.001) {
+			if(returnValue > len - 0.001 || returnValue < 0.01) {
 				// printf("Hit light!\n");
 				lBuffer->push_back(work);
 				// printf("Added to light Buffer.\n");
+				posToLight->setD(posToLight->getD()*-1);
 				rBuffer->push_back(posToLight);
 				// printf("Added to ray Buffer.\n");
 				count++;

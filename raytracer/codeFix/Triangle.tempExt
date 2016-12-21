@@ -1,0 +1,48 @@
+#ifndef __TRIANGLE
+#define __TRIANGLE
+
+#include "vector/GenVector.h"
+#include "Ray.h"
+#include "Primitive.h"
+#include "HitPoint.h"
+#include "Loader.h"
+
+void printVector(Vector3 v) ;
+
+class Triangle : public Primitive {
+private:
+	Ray* a;
+	Ray* b;
+	Ray* c;
+	Vector3 normal;
+	bool safeToDelete;
+	// Vector3 a, b, c, normal;
+	// Vector3 normalA, normalB, normalC;
+	Material* m;
+public:
+	Triangle() ;
+	Triangle(Ray* a, Ray* b, Ray* c, Material* m) ;
+	Triangle(Vector3 a, Vector3 b, Vector3 c) ;
+
+	Triangle(Vector3 a, Vector3 b, Vector3 c, Material* m) ;
+
+	Triangle(obj_face* face, obj_vector** vertexList, obj_vector** normalList, Material* m) ;
+
+	~Triangle() ;
+
+	void clonePoints() ;
+
+	Vector3 getTriangleNormal() ;
+
+	float intersect(Ray* r) ;
+
+	Vector3 getNormal(Ray* r, HitPoint* hp) ;
+
+	Material* getMaterial() ;
+
+	Vector3 getMinimumPoint() ;
+
+	Vector3 getMaximumPoint() ;
+};
+
+#endif

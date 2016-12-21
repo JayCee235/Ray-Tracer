@@ -1,0 +1,33 @@
+#ifndef __RAY
+#define __RAY
+
+#include "vector/GenVector.h"
+
+class Ray {
+private:
+	Vector3 p, d;
+	Vector3 invD;
+public:
+	Ray(Vector3 p, Vector3 d) ;
+
+	Ray() ;
+
+	Ray(Ray* copy) ;
+
+	void setP(Vector3 p) ;
+
+	void setD(Vector3 d) ; 
+
+	Vector3 getP() ;
+	Vector3 getD() ;
+	Vector3 getDirection() ;
+	Vector3 getPointAt(float t) ;
+
+	Ray* reflect(Vector3 point, Vector3 normal) ;
+
+	void printRay() ;
+
+	Vector3 getInverseDirection() ;
+};
+
+#endif

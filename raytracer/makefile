@@ -97,6 +97,15 @@ runNormalShadingTest: RayTracer
 	./RayTracer res/bunny-scene.obj res/bunny-scene_normal1.png -res 1000 -calcNormal
 	./RayTracer res/bunny-scene.obj res/bunny-scene_normal2.png -res 1000
 
+WindowTracer.o: src/WindowTracer.cpp
+	g++ -O3 src/WindowTracer.cpp -lX11 -c -o WindowTracer.o
+
+WindowTracer: WindowTracer.o
+	g++ -O3 WindowTracer.o -lX11 -o WindowTracer
+
+HappyWindow: WindowTracer
+	./WindowTracer res/happy-scene.obj -res 1000 -scale 1- calcNormal -section 1 -fadeFactor 56
+
 runBlueSphereTest: RayTracer
 	./RayTracer res/blue_sphere.obj res/blue_sphere.png
 
@@ -154,4 +163,7 @@ crystalGod: Binocular
 all: RayTracer Binocular Blend
 
 clean: 
-	rm -f core *.o  *Test RayTracer Binocular Blend Animation AnimationPath a.out
+	rm -f core *.o  *Test RayTracer Binocular Blend Animation AnimationPath a.out WindowTracer
+
+tempTest: clean RayTracer
+	./RayTracer res/NormalShadingTest1.obj res/NormalShadingTest1.png -scale 1000
