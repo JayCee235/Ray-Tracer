@@ -289,6 +289,8 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
+typedef GenVector<2, int> Pair;
+
 int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader, 
 	int xRes, int yRes, int sections, int fade, bool randompx) {
 
@@ -319,6 +321,27 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 	int lastx=0, lasty=0;
 	int x = 0, y = 0;
 
+	Pair* screen = (Pair*) malloc(sizeof(Pair)*xRes*yRes);
+
+	for(int i = 0; i < xRes / cut; i++) {
+		for(int j = 0; j < yRes / cut; j++) {
+			Pair p;
+			p[0] = i;
+			p[1] = j;
+			screen[i*(yRes/cut) + j] = p;
+			// Pair p = screen[i*(yRes / cut) + j];
+			// p[0] = i;
+			// p[1] = j;
+		}
+	}
+
+	for(int i = 0; i < (xRes * yRes) / (cut * cut); i++) {
+		int index = i + (rand() % ((xRes * yRes)/(cut * cut) - i));
+		Pair temp = screen[index];
+		screen[index] = screen[i];
+		screen[i] = temp;
+	}
+
 	XNextEvent(display, &event);
 
 	for(int yy=0; yy<yRes; yy++)
@@ -339,6 +362,8 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 	printf("Displaying...\n");
 
 	bool run = true;
+
+	int pxIndex = 0;
 
 	while(run) {
 		if(XEventsQueued(display, s) > 0) {
@@ -424,8 +449,14 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 		}
 
 		if(randompx) {
-			lastx = rand() % (xRes/cut);
-		lasty = rand() % (yRes/cut);
+			Pair p = screen[pxIndex];
+			lastx = p[0];
+			lasty = p[1];
+			pxIndex++;
+			if(pxIndex >= (xRes / cut) * (yRes / cut)) pxIndex = 0;
+			// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
+			// lastx = rand() % (xRes/cut);
+			// lasty = rand() % (yRes/cut);
 		} else {
 			if (lastx < xRes/cut) {
 				lastx += 1;
@@ -504,6 +535,27 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 	int lastx=0, lasty=0;
 	int x = 0, y = 0;
 
+	Pair* screen = (Pair*) malloc(sizeof(Pair)*xRes*yRes);
+
+	for(int i = 0; i < xRes / cut; i++) {
+		for(int j = 0; j < yRes / cut; j++) {
+			Pair p;
+			p[0] = i;
+			p[1] = j;
+			screen[i*(yRes/cut) + j] = p;
+			// Pair p = screen[i*(yRes / cut) + j];
+			// p[0] = i;
+			// p[1] = j;
+		}
+	}
+
+	for(int i = 0; i < (xRes * yRes) / (cut * cut); i++) {
+		int index = i + (rand() % ((xRes * yRes)/(cut * cut) - i));
+		Pair temp = screen[index];
+		screen[index] = screen[i];
+		screen[i] = temp;
+	}
+
 	XNextEvent(display, &event);
 
 	for(int yy=0; yy<yRes; yy++)
@@ -533,6 +585,8 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 	printf("Displaying...\n");
 
 	bool run = true;
+
+	int pxIndex = 0;
 
 	while(run) {
 		if(XEventsQueued(display, s) > 0) {
@@ -642,8 +696,14 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 		}
 
 		if(randompx) {
-			lastx = rand() % (xRes/cut);
-			lasty = rand() % (yRes/cut);
+			Pair p = screen[pxIndex];
+			lastx = p[0];
+			lasty = p[1];
+			pxIndex++;
+			if(pxIndex >= (xRes / cut) * (yRes / cut)) pxIndex = 0;
+			// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
+			// lastx = rand() % (xRes/cut);
+			// lasty = rand() % (yRes/cut);
 		} else {
 			if (lastx < xRes/cut) {
 				lastx += 1;
