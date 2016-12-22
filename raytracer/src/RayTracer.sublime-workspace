@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"KeyP",
+				"KeyPressMask"
+			],
+			[
+				"de",
+				"DefaultGC"
+			],
+			[
 				"pos",
 				"posToLight"
 			],
@@ -96,50 +104,50 @@
 	"buffers":
 	[
 		{
+			"file": "WindowTracer.cpp",
+			"settings":
+			{
+				"buffer_size": 16229,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 			"settings":
 			{
-				"buffer_size": 5647,
+				"buffer_size": 6146,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "AnimPairTest.cpp",
+			"file": "Shader.h",
 			"settings":
 			{
-				"buffer_size": 4274,
+				"buffer_size": 4829,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "RayGenerator.h",
+			"file": "Scene.h",
 			"settings":
 			{
-				"buffer_size": 1101,
+				"buffer_size": 4310,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "RayTracer.cpp",
+			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.mtl",
 			"settings":
 			{
-				"buffer_size": 2359,
+				"buffer_size": 122,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "camera.h",
+			"file": "Loader.h",
 			"settings":
 			{
-				"buffer_size": 5253,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Binocular.cpp",
-			"settings":
-			{
-				"buffer_size": 4775,
+				"buffer_size": 9525,
 				"line_ending": "Unix"
 			}
 		},
@@ -148,94 +156,6 @@
 			"settings":
 			{
 				"buffer_size": 6935,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Light.h",
-			"settings":
-			{
-				"buffer_size": 854,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Loader.h",
-			"settings":
-			{
-				"buffer_size": 9510,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Scene.h",
-			"settings":
-			{
-				"buffer_size": 4230,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene-crystal.mtl",
-			"settings":
-			{
-				"buffer_size": 115,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "BVHTree.h",
-			"settings":
-			{
-				"buffer_size": 15904,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "AABB.h",
-			"settings":
-			{
-				"buffer_size": 4789,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Blend.cpp",
-			"settings":
-			{
-				"buffer_size": 2717,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Animation.cpp",
-			"settings":
-			{
-				"buffer_size": 2631,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "AnimationPath.h",
-			"settings":
-			{
-				"buffer_size": 1364,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Ray.h",
-			"settings":
-			{
-				"buffer_size": 1458,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Shader.h",
-			"settings":
-			{
-				"buffer_size": 4692,
 				"line_ending": "Unix"
 			}
 		}
@@ -264,8 +184,31 @@
 	},
 	"file_history":
 	[
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene-crystal.obj",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.obj",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Sphere.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Windowed.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AnimPairTest.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayGenerator.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/camera.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Binocular.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Triangle.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Light.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Loader.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Scene.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene-crystal.mtl",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box.mtl",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/BVHTree.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AABB.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Blend.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Animation.cpp",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AnimationPath.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Ray.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Shader.h",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Material.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box_trans_test.mtl",
+		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene-crystal.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene-camera-path.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene.obj",
@@ -273,25 +216,16 @@
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/vector/GenVector.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/BVHNode.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/triangleTest.cpp",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Triangle.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Ray.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/objToGenVec.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AABB.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/headerCorrectionTemp/AABB.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AABB.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/ioTest.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.sublime-project",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/SphereTest.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/BVHTree",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Blend.cpp",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Animation.cpp",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AnimPairTest.cpp",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Binocular.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/camera.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Triangle.cpp",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayTracer.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/objToGenVec.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/BVHNode.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/BVHTree.cpp",
@@ -357,25 +291,13 @@
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/headerCorrectionTemp/RayTracer.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/headerCorrectionTemp/Animation.cpp",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/headerCorrectionTemp/RayTracer.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/AnimationPath.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/HitPoint.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box.mtl",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Light.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Loader.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Scene.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/RayGenerator.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Sphere.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Primitive.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Material.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/objload/objLoader.hpp",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/camera.h",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/Shader.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/buffer/Buffer.h",
 		"/home/caudeljn/Desktop/Sublime Text 2/sublime_text",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.mtl",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/cornell_box_trans_test.obj",
-		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/src/BVHTree.h",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/SphereTest2.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/NormalShadingTest1.obj",
 		"/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/blue_sphere.obj",
@@ -389,9 +311,7 @@
 		"/usr/share/applications/sublime_text.desktop",
 		"/home/caudeljn/Desktop/csse451_RayTracer/raytracer/makefile",
 		"/home/caudeljn/Desktop/RayTracer/raytracer/makefile",
-		"/home/caudeljn/Desktop/Link to csse451 RayTracer/raytracer/makefile",
-		"/home/caudeljn/HelloWorld/HelloWorld.c",
-		"/home/caudeljn/HelloWorld/addTwo.c"
+		"/home/caudeljn/Desktop/Link to csse451 RayTracer/raytracer/makefile"
 	],
 	"find":
 	{
@@ -409,6 +329,9 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			" );",
+			"shader",
+			"_t",
 			"operator",
 			"operator>",
 			">",
@@ -512,7 +435,7 @@
 			"obj"
 		],
 		"highlight": false,
-		"in_selection": false,
+		"in_selection": true,
 		"preserve_case": false,
 		"regex": true,
 		"replace_history":
@@ -532,18 +455,45 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
+					"file": "WindowTracer.cpp",
 					"settings":
 					{
-						"buffer_size": 5647,
+						"buffer_size": 16229,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5526,
-								5526
+								10151,
+								10151
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5743.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
+					"settings":
+					{
+						"buffer_size": 6146,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6057,
+								6057
 							]
 						],
 						"settings":
@@ -551,52 +501,25 @@
 							"syntax": "Packages/Makefile/Makefile.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1665.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "AnimPairTest.cpp",
-					"settings":
-					{
-						"buffer_size": 4274,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2755,
-								2755
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1260.0,
+						"translation.y": 2340.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "RayGenerator.h",
+					"file": "Shader.h",
 					"settings":
 					{
-						"buffer_size": 1101,
+						"buffer_size": 4829,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								3131,
+								3131
 							]
 						],
 						"settings":
@@ -605,25 +528,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 1350.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "RayTracer.cpp",
+					"file": "Scene.h",
 					"settings":
 					{
-						"buffer_size": 2359,
+						"buffer_size": 4310,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1460,
-								1460
+								2940,
+								2940
 							]
 						],
 						"settings":
@@ -632,52 +555,51 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 855.0,
+						"translation.y": 1530.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 4,
-					"file": "camera.h",
+					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.mtl",
 					"settings":
 					{
-						"buffer_size": 5253,
+						"buffer_size": 122,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1090,
-								1090
+								60,
+								60
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2430.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "Binocular.cpp",
+					"file": "Loader.h",
 					"settings":
 					{
-						"buffer_size": 4775,
+						"buffer_size": 9525,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2924,
-								2924
+								6762,
+								6762
 							]
 						],
 						"settings":
@@ -686,7 +608,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1800.0,
+						"translation.y": 3420.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -703,8 +625,8 @@
 						"selection":
 						[
 							[
-								4008,
-								4008
+								3513,
+								3513
 							]
 						],
 						"settings":
@@ -713,303 +635,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2385.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "Light.h",
-					"settings":
-					{
-						"buffer_size": 854,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								249,
-								249
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "Loader.h",
-					"settings":
-					{
-						"buffer_size": 9510,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								740,
-								740
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 180.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "Scene.h",
-					"settings":
-					{
-						"buffer_size": 4230,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3524,
-								3524
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1080.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/happy-scene-crystal.mtl",
-					"settings":
-					{
-						"buffer_size": 115,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								71,
-								71
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "BVHTree.h",
-					"settings":
-					{
-						"buffer_size": 15904,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								549,
-								549
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 630.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "AABB.h",
-					"settings":
-					{
-						"buffer_size": 4789,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4457,
-								4457
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2310.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "Blend.cpp",
-					"settings":
-					{
-						"buffer_size": 2717,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1003,
-								1003
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "Animation.cpp",
-					"settings":
-					{
-						"buffer_size": 2631,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								892,
-								892
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "AnimationPath.h",
-					"settings":
-					{
-						"buffer_size": 1364,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1178,
-								1178
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 180.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 16,
-					"file": "Ray.h",
-					"settings":
-					{
-						"buffer_size": 1458,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 17,
-					"file": "Shader.h",
-					"settings":
-					{
-						"buffer_size": 4692,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								848,
-								848
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2115.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1048,6 +674,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
 	"replace":
 	{
 		"height": 64.0

@@ -456,8 +456,8 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 		x = lastx*cut;
 		y = lasty*cut;
 
-		for(int i = 0; i < cut; i++) {
-			for(int j = 0; j < cut; j++) {
+		for(int i = 0; i < cut && x+i < xRes; i++) {
+			for(int j = 0; j < cut && y+j < yRes; j++) {
 				buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
 					&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
 			}
