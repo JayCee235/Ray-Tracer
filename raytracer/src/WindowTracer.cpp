@@ -22,12 +22,12 @@
 #include <string.h>
 
 int callWindow(Buffer<Vector3>* b, RayGenerator* generator, Shader* shader, 
-	int xRes, int yRes, int sections, int fade);
+	int xRes, int yRes, int sections, int fade, bool randompx);
 
 int callDoubleWindow(Buffer<Vector3>* rb, Buffer<Vector3>* lb,
 	RayGenerator* lGenerator, RayGenerator* rGenerator,
 	Shader* lShader, Shader* rShader, 
-	int xRes, int yRes, int sections, int fade);
+	int xRes, int yRes, int sections, int fade, bool randompx);
 
 Vector3 updatePixel(int x, int y, RayGenerator* generator, Shader* shader, 
 		float* max, Display* display, int s, Buffer<Vector3>* buffer, 
@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
 	bool REDBLUE = false;
 	bool IMPLICITCALC = false;
 	bool OVERLAP = false;
+	bool RANDOM = true;
 
 	int fade = 0;
 	int section = 1;
@@ -107,6 +108,10 @@ int main(int argc, char* argv[]) {
 		if(strcmp(argv[i], "-depth") == 0) {
 			printf("Set overlap\n");
 			OVERLAP = true;
+		}
+		if(strcmp(argv[i], "-refreshLine") == 0) {
+			printf("Set pixel refresh to linear\n");
+			RANDOM = true;
 		}
 		if(strcmp(argv[i], "-pxSize") == 0) {
 			int check = atoi(argv[i+1]);
@@ -241,17 +246,18 @@ int main(int argc, char* argv[]) {
 
 	printf("finished.\n");
 
-	int pid = fork();
+	// int pid = fork();
 
-	if(pid == 0) {
+	// if(pid == 0) {
 		if(REDBLUE || OVERLAP) {
-			callWindow(lBuffer, lGenerator, lShader, xRes, yRes, section, fade);
+			callWindow(lBuffer, lGenerator, lShader, xRes, yRes, section, fade, RANDOM);
 		} else {
-			callDoubleWindow(lBuffer, rBuffer, lGenerator, rGenerator, lShader, rShader, xRes, yRes, section, fade);
+			callDoubleWindow(lBuffer, rBuffer, lGenerator, rGenerator, 
+				lShader, rShader, xRes, yRes, section, fade, RANDOM);
 			printf("Window closed.\n");
 			return 0;
 		}
-	}
+	// }
 
 	// pid = fork();
 
@@ -261,12 +267,12 @@ int main(int argc, char* argv[]) {
 	// 	return 0;
 	// }
 
-	printf("Waiting...\n");
+	// printf("Waiting...\n");
 
-	wait(NULL);
+	// wait(NULL);
 	// wait(NULL);
 
-	printf("Waited.\n");
+	// printf("Waited.\n");
 
 
 
@@ -284,7 +290,7 @@ int main(int argc, char* argv[]) {
 }
 
 int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader, 
-	int xRes, int yRes, int sections, int fade) {
+	int xRes, int yRes, int sections, int fade, bool randompx) {
 
 	int cut = sections;
 
@@ -340,6 +346,7 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 			if(event.type == KeyPress || event.type == KeyRelease) {
 				XKeyEvent e = event.xkey;
 				int code = e.keycode;
+				printf("code: %d\n", code);
 				if(code == 25) {
 					if(event.type == KeyPress) {
 						up = true;
@@ -367,6 +374,12 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 					} else {
 						right = false;
 					}
+				}
+				if(code == 41) {
+					randompx = false;
+				}
+				if(code == 42) {
+					randompx = true;
 				}
 				if(code == 9) {
 					run = false;
@@ -410,8 +423,24 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 			delete(cam);
 		}
 
-		lastx = rand() % (xRes/cut);
+		if(randompx) {
+			lastx = rand() % (xRes/cut);
 		lasty = rand() % (yRes/cut);
+		} else {
+			if (lastx < xRes/cut) {
+				lastx += 1;
+			} else {
+				lastx = 0;
+				if (lasty < yRes/cut) {
+					lasty += 1;
+				} else {
+					lasty = 0;
+				}
+			}
+		}
+
+		// lastx = rand() % (xRes/cut);
+		// lasty = rand() % (yRes/cut);
 
 		// if (lastx < RES/cut) {
 		// 	lastx += 1;
@@ -446,7 +475,7 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 
 int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 	RayGenerator* lGenerator, RayGenerator* rGenerator,
-	Shader* lShader, Shader* rShader, int xRes, int yRes, int sections, int fade) {
+	Shader* lShader, Shader* rShader, int xRes, int yRes, int sections, int fade, bool randompx) {
 
 	int cut = sections;
 
@@ -511,6 +540,7 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 			if(event.type == KeyPress || event.type == KeyRelease) {
 				XKeyEvent e = event.xkey;
 				int code = e.keycode;
+				printf("code: %d\n", code);
 				if(code == 25) {
 					if(event.type == KeyPress) {
 						up = true;
@@ -538,6 +568,12 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 					} else {
 						right = false;
 					}
+				}
+				if(code == 41) {
+					randompx = false;
+				}
+				if(code == 42) {
+					randompx = true;
 				}
 				if(code == 9) {
 					run = false;
@@ -605,8 +641,21 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 			delete(cam);
 		}
 
-		lastx = rand() % (xRes/cut);
-		lasty = rand() % (yRes/cut);
+		if(randompx) {
+			lastx = rand() % (xRes/cut);
+			lasty = rand() % (yRes/cut);
+		} else {
+			if (lastx < xRes/cut) {
+				lastx += 1;
+			} else {
+				lastx = 0;
+				if (lasty < yRes/cut) {
+					lasty += 1;
+				} else {
+					lasty = 0;
+				}
+			}
+		}
 
 		// if (lastx < RES/cut) {
 		// 	lastx += 1;
