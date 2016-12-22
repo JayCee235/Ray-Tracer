@@ -656,23 +656,12 @@ int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
 				}
 			}
 		}
-
-		// if (lastx < RES/cut) {
-		// 	lastx += 1;
-		// } else {
-		// 	lastx = 0;
-		// 	if (lasty < RES/cut) {
-		// 		lasty += 1;
-		// 	} else {
-		// 		lasty = 0;
-		// 	}
-		// }
 		
 		x = lastx*cut;
 		y = lasty*cut;
 
-		for(int i = 0; i < cut; i++) {
-			for(int j = 0; j < cut; j++) {
+		for(int i = 0; i < cut && x+i < xRes; i++) {
+			for(int j = 0; j < cut && y+j < yRes; j++) {
 				lBuffer->at(x+i, y+j) = updatePixel(x+i, y+j, lGenerator, lShader, 
 					&max, display, s, lBuffer, window, x+i, y+j, oldScale, newScale);
 				rBuffer->at(x+i, y+j) = updatePixel(x+i, y+j, rGenerator, rShader, 

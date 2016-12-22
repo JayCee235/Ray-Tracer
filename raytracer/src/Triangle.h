@@ -168,8 +168,8 @@ public:
 		float d02 = point.dot(this->v);
 
 		// printf("d02, d12: %.2f, %.2f\n", d02, d12);
-		float o2 = (u2*d02 - uv*d12) * baryDom;
-		float o3 = (v2*d12 - uv*d02) * baryDom;
+		float o3 = (u2*d02 - uv*d12) * baryDom;
+		float o2 = (v2*d12 - uv*d02) * baryDom;
 
 		float o1 = 1 - o2 - o3;
 
@@ -223,7 +223,7 @@ public:
 	Vector3 getNormal(Ray* r, HitPoint* hp) {
 		Vector3 pointToCheck = r->getPointAt(hp->t);
 		Vector3 bary = this->barycentric(pointToCheck);
-		Vector3 out = (this->a->getD() * bary[0]) + (this->b->getD() * bary[2]) + (this->c->getD() * bary[1]);
+		Vector3 out = (this->a->getD() * bary[0]) + (this->b->getD() * bary[1]) + (this->c->getD() * bary[2]);
 		out.normalize();
 		return out;
 
