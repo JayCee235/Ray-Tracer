@@ -107,7 +107,15 @@
 			"file": "WindowTracer.cpp",
 			"settings":
 			{
-				"buffer_size": 16229,
+				"buffer_size": 17669,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "vector/GenVector.h",
+			"settings":
+			{
+				"buffer_size": 7563,
 				"line_ending": "Unix"
 			}
 		},
@@ -115,7 +123,7 @@
 			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
 			"settings":
 			{
-				"buffer_size": 6146,
+				"buffer_size": 6144,
 				"line_ending": "Unix"
 			}
 		},
@@ -139,7 +147,7 @@
 			"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.mtl",
 			"settings":
 			{
-				"buffer_size": 122,
+				"buffer_size": 115,
 				"line_ending": "Unix"
 			}
 		},
@@ -450,7 +458,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -458,15 +466,15 @@
 					"file": "WindowTracer.cpp",
 					"settings":
 					{
-						"buffer_size": 16229,
+						"buffer_size": 17669,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10151,
-								10151
+								6904,
+								6904
 							]
 						],
 						"settings":
@@ -475,25 +483,52 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5743.0,
+						"translation.y": 4044.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
+					"file": "vector/GenVector.h",
 					"settings":
 					{
-						"buffer_size": 6146,
+						"buffer_size": 7563,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6057,
-								6057
+								7451,
+								7451
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5400.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/makefile",
+					"settings":
+					{
+						"buffer_size": 6144,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3587,
+								3587
 							]
 						],
 						"settings":
@@ -501,13 +536,13 @@
 							"syntax": "Packages/Makefile/Makefile.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2340.0,
+						"translation.y": 1305.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "Shader.h",
 					"settings":
 					{
@@ -534,7 +569,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "Scene.h",
 					"settings":
 					{
@@ -561,19 +596,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "/home/caudeljn/csse451/1617b-csse451-caudeljn/raytracer/res/bunny-scene.mtl",
 					"settings":
 					{
-						"buffer_size": 122,
+						"buffer_size": 115,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								60,
-								60
+								53,
+								53
 							]
 						],
 						"settings":
@@ -587,7 +622,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "Loader.h",
 					"settings":
 					{
@@ -614,7 +649,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "Triangle.h",
 					"settings":
 					{

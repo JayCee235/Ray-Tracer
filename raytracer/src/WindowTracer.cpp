@@ -316,10 +316,15 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 
 	XMapWindow(display, window);
 
-	bool up=false, down=false, left=false, right=false;
+	bool up=false, down=false, left=false, right=false; 
+	bool forward = false, backward = false;
+	bool goUp = false, goDown = false, goLeft = false, goRight = false;
+	bool resetCam = false;
 
 	int lastx=0, lasty=0;
 	int x = 0, y = 0;
+
+	Camera* init = new Camera(generator->getCamera());
 
 	Pair* screen = (Pair*) malloc(sizeof(Pair)*xRes*yRes);
 
@@ -365,6 +370,9 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 
 	int pxIndex = 0;
 
+	float rot = 0.000003 * cut * cut;
+	float move = 0.0000003 * cut * cut;
+
 	while(run) {
 		if(XEventsQueued(display, s) > 0) {
 			XNextEvent(display, &event);
@@ -400,6 +408,48 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 						right = false;
 					}
 				}
+				if(code == 26) {
+					if(event.type == KeyPress) {
+						forward = true;
+					} else {
+						forward = false;
+					}
+				}
+				if(code == 24) {
+					if(event.type == KeyPress) {
+						backward = true;
+					} else {
+						backward = false;
+					}
+				}
+				if(code == 113) {
+					if(event.type == KeyPress) {
+						goLeft = true;
+					} else {
+						goLeft = false;
+					}
+				}
+				if(code == 111) {
+					if(event.type == KeyPress) {
+						goUp = true;
+					} else {
+						goUp = false;
+					}
+				}
+				if(code == 116) {
+					if(event.type == KeyPress) {
+						goDown = true;
+					} else {
+						goDown = false;
+					}
+				}
+				if(code == 114) {
+					if(event.type == KeyPress) {
+						goRight = true;
+					} else {
+						goRight = false;
+					}
+				}
 				if(code == 41) {
 					randompx = false;
 				}
@@ -409,11 +459,19 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 				if(code == 9) {
 					run = false;
 				}
-
+				if(code == 65) {
+					if(event.type == KeyPress) {
+						resetCam = true;
+					}
+				}
 			}
 		}
 
-		float rot = 0.000003 * cut * cut;
+		if(resetCam) {
+			generator->setCamera(init);
+			shader->setCamera(init);
+			resetCam = false;
+		}
 
 		if(up) {
 			float toRotate = rot;
@@ -443,6 +501,49 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 			float toRotate = rot;
 			Camera* cam = generator->getCamera();
 			cam = cam->rotateAroundFocus(toRotate);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(forward) {
+			Camera* cam = generator->getCamera();
+			cam = cam->zoomIn(move);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(backward) {
+			Camera* cam = generator->getCamera();
+			cam = cam->zoomIn(-move);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+
+		if(goUp) {
+			Camera* cam = generator->getCamera();
+			cam = cam->travelUp(-move);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(goRight) {
+			Camera* cam = generator->getCamera();
+			cam = cam->travelRight(-move);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(goLeft) {
+			Camera* cam = generator->getCamera();
+			cam = cam->travelRight(move);
+			generator->setCamera(cam);
+			shader->setCamera(cam);
+			delete(cam);
+		}
+		if(goDown) {
+			Camera* cam = generator->getCamera();
+			cam = cam->travelUp(move);
 			generator->setCamera(cam);
 			shader->setCamera(cam);
 			delete(cam);

@@ -194,10 +194,43 @@ public:
 
 	}
 
+	Camera* focus(Scene* s) {
+		Ray* ray = new Ray(this->at, this->w * -1);
+		HitPoint hp;
+		float foc = s->intersect(r, &hp);
+		if(foc > 0) {
+			this->lookingAt = ray->getPointAt(hp.t);
+		}
+	}
+
+	Camera* zoomIn(float dis) {
+		Vector3 newAt = this->at - this->w * dis;
+		Vector3 newUp = Vector3(this->up);
+		Vector3 newLookingAt = Vector3(this->lookingAt);
+
+		return new Camera(newAt, newLookingAt, newUp);
+	}
+
 	Camera* travelForward(float dis) {
 		Vector3 newAt = this->at - this->w * dis;
-		Vector3 newUp = this->up + Vector3(0, 0, 0);
-		Vector3 newLookingAt = this->lookingAt + Vector3(0, 0, 0);
+		Vector3 newUp = Vector3(this->up);
+		Vector3 newLookingAt = this->lookingAt - this->w * dis;
+
+		return new Camera(newAt, newLookingAt, newUp);
+	}
+
+	Camera* travelRight(float dis) {
+		Vector3 newAt = this->at - this->u * dis;
+		Vector3 newUp = Vector3(this->up);
+		Vector3 newLookingAt = this->lookingAt - this->u * dis;
+
+		return new Camera(newAt, newLookingAt, newUp);
+	}
+
+	Camera* travelUp(float dis) {
+		Vector3 newAt = this->at - this->v * dis;
+		Vector3 newUp = Vector3(this->up);
+		Vector3 newLookingAt = this->lookingAt - this->v * dis;
 
 		return new Camera(newAt, newLookingAt, newUp);
 	}
