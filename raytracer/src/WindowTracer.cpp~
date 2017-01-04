@@ -33,11 +33,6 @@ Vector3 updatePixel(int x, int y, RayGenerator* generator, Shader* shader,
 		float* max, Display* display, int s, Buffer<Vector3>* buffer, 
 		Window window, int wx, int wy, int oldScale, int newScale);
 
-Vector3 calculatePixel(int x, int y, RayGenerator* generator, Shader* shader, 
-		float* max, Buffer<Vector3>* buffer, int oldScale, int newScale);
-
-void drawPixel(int x, int y, Vector3 color, Display* display, int s, Window w);
-
 void printHelp() {
 	printf("----------\n");
 	printf("-res <res> sets the generated image resoultion to res*res.\n");
@@ -314,8 +309,6 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 	display = XOpenDisplay(NULL);
 	s = DefaultScreen(display);
 
-	printf("Creating window...\n");
-
 	window = XCreateSimpleWindow(display, RootWindow(display, s), 0, 0, xRes, yRes, 1,
                            BlackPixel(display, s), WhitePixel(display, s));
 
@@ -333,26 +326,22 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 
 	Camera* init = new Camera(generator->getCamera());
 
-	int xb = (xRes * SCALE)/cut;
-	int yb = (yRes * SCALE)/cut;
+	Pair* screen = (Pair*) malloc(sizeof(Pair)*xRes*yRes);
 
-	Pair* screen = (Pair*) malloc(sizeof(Pair)*xb*yb);
-
-	printf("Determining pixel refresh order...\n");
-	for(int i = 0; i < xb; i++) {
-		for(int j = 0; j < yb; j++) {
+	for(int i = 0; i < xRes * SCALE / cut; i++) {
+		for(int j = 0; j < yRes * SCALE / cut; j++) {
 			Pair p;
 			p[0] = i;
 			p[1] = j;
-			screen[i*(yb) + j] = p;
+			screen[i*(yRes/cut) + j] = p;
 			// Pair p = screen[i*(yRes / cut) + j];
 			// p[0] = i;
 			// p[1] = j;
 		}
 	}
 
-	for(int i = 0; i < xb*yb; i++) {
-		int index = i + (rand() % ((xb*yb) - i));
+	for(int i = 0; i < (xRes * yRes * SCALE * SCALE) / (cut * cut); i++) {
+		int index = i + (rand() % ((xRes * yRes * SCALE * SCALE)/(cut * cut) - i));
 		Pair temp = screen[index];
 		screen[index] = screen[i];
 		screen[i] = temp;
@@ -360,22 +349,16 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 
 	XNextEvent(display, &event);
 
-	float invScale = 1.0 / SCALE;
-	float invScale2 = 1.0 / (SCALE*SCALE);
-	printf("%.2f %.2f\n", invScale2, invScale);
-
-	printf("Filling initial display...\n");
 	for(int yy=0; yy<yRes; yy++)
 	{
 		for(int xx=0; xx<xRes; xx++)
 		{
-			Vector3 ans = Vector3(0, 0, 0);
+			Vector3 ans = Vector(0, 0, 0);
 			for(int i = 0; i < SCALE; i++) {
 				for(int j = 0; j < SCALE; j++) {
-					ans += buffer->at(xx*SCALE + i, yy*SCALE + j);
+					ans += buffer->at(xx + i, yy + j);
 				}
 			}
-			ans *= invScale2;
 			// Vector3 ans = buffer->at(xx, yy);
 			int red = (int) (255*ans[0]);
 			int green = (int) (255*ans[1]);
@@ -396,11 +379,6 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 	float rot = 0.000003 * cut * cut;
 	float move = 0.0000003 * cut * cut;
 
-	int pux2 = (cut+SCALE-1) / SCALE;
-	int puy2 = (cut+SCALE-1) / SCALE;
-
-
-	printf("Beginning loop.\n");
 	while(run) {
 		if(XEventsQueued(display, s) > 0) {
 			XNextEvent(display, &event);
@@ -582,16 +560,16 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 			lastx = p[0];
 			lasty = p[1];
 			pxIndex++;
-			if(pxIndex >= xb*yb) pxIndex = 0;
+			if(pxIndex >= (xRes / cut) * (yRes / cut)) pxIndex = 0;
 			// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
 			// lastx = rand() % (xRes/cut);
 			// lasty = rand() % (yRes/cut);
 		} else {
-			if (lastx+1 < xb) {
+			if (lastx < xRes/cut) {
 				lastx += 1;
 			} else {
 				lastx = 0;
-				if (lasty+1 < yb) {
+				if (lasty < yRes/cut) {
 					lasty += 1;
 				} else {
 					lasty = 0;
@@ -616,58 +594,11 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 		x = lastx*cut;
 		y = lasty*cut;
 
-		for(int i = 0; i < cut && x+i < xRes*SCALE; i++) {
-			for(int j = 0; j < cut && y+j < yRes*SCALE; j++) {
-				// buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
-				// 	&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
-				Vector3 ans = calculatePixel(x+i, y+j, generator, shader, &max, 
-					buffer, oldScale, newScale);
-				buffer->at(x+i, y+j) = ans;
-
+		for(int i = 0; i < cut && x+i < xRes; i++) {
+			for(int j = 0; j < cut && y+j < yRes; j++) {
+				buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
+					&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
 			}
-		}
-
-		int pux, puy, bux, buy;
-
-		if(SCALE == 1) {
-			pux = x;
-			puy = y;
-			bux = x;
-			buy = y;
-		} else {
-			pux = (int) x * invScale;
-			puy = (int) y * invScale;
-
-			bux = x - (x%SCALE);
-			buy = y - (y%SCALE);
-		}
-
-		
-
-		// int di = 0;
-		int sdi = bux;
-		for(int i = 0; i <= pux2 && pux+i < xRes; i++) {
-			// int dj = 0;
-			int sdj = buy;
-			for(int j = 0; j <= puy2 && puy+j < yRes; j++) {
-				Vector3 ans = Vector3(0, 0, 0);
-				for(int dx = 0; dx < SCALE; dx++) {
-					for(int dy = 0; dy < SCALE; dy++) {
-						Vector3 toAdd = buffer->at(sdi+dx, sdj+dy);
-						ans += toAdd;
-					}
-				}
-				if(ans != Vector3(0, 0, 0)) {
-					ans *= invScale2;
-					// printVector(ans);
-				}
-
-				drawPixel(pux+i, puy+j, ans, display, s, window);
-				// dj++;
-				sdj += SCALE;
-			}
-			// di++;
-			sdi += SCALE;
 		}
 
 		// max = (max + 1) / 2;
@@ -947,43 +878,4 @@ Vector3 updatePixel(int x, int y, RayGenerator* generator, Shader* shader,
 		(red+oldRed)/256.0f, 
 		(green+oldGreen)/256.0f, 
 		(blue+oldBlue)/256.0f);
-}
-
-Vector3 calculatePixel(int x, int y, RayGenerator* generator, Shader* shader, 
-		float* max, Buffer<Vector3>* buffer, int oldScale, int newScale) {
-	Ray* r = generator->getRay(x, y);
-	Vector3 ans = shader->shadePoint(r);
-	delete(r);
-
-	for(int q = 0; q < 3; q++) {
-		if(ans[q] > *max) {
-			*max = ans[q];
-		}
-	}
-
-	int red = (int) (newScale*ans[0] / *max);
-	int green = (int) (newScale*ans[1] / *max);
-	int blue = (int) (newScale*ans[2] / *max);
-
-	Vector3 old = buffer->at(x, y);
-
-	int oldRed = (int) (oldScale*old[0]);
-	int oldGreen = (int) (oldScale*old[1]);
-	int oldBlue = (int) (oldScale*old[2]);
-
-	return Vector3(
-		(red+oldRed)/256.0f, 
-		(green+oldGreen)/256.0f, 
-		(blue+oldBlue)/256.0f);
-}
-
-void drawPixel(int x, int y, Vector3 color, Display* display, int s, Window w) {
-	int red = (int) 255 * color[0];
-	int green = (int) 255 * color[1];
-	int blue = (int) 255 * color[2];
-
-	int fin = 256*256*red + 256*green + blue;
-
-	XSetForeground(display, DefaultGC(display, s), fin);
-	XDrawPoint(display, w, DefaultGC(display, s), x, y);
 }

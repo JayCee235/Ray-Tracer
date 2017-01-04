@@ -71,6 +71,15 @@ public:
 		tree->printTree();
 	}
 
+	Camera* focus(Camera* cam) {
+		Ray* ray = new Ray(cam->getAt(), cam->getW() * -1);
+		HitPoint hp;
+		float foc = this->intersect(ray, &hp);
+		if(foc > 0) {
+			cam->setLookingAt(ray->getPointAt(hp.t));
+		}
+	}
+
 	float intersect(Ray* r, HitPoint* hp) {
 		// printf("I am beginning an intersection.\n");
 		float out = this->tree->intersect(r);

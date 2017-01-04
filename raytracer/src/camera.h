@@ -194,15 +194,6 @@ public:
 
 	}
 
-	Camera* focus(Scene* s) {
-		Ray* ray = new Ray(this->at, this->w * -1);
-		HitPoint hp;
-		float foc = s->intersect(r, &hp);
-		if(foc > 0) {
-			this->lookingAt = ray->getPointAt(hp.t);
-		}
-	}
-
 	Camera* zoomIn(float dis) {
 		Vector3 newAt = this->at - this->w * dis;
 		Vector3 newUp = Vector3(this->up);
@@ -312,6 +303,10 @@ public:
 
 	Vector3 getUp() {
 		return this->up * 1;
+	}
+
+	void setLookingAt(Vector3 v) {
+		this->lookingAt = Vector3(v);
 	}
 };
 
