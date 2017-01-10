@@ -56,13 +56,13 @@
 
 
 RayTracer.o: src/RayTracer.cpp
-	g++ -O3 src/RayTracer.cpp -c -o RayTracer.o
+	g++ -O3 src/RayTracer.cpp -fopenmp -c -o RayTracer.o
 
 #RayTracer: RayTracer.o AABB.o AnimationPath.o Blender.o BVHTree.o BVHNode.o calcQuad.o Camera.o HitPoint.o Light.o Loader.o Material.o ObjToGenVec.o Primitive.o Ray.o RayGenerator.o Scene.o Sphere.o Triangle.o
 #	g++ -O3 RayTracer.o -o RayTracer
 
 RayTracer: RayTracer.o
-	g++ -O3 RayTracer.o -o RayTracer
+	g++ -O3 RayTracer.o -fopenmp -o RayTracer
 
 Blend.o: src/Blend.cpp
 	g++ -O3 src/Blend.cpp -c -o Blend.o
@@ -98,10 +98,10 @@ runNormalShadingTest: RayTracer
 	./RayTracer res/bunny-scene.obj res/bunny-scene_normal2.png -res 1000
 
 WindowTracer.o: src/WindowTracer.cpp
-	g++ -O3 src/WindowTracer.cpp -lX11 -c -o WindowTracer.o
+	g++ -O3 src/WindowTracer.cpp -lX11 -c -fopenmp -o WindowTracer.o
 
 WindowTracer: WindowTracer.o
-	g++ -O3 WindowTracer.o -lX11 -o WindowTracer
+	g++ -O3 WindowTracer.o -lX11 -fopenmp -o WindowTracer
 
 HappyWindow: WindowTracer
 	./WindowTracer res/happy-scene.obj -res 1000 -scale 1- -calcNormal -pxSize 1

@@ -134,8 +134,15 @@ public:
 
 					Ray* reflection = workRay->reflect(Vector3(0, 0, 0), hp.normal);
 					Vector3 reflectionDir = reflection->getD();
-					// Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
-					// hpToCam.normalize();
+
+					Vector3 hpToCam = camera->getP() - ray->getPointAt(hp.t);
+					hpToCam.normalize();
+
+					// Vector3 H = workRay->getD() + hpToCam;
+					// H.normalize();
+					// float specMult = H.dot(ray->getD()*-1);
+
+
 					float specMult = reflectionDir.dot(ray->getD()*-1);
 					delete(reflection);
 
@@ -145,7 +152,7 @@ public:
 
 					if(specMult > 0) {
 						// specMult *= dott;
-						specMult = pow(specMult, m->shiny);
+						specMult = pow(specMult, 4*m->shiny);
 						Vector3 lightSpec = work->getMaterial()->specular;// * (work->count / 300);
 						lightSpec = lightSpec * specMult;
 						lightSpec = lightSpec * dom;

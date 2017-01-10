@@ -21,13 +21,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define PIXLOOP 16
+
 int callWindow(Buffer<Vector3>* b, RayGenerator* generator, Shader* shader, 
 	int xRes, int yRes, int sections, int fade, bool randompx, int scale);
-
-int callDoubleWindow(Buffer<Vector3>* rb, Buffer<Vector3>* lb,
-	RayGenerator* lGenerator, RayGenerator* rGenerator,
-	Shader* lShader, Shader* rShader, 
-	int xRes, int yRes, int sections, int fade, bool randompx);
 
 Vector3 updatePixel(int x, int y, RayGenerator* generator, Shader* shader, 
 		float* max, Display* display, int s, Buffer<Vector3>* buffer, 
@@ -37,6 +34,8 @@ Vector3 calculatePixel(int x, int y, RayGenerator* generator, Shader* shader,
 		float* max, Buffer<Vector3>* buffer, int oldScale, int newScale);
 
 void drawPixel(int x, int y, Vector3 color, Display* display, int s, Window w);
+void drawPixelComputed(int x, int y, int colour, Display* display, int s, Window w);
+int setDrawPixel(Vector3 color);
 
 void printHelp() {
 	printf("----------\n");
@@ -56,7 +55,7 @@ int main(int argc, char* argv[]) {
 
 	bool REDBLUE = false;
 	bool IMPLICITCALC = false;
-	bool OVERLAP = false;
+	bool OVERLAP = true;
 	bool RANDOM = true;
 
 	int fade = 0;
@@ -211,6 +210,7 @@ int main(int argc, char* argv[]) {
 	float max = 1;
 
 	int traceCount = -1;
+	#pragma omp parallel for
 	for(int y=0; y<yRes; y++)
 	{
 		// if(y%(RES/10) == 0) {
@@ -257,8 +257,8 @@ int main(int argc, char* argv[]) {
 		if(REDBLUE || OVERLAP) {
 			callWindow(lBuffer, lGenerator, lShader, xRes/SCALE, yRes/SCALE, section, fade, RANDOM, SCALE);
 		} else {
-			callDoubleWindow(lBuffer, rBuffer, lGenerator, rGenerator, 
-				lShader, rShader, xRes, yRes, section, fade, RANDOM);
+			// callDoubleWindow(lBuffer, rBuffer, lGenerator, rGenerator, 
+			// 	lShader, rShader, xRes, yRes, section, fade, RANDOM);
 			printf("Window closed.\n");
 			return 0;
 		}
@@ -339,6 +339,7 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 	Pair* screen = (Pair*) malloc(sizeof(Pair)*xb*yb);
 
 	printf("Determining pixel refresh order...\n");
+	#pragma omp parallel for
 	for(int i = 0; i < xb; i++) {
 		for(int j = 0; j < yb; j++) {
 			Pair p;
@@ -351,6 +352,7 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 		}
 	}
 
+	#pragma omp parallel for
 	for(int i = 0; i < xb*yb; i++) {
 		int index = i + (rand() % ((xb*yb) - i));
 		Pair temp = screen[index];
@@ -393,8 +395,8 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 
 	int pxIndex = 0;
 
-	float rot = 0.000003 * cut * cut;
-	float move = 0.0000003 * cut * cut;
+	float rot = 0.0000043 * cut * cut;
+	float move = 0.00000043 * cut * cut;
 
 	int pux2 = (cut+SCALE-1) / SCALE;
 	int puy2 = (cut+SCALE-1) / SCALE;
@@ -407,7 +409,7 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 			if(event.type == KeyPress || event.type == KeyRelease) {
 				XKeyEvent e = event.xkey;
 				int code = e.keycode;
-				printf("code: %d\n", code);
+				// printf("code: %d\n", code);
 				if(code == 25) {
 					if(event.type == KeyPress) {
 						up = true;
@@ -577,27 +579,27 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 			delete(cam);
 		}
 
-		if(randompx) {
-			Pair p = screen[pxIndex];
-			lastx = p[0];
-			lasty = p[1];
-			pxIndex++;
-			if(pxIndex >= xb*yb) pxIndex = 0;
-			// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
-			// lastx = rand() % (xRes/cut);
-			// lasty = rand() % (yRes/cut);
-		} else {
-			if (lastx+1 < xb) {
-				lastx += 1;
-			} else {
-				lastx = 0;
-				if (lasty+1 < yb) {
-					lasty += 1;
-				} else {
-					lasty = 0;
-				}
-			}
-		}
+		// if(randompx) {
+		// 	Pair p = screen[pxIndex];
+		// 	lastx = p[0];
+		// 	lasty = p[1];
+		// 	pxIndex++;
+		// 	if(pxIndex >= xb*yb) pxIndex = 0;
+		// 	// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
+		// 	// lastx = rand() % (xRes/cut);
+		// 	// lasty = rand() % (yRes/cut);
+		// } else {
+		// 	if (lastx+1 < xb) {
+		// 		lastx += 1;
+		// 	} else {
+		// 		lastx = 0;
+		// 		if (lasty+1 < yb) {
+		// 			lasty += 1;
+		// 		} else {
+		// 			lasty = 0;
+		// 		}
+		// 	}
+		// }
 
 		// lastx = rand() % (xRes/cut);
 		// lasty = rand() % (yRes/cut);
@@ -613,302 +615,168 @@ int callWindow(Buffer<Vector3>* buffer, RayGenerator* generator, Shader* shader,
 		// 	}
 		// }
 		
-		x = lastx*cut;
-		y = lasty*cut;
+		// x = lastx*cut;
+		// y = lasty*cut;
 
-		for(int i = 0; i < cut && x+i < xRes*SCALE; i++) {
-			for(int j = 0; j < cut && y+j < yRes*SCALE; j++) {
-				// buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
-				// 	&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
-				Vector3 ans = calculatePixel(x+i, y+j, generator, shader, &max, 
-					buffer, oldScale, newScale);
-				buffer->at(x+i, y+j) = ans;
+		int* colours = (int*) malloc(PIXLOOP * sizeof(int));
+		int* xCol = (int*) malloc(PIXLOOP * sizeof(int));
+		int* yCol = (int*) malloc(PIXLOOP * sizeof(int));
 
-			}
-		}
-
-		int pux, puy, bux, buy;
-
-		if(SCALE == 1) {
-			pux = x;
-			puy = y;
-			bux = x;
-			buy = y;
-		} else {
-			pux = (int) x * invScale;
-			puy = (int) y * invScale;
-
-			bux = x - (x%SCALE);
-			buy = y - (y%SCALE);
-		}
-
-		
-
-		// int di = 0;
-		int sdi = bux;
-		for(int i = 0; i <= pux2 && pux+i < xRes; i++) {
-			// int dj = 0;
-			int sdj = buy;
-			for(int j = 0; j <= puy2 && puy+j < yRes; j++) {
-				Vector3 ans = Vector3(0, 0, 0);
-				for(int dx = 0; dx < SCALE; dx++) {
-					for(int dy = 0; dy < SCALE; dy++) {
-						Vector3 toAdd = buffer->at(sdi+dx, sdj+dy);
-						ans += toAdd;
-					}
-				}
-				if(ans != Vector3(0, 0, 0)) {
-					ans *= invScale2;
-					// printVector(ans);
-				}
-
-				drawPixel(pux+i, puy+j, ans, display, s, window);
-				// dj++;
-				sdj += SCALE;
-			}
-			// di++;
-			sdi += SCALE;
-		}
-
-		// max = (max + 1) / 2;
-		if(!up && !down && !left && !right) {
-			// max = (9999*max+1) / 10000;
-		}
-	}
-	XCloseDisplay(display);
-
-	return 0;
-}
-
-int callDoubleWindow(Buffer<Vector3>* rBuffer, Buffer<Vector3>* lBuffer,
-	RayGenerator* lGenerator, RayGenerator* rGenerator,
-	Shader* lShader, Shader* rShader, int xRes, int yRes, int sections, int fade, bool randompx) {
-
-	int cut = sections;
-
-	int oldScale = fade;
-	int newScale = 256 - oldScale;
-
-	float max = 1;
-
-	Display *display;
-	Window window;
-	XEvent event;
-	int s;
-
-	display = XOpenDisplay(NULL);
-	s = DefaultScreen(display);
-
-	window = XCreateSimpleWindow(display, RootWindow(display, s), 0, 0, 2*xRes, yRes, 1,
-                           BlackPixel(display, s), WhitePixel(display, s));
-
-	XSelectInput(display, window, KeyPressMask | KeyReleaseMask);
-
-	XMapWindow(display, window);
-
-	bool up=false, down=false, left=false, right=false;
-
-	int lastx=0, lasty=0;
-	int x = 0, y = 0;
-
-	Pair* screen = (Pair*) malloc(sizeof(Pair)*xRes*yRes);
-
-	for(int i = 0; i < xRes / cut; i++) {
-		for(int j = 0; j < yRes / cut; j++) {
-			Pair p;
-			p[0] = i;
-			p[1] = j;
-			screen[i*(yRes/cut) + j] = p;
-			// Pair p = screen[i*(yRes / cut) + j];
-			// p[0] = i;
-			// p[1] = j;
-		}
-	}
-
-	for(int i = 0; i < (xRes * yRes) / (cut * cut); i++) {
-		int index = i + (rand() % ((xRes * yRes)/(cut * cut) - i));
-		Pair temp = screen[index];
-		screen[index] = screen[i];
-		screen[i] = temp;
-	}
-
-	XNextEvent(display, &event);
-
-	for(int yy=0; yy<yRes; yy++)
-	{
-		for(int xx=0; xx<xRes; xx++)
-		{
-			Vector3 ans = lBuffer->at(xx, yy);
-			int red = (int) (255*ans[0]);
-			int green = (int) (255*ans[1]);
-			int blue = (int) (255*ans[2]);
-			int fin = 256*256*red + 256*green + blue;
-
-			XSetForeground(display, DefaultGC(display, s), fin);
-			XDrawPoint(display, window, DefaultGC(display, s), xx, yy);
-
-			ans = rBuffer->at(xx, yy);
-			red = (int) (255*ans[0]);
-			green = (int) (255*ans[1]);
-			blue = (int) (255*ans[2]);
-			fin = 256*256*red + 256*green + blue;
-
-			XSetForeground(display, DefaultGC(display, s), fin);
-			XDrawPoint(display, window, DefaultGC(display, s), xx + xRes, yy);
-		}
-	}
-
-	printf("Displaying...\n");
-
-	bool run = true;
-
-	int pxIndex = 0;
-
-	while(run) {
-		if(XEventsQueued(display, s) > 0) {
-			XNextEvent(display, &event);
-			if(event.type == KeyPress || event.type == KeyRelease) {
-				XKeyEvent e = event.xkey;
-				int code = e.keycode;
-				printf("code: %d\n", code);
-				if(code == 25) {
-					if(event.type == KeyPress) {
-						up = true;
-					} else {
-						up = false;
-					}
-				}
-				if(code == 38) {
-					if(event.type == KeyPress) {
-						left = true;
-					} else {
-						left = false;
-					}
-				}
-				if(code == 39) {
-					if(event.type == KeyPress) {
-						down = true;
-					} else {
-						down = false;
-					}
-				}
-				if(code == 40) {
-					if(event.type == KeyPress) {
-						right = true;
-					} else {
-						right = false;
-					}
-				}
-				if(code == 41) {
-					randompx = false;
-				}
-				if(code == 42) {
-					randompx = true;
-				}
-				if(code == 9) {
-					run = false;
-				}
-
-			}
-		}
-
-		float rot = 0.000003 * cut * cut;
-
-		if(up) {
-			float toRotate = rot;
-			Camera* cam = lGenerator->getCamera();
-			cam = cam->rotateVerticallyAroundFocus(toRotate);
-			lGenerator->setCamera(cam);
-			lShader->setCamera(cam);
-			delete(cam);
-
-			cam = rGenerator->getCamera();
-			cam = cam->rotateVerticallyAroundFocus(toRotate);
-			rGenerator->setCamera(cam);
-			rShader->setCamera(cam);
-			delete(cam);
-		}
-		if(down) {
-			float toRotate = -rot;
-			Camera* cam = lGenerator->getCamera();
-			cam = cam->rotateVerticallyAroundFocus(toRotate);
-			lGenerator->setCamera(cam);
-			lShader->setCamera(cam);
-			delete(cam);
-
-			cam = rGenerator->getCamera();
-			cam = cam->rotateVerticallyAroundFocus(toRotate);
-			rGenerator->setCamera(cam);
-			rShader->setCamera(cam);
-			delete(cam);
-		}
-		if(left) {
-			float toRotate = -rot;
-			Camera* cam = lGenerator->getCamera();
-			cam = cam->rotateAroundFocus(toRotate);
-			lGenerator->setCamera(cam);
-			lShader->setCamera(cam);
-			delete(cam);
-
-			cam = rGenerator->getCamera();
-			cam = cam->rotateAroundFocus(toRotate);
-			rGenerator->setCamera(cam);
-			rShader->setCamera(cam);
-			delete(cam);
-		}
-		if(right) {
-			float toRotate = rot;
-			Camera* cam = lGenerator->getCamera();
-			cam = cam->rotateAroundFocus(toRotate);
-			lGenerator->setCamera(cam);
-			lShader->setCamera(cam);
-			delete(cam);
-
-			cam = rGenerator->getCamera();
-			cam = cam->rotateAroundFocus(toRotate);
-			rGenerator->setCamera(cam);
-			rShader->setCamera(cam);
-			delete(cam);
-		}
-
-		if(randompx) {
-			Pair p = screen[pxIndex];
-			lastx = p[0];
-			lasty = p[1];
-			pxIndex++;
-			if(pxIndex >= (xRes / cut) * (yRes / cut)) pxIndex = 0;
-			// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
-			// lastx = rand() % (xRes/cut);
-			// lasty = rand() % (yRes/cut);
-		} else {
-			if (lastx < xRes/cut) {
-				lastx += 1;
+		#pragma omp parallel for
+		for(int pxi = 0; pxi < PIXLOOP; pxi++) {
+			int lastx = 0, lasty = 0;
+			if(randompx) {
+				Pair p = screen[(pxIndex+pxi) % (xb*yb)];
+				lastx = p[0];
+				lasty = p[1];
+				// printf("%d: (%d, %d)\n", pxIndex, p[0], p[1]);
+				// lastx = rand() % (xRes/cut);
+				// lasty = rand() % (yRes/cut);
 			} else {
-				lastx = 0;
-				if (lasty < yRes/cut) {
-					lasty += 1;
+				if (lastx+1 < xb) {
+					lastx += 1;
 				} else {
-					lasty = 0;
+					lastx = 0;
+					if (lasty+1 < yb) {
+						lasty += 1;
+					} else {
+						lasty = 0;
+					}
 				}
 			}
-		}
-		
-		x = lastx*cut;
-		y = lasty*cut;
 
-		for(int i = 0; i < cut && x+i < xRes; i++) {
-			for(int j = 0; j < cut && y+j < yRes; j++) {
-				lBuffer->at(x+i, y+j) = updatePixel(x+i, y+j, lGenerator, lShader, 
-					&max, display, s, lBuffer, window, x+i, y+j, oldScale, newScale);
-				rBuffer->at(x+i, y+j) = updatePixel(x+i, y+j, rGenerator, rShader, 
-					&max, display, s, rBuffer, window, x+i+xRes, y+j, oldScale, newScale);
+			int x = lastx*cut;
+			int y = lasty*cut;
+
+			for(int i = 0; i < cut && x+i < xRes*SCALE; i++) {
+				for(int j = 0; j < cut && y+j < yRes*SCALE; j++) {
+					// buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
+					// 	&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
+					Vector3 ans = calculatePixel(x+i, y+j, generator, shader, &max, 
+						buffer, oldScale, newScale);
+					buffer->at(x+i, y+j) = ans;
+
+				}
+			}
+
+			int pux, puy, bux, buy;
+
+			if(SCALE == 1) {
+				pux = x;
+				puy = y;
+				bux = x;
+				buy = y;
+			} else {
+				pux = (int) x * invScale;
+				puy = (int) y * invScale;
+
+				bux = x - (x%SCALE);
+				buy = y - (y%SCALE);
+			}
+
+			
+
+			// int di = 0;
+			int sdi = bux;
+			for(int i = 0; i <= pux2 && pux+i < xRes; i++) {
+				// int dj = 0;
+				int sdj = buy;
+				for(int j = 0; j <= puy2 && puy+j < yRes; j++) {
+					Vector3 ans = Vector3(0, 0, 0);
+					for(int dx = 0; dx < SCALE; dx++) {
+						for(int dy = 0; dy < SCALE; dy++) {
+							Vector3 toAdd = buffer->at(sdi+dx, sdj+dy);
+							ans += toAdd;
+						}
+					}
+					if(ans != Vector3(0, 0, 0)) {
+						ans *= invScale2;
+						// printVector(ans);
+					}
+
+					colours[pxi] = setDrawPixel(ans);
+					xCol[pxi] = pux+i;
+					yCol[pxi] = puy+j;
+
+					// dj++;
+					sdj += SCALE;
+				}
+				// di++;
+				sdi += SCALE;
+			}
+
+			// max = (max + 1) / 2;
+			if(!up && !down && !left && !right) {
+				// max = (9999*max+1) / 10000;
 			}
 		}
 
-		// max = (max + 1) / 2;
-		if(!up && !down && !left && !right) {
-			// max = (9999*max+1) / 10000;
+		pxIndex += PIXLOOP;
+		while(pxIndex >= xb*yb) pxIndex -= xb*yb;
+
+		for(int pxi = 0; pxi < PIXLOOP; pxi++) {
+			drawPixelComputed(xCol[pxi], yCol[pxi], colours[pxi], display, s, window);
 		}
+
+
+		// for(int i = 0; i < cut && x+i < xRes*SCALE; i++) {
+		// 	for(int j = 0; j < cut && y+j < yRes*SCALE; j++) {
+		// 		// buffer->at(x+i, y+j) = updatePixel(x+i, y+j, generator, shader, 
+		// 		// 	&max, display, s, buffer, window, x+i, y+j, oldScale, newScale);
+		// 		Vector3 ans = calculatePixel(x+i, y+j, generator, shader, &max, 
+		// 			buffer, oldScale, newScale);
+		// 		buffer->at(x+i, y+j) = ans;
+
+		// 	}
+		// }
+
+		// int pux, puy, bux, buy;
+
+		// if(SCALE == 1) {
+		// 	pux = x;
+		// 	puy = y;
+		// 	bux = x;
+		// 	buy = y;
+		// } else {
+		// 	pux = (int) x * invScale;
+		// 	puy = (int) y * invScale;
+
+		// 	bux = x - (x%SCALE);
+		// 	buy = y - (y%SCALE);
+		// }
+
+		
+
+		// // int di = 0;
+		// int sdi = bux;
+		// for(int i = 0; i <= pux2 && pux+i < xRes; i++) {
+		// 	// int dj = 0;
+		// 	int sdj = buy;
+		// 	for(int j = 0; j <= puy2 && puy+j < yRes; j++) {
+		// 		Vector3 ans = Vector3(0, 0, 0);
+		// 		for(int dx = 0; dx < SCALE; dx++) {
+		// 			for(int dy = 0; dy < SCALE; dy++) {
+		// 				Vector3 toAdd = buffer->at(sdi+dx, sdj+dy);
+		// 				ans += toAdd;
+		// 			}
+		// 		}
+		// 		if(ans != Vector3(0, 0, 0)) {
+		// 			ans *= invScale2;
+		// 			// printVector(ans);
+		// 		}
+
+		// 		drawPixel(pux+i, puy+j, ans, display, s, window);
+		// 		// dj++;
+		// 		sdj += SCALE;
+		// 	}
+		// 	// di++;
+		// 	sdi += SCALE;
+		// }
+
+		// // max = (max + 1) / 2;
+		// if(!up && !down && !left && !right) {
+		// 	// max = (9999*max+1) / 10000;
+		// }
 	}
 	XCloseDisplay(display);
 
@@ -986,4 +854,19 @@ void drawPixel(int x, int y, Vector3 color, Display* display, int s, Window w) {
 
 	XSetForeground(display, DefaultGC(display, s), fin);
 	XDrawPoint(display, w, DefaultGC(display, s), x, y);
+}
+
+void drawPixelComputed(int x, int y, int fin, Display* display, int s, Window w) {
+	XSetForeground(display, DefaultGC(display, s), fin);
+	XDrawPoint(display, w, DefaultGC(display, s), x, y);
+}
+
+int setDrawPixel(Vector3 color) {
+	int red = (int) 255 * color[0];
+	int green = (int) 255 * color[1];
+	int blue = (int) 255 * color[2];
+
+	int fin = 256*256*red + 256*green + blue;
+
+	return fin;
 }
